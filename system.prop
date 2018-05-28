@@ -6,6 +6,7 @@ dalvik.vm.dex2oat64.enabled=true
 
 # Display
 debug.hwui.renderer=skiavk
+sys.use_fifo_ui=1
 
 # eBPF
 bpf.progs_loaded=1
