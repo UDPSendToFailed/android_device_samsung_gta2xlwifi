@@ -270,9 +270,13 @@ PRODUCT_PACKAGES += \
     android.hardware.power-service-qti \
     SamsungDoze
 
- # RemovePackages
+# RemovePackages
  PRODUCT_PACKAGES += \
     RemovePackages
+
+# Tethering
+PRODUCT_PACKAGES += \
+    TetheringConfigOverlay
 
 # Thermal
 PRODUCT_PACKAGES += \
