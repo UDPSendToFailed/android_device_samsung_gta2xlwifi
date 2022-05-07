@@ -3,3 +3,6 @@ allow init hidl_base_hwservice:hwservice_manager add;
 allow init sysfs:file setattr;
 allow init vendor_file:file execute;
 
+allow init sysfs:dir create;
+allow init vendor_data_file:file rename;
+allow init vendor_file:file execute_no_trans;

@@ -12,6 +12,9 @@ allow hal_sensors_default app_efs_file:file create_file_perms;
 
 allow hal_sensors_default sec_poc_file:dir r_dir_perms;
 
+allow hal_sensors_default sysfs:dir { open read };
+allow hal_sensors_default sysfs:file { getattr open read write };
+
 r_dir_file(hal_sensors_default, efs_file)
 r_dir_file(hal_sensors_default, sec_poc_file)
 

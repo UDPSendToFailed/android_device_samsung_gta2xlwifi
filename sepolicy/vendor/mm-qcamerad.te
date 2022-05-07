@@ -1,1 +1,5 @@
 allow mm-qcamerad { sysfs_jpeg sysfs_graphics }:file r_file_perms;
+allow mm-qcamerad camera_data_file:dir search;
+allow mm-qcamerad default_prop:file { getattr open read };
+allow mm-qcamerad sec_camera_prop:file { getattr open read };
+allow mm-qcamerad sysfs:file { getattr open read write };
