@@ -9,6 +9,19 @@ allow vendor_init vendor_toolbox_exec:file {open execute getattr};
 
 allow vendor_init vendor_tee_listener_prop:file { getattr open read };
 
+allow vendor_init camera_data_file:dir getattr;
+allow vendor_init ipa_dev:file { create open write };
+allow vendor_init persist_file:lnk_file read;
+allow vendor_init system_data_file:dir setattr;
+allow vendor_init tombstone_data_file:dir getattr;
+allow vendor_init watchdog_device:file setattr;
+
+allow vendor_init system_data_file:dir { add_name create };
+
+allow vendor_init cache_backup_file:dir setattr;
+allow vendor_init cache_file:dir search;
+allow vendor_init cache_private_backup_file:dir setattr;
+
 set_prop(vendor_init, camera_prop)
 set_prop(vendor_init, config_prop)
 set_prop(vendor_init, csc_prop)
@@ -17,4 +30,3 @@ set_prop(vendor_init, receiver_error_prop)
 set_prop(vendor_init, vendor_iop_prop)
 set_prop(vendor_init, vendor_members_prop)
 set_prop(vendor_init, vold_prop)
-
