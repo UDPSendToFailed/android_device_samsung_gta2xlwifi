@@ -1,3 +1,8 @@
+on post-fs
+
+# setup cgroup mountpoint
+    mount tmpfs cgroup /sys/fs/cgroup
+
 on post-fs-data
 
 #SystemFramework
