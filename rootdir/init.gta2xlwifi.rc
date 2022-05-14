@@ -1,8 +1,3 @@
-on post-fs
-
-# setup cgroup mountpoint
-    mount tmpfs cgroup /sys/fs/cgroup
-
 on post-fs-data
 
 #SystemFramework
@@ -205,6 +200,9 @@ on boot
 on init
     # Add preload partition.
     mkdir /preload 0771 system system
+
+# setup cgroup mountpoint
+    mount tmpfs cgroup /sys/fs/cgroup
 
 # Create mb_po folder for Activation TA
     mkdir /efs/mb_po 0700 system system
