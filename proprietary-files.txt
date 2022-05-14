@@ -586,6 +586,7 @@ vendor/bin/hw/android.hardware.sensors@1.0-service
 vendor/lib/hw/android.hardware.sensors@1.0-impl.so
 vendor/lib64/hw/android.hardware.sensors@1.0-impl.so
 vendor/bin/init.qcom.sensors.sh
+vendor/bin/init.qti.qseecomd.sh
 vendor/etc/init/android.hardware.sensors@1.0-service.rc
 
 # Soter
