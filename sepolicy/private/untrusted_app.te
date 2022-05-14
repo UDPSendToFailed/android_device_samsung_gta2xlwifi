@@ -1,0 +1,2 @@
+allow untrusted_app proc_version:file { getattr open read };
+allow untrusted_app self:netlink_route_socket ioctl;
