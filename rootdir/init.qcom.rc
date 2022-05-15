@@ -851,9 +851,6 @@ service wifi_ftmd /system/vendor/bin/wifi_ftmd
 
 service cnss-daemon /system/vendor/bin/cnss-daemon -n -l
     class late_start
-    user system
-    group system inet net_admin wifi
-    capabilities NET_ADMIN
 
 on property:sys.shutdown.requested=*
     write /sys/kernel/shutdown_wlan/shutdown 1
