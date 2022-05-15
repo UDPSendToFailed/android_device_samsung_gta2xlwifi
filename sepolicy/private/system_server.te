@@ -3,3 +3,4 @@ allow system_server init:process signal;
 allow system_server proc:file { getattr open read };
 allow system_server sysfs:dir { open read };
 allow system_server tmpfs:dir { open read write };
+allow system_server tmpfs:dir { add_name create remove_name rmdir setattr };
