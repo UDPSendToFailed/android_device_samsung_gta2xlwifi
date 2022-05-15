@@ -30,3 +30,9 @@ PRODUCT_MODEL := SM-T590
 PRODUCT_BRAND := samsung
 PRODUCT_MANUFACTURER := samsung
 PRODUCT_GMS_CLIENTID_BASE := android-samsung
+
+PRODUCT_BUILD_PROP_OVERRIDES += \
+    PRIVATE_BUILD_DESC="gta2xlwifixx-user 10 QP1A.190711.020 T590XXS3CUK1 release-keys"
+
+# Set BUILD_FINGERPRINT variable to be picked up by both system and vendor build.prop
+BUILD_FINGERPRINT := "samsung/gta2xlwifixx/gta2xlwifi:10/QP1A.190711.020/T590XXS3CUK1:user/release-keys"
