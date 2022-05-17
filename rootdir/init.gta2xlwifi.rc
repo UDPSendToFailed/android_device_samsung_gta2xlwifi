@@ -196,6 +196,11 @@ on boot
 #Meta event
    chown system radio /sys/class/sensors/sensor_dev/flush
    chmod 760 /sys/class/sensors/sensor_dev/flush
+   
+# DT2W
+   chown system radio /sys/class/sec/tsp/cmd
+   chmod 0660 /sys/class/sec/tsp/input/enabled
+   chown system system /sys/class/sec/tsp/input/enabled
 
 on init
     # Add preload partition.

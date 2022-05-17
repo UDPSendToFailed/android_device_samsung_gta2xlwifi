@@ -229,4 +229,7 @@
          This should be turned off on low-end devices to improve animation performance. -->
     <bool name="config_supportsRoundedCornersOnWindows">true</bool>
 
+    <!-- Whether device supports double tap to wake -->
+    <bool name="config_supportDoubleTapWake">true</bool>
+	
 </resources>
