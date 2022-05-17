@@ -350,12 +350,13 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/qti_whitelist.xml:system/etc/sysconfig/qti_whitelist.xml \
     $(LOCAL_PATH)/configs/privapp-permissions-qti.xml:system/etc/permissions/privapp-permissions-qti.xml \
 	
-#aaaaaaaa
+# Misc
 PRODUCT_PACKAGES += \
 	vendor.qti.hardware.cryptfshw@1.0.vendor \
 	vendor.qti.hardware.capabilityconfigstore@1.0.vendor \
 	vendor.lineage.livedisplay@2.1 \
-	vendor.lineage.fastcharge@1.0
+	vendor.lineage.fastcharge@1.0 \
+	libnl.vendor
 
 # For userdebug builds
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
