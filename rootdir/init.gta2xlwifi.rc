@@ -274,6 +274,7 @@ on property:persist.sys.storage_preload=0
 
 on fs
     mount none /mnt/vendor/efs /efs bind
+    mount none /vendor /system/vendor bind
 
 on property:sys.boot_completed=1
     # This is the only thing which init.qcom.post_boot.sh does
