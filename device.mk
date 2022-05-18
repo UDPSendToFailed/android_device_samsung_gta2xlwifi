@@ -127,17 +127,15 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.frameworks.displayservice@1.0.vendor \
     android.frameworks.sensorservice@1.0.vendor \
-    android.hardware.camera.common@1.0 \
+    android.hardware.camera.common@1.0.vendor \
     android.hardware.camera.device@3.7.vendor \
     android.hardware.camera.provider@2.7.vendor \
-    android.hardware.camera.provider@2.7-impl \
-    android.hardware.camera.provider@2.7-service \
+    android.hardware.camera.provider@2.4-impl \
+    android.hardware.camera.provider@2.5-service \
     vendor.qti.hardware.camera.device@1.0.vendor \
-    camera.msm8953 \
-    libcamshim \
+    libshim_camera \
+    libgui_vendor \
     libmm-qcamera \
-    libui_shim \
-	libgui_vendor
 
 # Display
 PRODUCT_PACKAGES += \
@@ -356,7 +354,8 @@ PRODUCT_PACKAGES += \
 	vendor.qti.hardware.capabilityconfigstore@1.0.vendor \
 	vendor.lineage.livedisplay@2.1 \
 	vendor.lineage.fastcharge@1.0 \
-	libnl.vendor
+	libnl.vendor \
+	libdemangle.vendor
 
 # For userdebug builds
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \

@@ -230,6 +230,13 @@ vendor/lib64/libmmcamera_dbg.so
 vendor/lib64/vendor.qti.hardware.scve.objecttracker@1.0.so
 vendor/lib64/vendor.qti.hardware.scve.panorama@1.0.so
 
+vendor/lib/libmmcamera_ppeiscore.so
+vendor/lib/libMOTION.so
+vendor/lib/libsomp.so
+vendor/lib/libmmcamera_sw_tnr.so
+vendor/lib/libtrueportrait.so
+
+
 # Camera configs
 etc/camera/s5k4h5yc_dw9807_chromatix_gta2s.xml
 vendor/etc/camera/N05QL_s5k5e3yx_module_info.xml
