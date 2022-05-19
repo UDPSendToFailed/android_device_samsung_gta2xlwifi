@@ -163,10 +163,11 @@ PRODUCT_COPY_FILES += \
 
 # DRM
 PRODUCT_PACKAGES += \
-    android.hardware.drm@1.0-impl:64 \
-    android.hardware.drm@1.0-service-lazy \
+    android.hardware.drm@1.0-impl \
+    android.hardware.drm@1.0-service \
     android.hardware.drm@1.4.vendor \
-    android.hardware.drm@1.4-service.clearkey
+    android.hardware.drm@1.4-service.clearkey \
+    libprotobuf-cpp-lite
 
 # FastCharge
 PRODUCT_PACKAGES += \
