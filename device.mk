@@ -43,14 +43,14 @@ PRODUCT_PACKAGES += \
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.qcom \
-	init.gta2xlwifi.rc \
+    init.gta2xlwifi.rc \
     init.msm.usb.configfs.rc \
     init.qcom.rc \
-	init.qcom.factory.rc \
+    init.qcom.factory.rc \
     init.qcom.rc \
     init.qcom.usb.rc \
-	init.samsung.bsp.rc \
-	init.samsung.rc \
+    init.samsung.bsp.rc \
+    init.samsung.rc \
     init.target.rc \
     ueventd.qcom.rc
 
@@ -63,7 +63,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.location.gps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.location.gps.xml \
     frameworks/native/data/etc/android.hardware.opengles.aep.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.opengles.aep.xml \
     frameworks/native/data/etc/android.hardware.sensor.accelerometer.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.accelerometer.xml \
-	frameworks/native/data/etc/android.hardware.sensor.light.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.light.xml \
+    frameworks/native/data/etc/android.hardware.sensor.light.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.light.xml \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/native/data/etc/android.hardware.usb.host.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.usb.host.xml \
@@ -105,22 +105,22 @@ PRODUCT_PACKAGES += \
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
-	$(LOCAL_PATH)/audio/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
-	$(LOCAL_PATH)/audio/audio_output_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_output_policy.conf \
-	$(LOCAL_PATH)/audio/audio_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy.conf \
+    $(LOCAL_PATH)/audio/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml \
+    $(LOCAL_PATH)/audio/audio_output_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_output_policy.conf \
+    $(LOCAL_PATH)/audio/audio_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy.conf \
     $(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/audio_policy_volumes.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_volumes.xml \
     frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
     frameworks/av/services/audiopolicy/config/r_submix_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/r_submix_audio_policy_configuration.xml \
-	$(LOCAL_PATH)/audio/audio_tuning_mixer.txt:$(TARGET_COPY_OUT_VENDOR)/etc/audio_tuning_mixer.txt \
+    $(LOCAL_PATH)/audio/audio_tuning_mixer.txt:$(TARGET_COPY_OUT_VENDOR)/etc/audio_tuning_mixer.txt \
     $(LOCAL_PATH)/audio/mixer_paths.xml:$(TARGET_COPY_OUT_VENDOR)/etc/mixer_paths.xml
 
 # Bluetooth
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-impl-qti \
-	android.hardware.bluetooth@1.0-service \
-	android.hardware.bluetooth@1.0:32 \
-	android.hardware.bluetooth@1.0.vendor \
+    android.hardware.bluetooth@1.0-service \
+    android.hardware.bluetooth@1.0:32 \
+    android.hardware.bluetooth@1.0.vendor \
     libbt-vendor
 
 # Camera
@@ -136,6 +136,7 @@ PRODUCT_PACKAGES += \
     libshim_camera \
     libgui_vendor \
     libmm-qcamera \
+    libion.vendor
 
 # Display
 PRODUCT_PACKAGES += \
@@ -165,6 +166,10 @@ PRODUCT_PACKAGES += \
     android.hardware.drm@1.4.vendor \
     android.hardware.drm@1.4-service.clearkey
 
+# FastCharge
+PRODUCT_PACKAGES += \
+    vendor.lineage.fastcharge@1.0-service.samsung
+
 # Gatekeeper HAL
 PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-impl:64 \
@@ -177,9 +182,9 @@ PRODUCT_COPY_FILES += \
 # GPS
 PRODUCT_PACKAGES += \
     android.hardware.gnss@2.0-impl-qti \
-	android.hardware.gnss@2.0-service \
-	android.hardware.gnss@2.0:32 \
-	android.hardware.gnss@2.0.vendor \
+    android.hardware.gnss@2.0-service \
+    android.hardware.gnss@2.0:32 \
+    android.hardware.gnss@2.0.vendor \
     gps.msm8953 \
     libcurl \
     libgnss \
@@ -235,6 +240,10 @@ PRODUCT_PACKAGES += \
     android.hardware.light@2.0-service \
     lights.msm8953
 
+# LiveDisplay
+PRODUCT_PACKAGES += \
+    vendor.lineage.livedisplay@2.0-service-sdm
+
 # Media
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_codecs.xml::$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml \
@@ -255,7 +264,7 @@ PRODUCT_PACKAGES += \
 
 # OMX
 PRODUCT_PACKAGES += \
-	android.hardware.media.omx@1.0 \
+    android.hardware.media.omx@1.0 \
     libc2dcolorconvert \
     libmm-omxcore \
     libOmxAacEnc \
@@ -289,48 +298,44 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/sensors/apdr.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sensors/apdr.conf 
-	
+
 # Thermal
 PRODUCT_PACKAGES += \
     android.hardware.thermal@1.0-impl \
     android.hardware.thermal@1.0-service \
-    thermal.msm8953 
-
-# Trust HAL
-PRODUCT_PACKAGES += \
-    vendor.lineage.trust@1.0-service
+    thermal.msm8953
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/thermal-engine.conf:$(TARGET_COPY_OUT_VENDOR)/etc/thermal-engine.conf
 
-# USB HAL
+# USB
 PRODUCT_PACKAGES += \
-    android.hardware.usb@1.0-service.basic
-	
+    android.hardware.usb@1.3-service.samsung
+
 # VNDK
 PRODUCT_PACKAGES += \
     libstdc++.vendor \
-	vndservicemanager
+    vndservicemanager
 
 # Wifi
 PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service \
     android.hardware.wifi@1.5.vendor \
-	android.hardware.wifi.hostapd@1.3.vendor \
-	android.hardware.wifi.offload@1.0.vendor \
-	android.hardware.wifi.supplicant@1.4.vendor \
+    android.hardware.wifi.hostapd@1.3.vendor \
+    android.hardware.wifi.offload@1.0.vendor \
+    android.hardware.wifi.supplicant@1.4.vendor \
     libcld80211 \
     libqsap_sdk \
     libQWiFiSoftApCfg \
     libwpa_client \
     dhcpcd.conf \
     macloader \
-	hostapd \
+    hostapd \
     wificond \
     wpa_supplicant \
     wpa_supplicant.conf \
-	libwifi-hal \
-	wcnss_service
+    libwifi-hal \
+    wcnss_service
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/wifi/p2p_supplicant_overlay.conf:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/p2p_supplicant_overlay.conf \
@@ -347,26 +352,24 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/qti_whitelist.xml:system/etc/sysconfig/qti_whitelist.xml \
     $(LOCAL_PATH)/configs/privapp-permissions-qti.xml:system/etc/permissions/privapp-permissions-qti.xml \
-	
+
 # Misc
 PRODUCT_PACKAGES += \
-	vendor.qti.hardware.cryptfshw@1.0.vendor \
-	vendor.qti.hardware.capabilityconfigstore@1.0.vendor \
-	vendor.lineage.livedisplay@2.1 \
-	vendor.lineage.fastcharge@1.0 \
-	libnl.vendor \
-	libdemangle.vendor
+    vendor.qti.hardware.cryptfshw@1.0.vendor \
+    vendor.qti.hardware.capabilityconfigstore@1.0.vendor \
+    libnl.vendor \
+    libdemangle.vendor
 
 # For userdebug builds
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-	ro.secure=0 \
-	ro.adb.secure=0 \
-	ro.debuggable=1 \
-	persist.sys.root_access=1 \
-	persist.service.adb.enable=1
+    ro.secure=0 \
+    ro.adb.secure=0 \
+    ro.debuggable=1 \
+    persist.sys.root_access=1 \
+    persist.service.adb.enable=1
 
 PRODUCT_PROPERTY_OVERRIDES += \
-	persist.sys.usb.config=mtp,adb
+    persist.sys.usb.config=mtp,adb
     
 # Call the proprietary setup
 $(call inherit-product, vendor/samsung/gta2xlwifi/gta2xlwifi-vendor.mk)
