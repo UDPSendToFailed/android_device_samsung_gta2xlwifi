@@ -32,6 +32,9 @@ import /vendor/etc/init/hw/init.target.rc
 import /vendor/etc/init/hw/init.qcom.factory.rc
 
 on early-init
+    # ION
+    chown system system /dev/ion
+	
     # Magisk needs the /sbin folder to be defined in the PATH
     export PATH /sbin:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin
 
