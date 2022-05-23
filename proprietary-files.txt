@@ -236,6 +236,38 @@ vendor/lib/libsomp.so
 vendor/lib/libmmcamera_sw_tnr.so
 vendor/lib/libtrueportrait.so
 
+vendor/bin/hw/vendor.samsung.hardware.camera.provider@3.0-service
+vendor/etc/init/vendor.samsung.hardware.camera.provider@3.0-service.rc
+vendor/lib/android.hardware.camera.provider@2.4-legacy.so
+vendor/lib/android.hardware.camera.provider@2.5-legacy.so
+vendor/lib/camera.device@1.0-impl.so
+vendor/lib/camera.device@3.2-impl.so
+vendor/lib/camera.device@3.3-impl.so
+vendor/lib/camera.device@3.4-impl.so
+vendor/lib/camera.device@3.5-impl.so
+vendor/lib/hw/vendor.samsung.hardware.camera.provider@3.0-impl.so
+vendor/lib/libOpenCv.camera.samsung.so
+vendor/lib/libxcv.camera.samsung.so
+vendor/lib/vendor.qti.hardware.camera.device@1.0.so
+vendor/lib/vendor.samsung.camera.device@1.0-impl.so
+vendor/lib/vendor.samsung.camera.device@4.0-impl.so
+vendor/lib/vendor.samsung.hardware.camera.device@1.0.so
+vendor/lib/vendor.samsung.hardware.camera.device@4.0.so
+vendor/lib/vendor.samsung.hardware.camera.provider@3.0.so
+vendor/lib64/android.hardware.camera.provider@2.4-external.so
+vendor/lib64/android.hardware.camera.provider@2.4-legacy.so
+vendor/lib64/camera.device@1.0-impl.so
+vendor/lib64/camera.device@3.2-impl.so
+vendor/lib64/camera.device@3.3-impl.so
+vendor/lib64/camera.device@3.4-external-impl.so
+vendor/lib64/camera.device@3.4-impl.so
+vendor/lib64/camera.device@3.5-external-impl.so
+vendor/lib64/camera.device@3.5-impl.so
+vendor/lib64/hw/android.hardware.camera.provider@2.4-impl.so
+vendor/lib64/libOpenCv.camera.samsung.so
+vendor/lib64/libxcv.camera.samsung.so
+vendor/lib64/vendor.qti.hardware.camera.device@1.0.so
+
 
 # Camera configs
 etc/camera/s5k4h5yc_dw9807_chromatix_gta2s.xml
@@ -380,8 +412,8 @@ vendor/lib64/libdrmfs.so
 vendor/lib64/libhdcpsrm.so
 vendor/lib64/liboemcrypto.so
 
-#vendor/lib/libops.so
-#vendor/lib/libspl.so
+vendor/lib64/libops.so
+vendor/lib64/libspl.so
 
 # DRM (Qualcomm Secure Execution Environment)
 lib/vendor.qti.hardware.qseecom@1.0.so
@@ -482,12 +514,6 @@ vendor/lib64/vendor.qti.gnss@3.0.so
 vendor/bin/hw/android.hardware.gnss@2.0-service-qti
 vendor/etc/init/android.hardware.gnss@2.0-service-qti.rc
 vendor/lib64/hw/android.hardware.gnss@2.0-impl-qti.so
-
-# IPA
-
-# Light
-
-# Local time
 
 # Media (OMX)
 lib/libQSEEComAPI_system.so
