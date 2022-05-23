@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 The MoKee Open Source Project
+ * Copyright (C) 2017 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,26 +41,4 @@ extern "C" void _ZN7android13GraphicBufferC1EjjijjP13native_handleb(
         (keepOwnership ? android::GraphicBuffer::TAKE_HANDLE : android::GraphicBuffer::WRAP_HANDLE);
     _ZN7android13GraphicBufferC1EjjijjjP13native_handleb(inHandle, inMethod, inWidth, inHeight,
         inFormat, static_cast<uint32_t>(1), static_cast<uint64_t>(inUsage), inStride);
-}
-
-extern "C" android::status_t _ZN7android13GraphicBuffer10reallocateEjjijy(
-        uint32_t inWidth,
-        uint32_t inHeight,
-        android::PixelFormat inFormat,
-        uint32_t inLayerCount,
-        uint32_t inUsage);
-
-extern "C" android::status_t _ZN7android13GraphicBuffer10reallocateEjjij(
-        uint32_t inWidth,
-        uint32_t inHeight,
-        android::PixelFormat inFormat,
-        uint32_t inUsage)
-{
-    return _ZN7android13GraphicBuffer10reallocateEjjijy(inWidth, inHeight, inFormat, 1, inUsage);
-}
-
-extern "C" void _ZN7android20DisplayEventReceiverC1ENS_16ISurfaceComposer11VsyncSourceE();
-
-extern "C" void _ZN7android20DisplayEventReceiverC1Ev() {
-    _ZN7android20DisplayEventReceiverC1ENS_16ISurfaceComposer11VsyncSourceE;
 }
