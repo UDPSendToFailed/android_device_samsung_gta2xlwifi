@@ -138,7 +138,8 @@ PRODUCT_PACKAGES += \
     libshim_camera \
     libgui_vendor \
     libmm-qcamera \
-    libion.vendor
+    libion.vendor \
+    camera.msm8953
 
 # Display
 PRODUCT_PACKAGES += \
