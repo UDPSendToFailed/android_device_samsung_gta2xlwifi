@@ -129,6 +129,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.frameworks.displayservice@1.0.vendor \
     android.frameworks.sensorservice@1.0.vendor \
+    android.frameworks.bufferhub@1.0.vendor \
     android.hardware.camera.common@1.0.vendor \
     android.hardware.camera.device@3.7.vendor \
     android.hardware.camera.provider@2.7.vendor \
@@ -138,8 +139,6 @@ PRODUCT_PACKAGES += \
     libshim_camera \
     libgui_vendor \
     libmm-qcamera \
-    libion.vendor \
-    camera.msm8953
 
 # Display
 PRODUCT_PACKAGES += \
