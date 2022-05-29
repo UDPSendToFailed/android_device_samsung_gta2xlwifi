@@ -82,14 +82,14 @@ PRODUCT_COPY_FILES += \
 
 # Audio
 PRODUCT_PACKAGES += \
-    android.hardware.audio@7.0-impl:32 \
-    android.hardware.audio.effect@7.0-impl:32 \
+    android.hardware.audio@7.0-impl_32 \
+    android.hardware.audio.effect@7.0-impl_32 \
     android.hardware.audio.service \
-    android.hardware.bluetooth.audio@2.1-impl:32 \
-    android.hardware.soundtrigger@2.1-impl:32 \
+    android.hardware.bluetooth.audio@2.1-impl_32 \
+    android.hardware.soundtrigger@2.1-impl_32 \
     audio.a2dp.default \
     audio.bluetooth.default \
-    audio.primary.msm8953:32 \
+    audio.primary.msm8953_32 \
     audio.r_submix.default \
     audio.usb.default \
     libaacwrapper \
@@ -97,13 +97,12 @@ PRODUCT_PACKAGES += \
     libqcomvisualizer \
     libqcomvoiceprocessing \
     libqcompostprocbundle \
-    sound_trigger.primary.msm8953:32
 
 # Audio features
 PRODUCT_PACKAGES += \
-    libhfp:32 \
-    libsndmonitor:32 \
-    libspkrprot:32
+    libhfp_32 \
+    libsndmonitor_32 \
+    libspkrprot_32
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
@@ -121,7 +120,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth@1.0-impl-qti \
     android.hardware.bluetooth@1.0-service \
-    android.hardware.bluetooth@1.0:32 \
     android.hardware.bluetooth@1.0.vendor \
     libbt-vendor
 
@@ -181,9 +179,8 @@ PRODUCT_PACKAGES += \
 
 # Gatekeeper HAL
 PRODUCT_PACKAGES += \
-    android.hardware.gatekeeper@1.0-impl:64 \
+    android.hardware.gatekeeper@1.0-impl \
     android.hardware.gatekeeper@1.0-service \
-    android.hardware.gatekeeper@1.0-service.vendor
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/lockscreen.rc:$(TARGET_COPY_OUT_VENDOR)/etc/init/lockscreen.rc
@@ -192,7 +189,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.gnss@2.0-impl-qti \
     android.hardware.gnss@2.0-service \
-    android.hardware.gnss@2.0:32 \
     android.hardware.gnss@2.0.vendor \
     gps.msm8953 \
     libcurl \
@@ -208,8 +204,7 @@ PRODUCT_COPY_FILES += \
 
 # Healthd
 PRODUCT_PACKAGES += \
-    android.hardware.health@2.1-impl:32 \
-    android.hardware.health@2.1-impl:64 \
+    android.hardware.health@2.1-impl \
     android.hardware.health@2.1-impl.recovery \
     android.hardware.health@2.1-service
 

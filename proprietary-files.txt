@@ -408,19 +408,20 @@ vendor/lib/com.qualcomm.qti.dpm.api@1.0.so
 vendor/lib64/com.qualcomm.qti.dpm.api@1.0.so
 
 # DRM
+vendor/bin/hw/android.hardware.drm@1.4-service.widevine
+vendor/etc/init/android.hardware.drm@1.4-service.widevine.rc
 vendor/lib/mediadrm/libwvdrmengine.so
 vendor/lib/libcpion.so
 vendor/lib/libdiag.so
 vendor/lib/libdrmfs.so
 vendor/lib/libhdcpsrm.so
 vendor/lib/liboemcrypto.so
-vendor/lib/libwvhidl.so
+vendor/lib64/libwvhidl.so
 vendor/lib64/libcpion.so
 vendor/lib64/libdiag.so
 vendor/lib64/libdrmfs.so
 vendor/lib64/libhdcpsrm.so
 vendor/lib64/liboemcrypto.so
-
 vendor/lib64/libops.so
 vendor/lib64/libspl.so
 
