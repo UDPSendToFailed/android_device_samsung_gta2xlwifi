@@ -424,6 +424,10 @@ vendor/lib64/libhdcpsrm.so
 vendor/lib64/liboemcrypto.so
 vendor/lib64/libops.so
 vendor/lib64/libspl.so
+vendor/lib/libops.so
+vendor/lib/libspl.so
+vendor/lib/libdisplayconfig.qti.so
+vendor/lib/vendor.display.config@2.0.so
 
 # DRM (Qualcomm Secure Execution Environment)
 lib/vendor.qti.hardware.qseecom@1.0.so
