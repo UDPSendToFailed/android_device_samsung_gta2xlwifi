@@ -200,6 +200,9 @@ vendor/lib/libsomp.so
 vendor/lib/libmmcamera_sw_tnr.so
 vendor/lib/libtrueportrait.so
 
+vendor/lib/libgui.so
+vendor/lib64/libgui.so
+
 #vendor/bin/hw/vendor.samsung.hardware.camera.provider@3.0-service
 #vendor/etc/init/vendor.samsung.hardware.camera.provider@3.0-service.rc
 #vendor/lib/android.hardware.camera.provider@2.4-legacy.so

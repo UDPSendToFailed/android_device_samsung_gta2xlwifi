@@ -140,7 +140,6 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.5-service \
     vendor.qti.hardware.camera.device@1.0.vendor \
     libshim_camera \
-    libgui_vendor \
     libmm-qcamera \
 
 # Display
