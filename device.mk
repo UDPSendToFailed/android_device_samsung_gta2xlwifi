@@ -97,6 +97,7 @@ PRODUCT_PACKAGES += \
     libqcomvisualizer \
     libqcomvoiceprocessing \
     libqcompostprocbundle \
+    tinymix
 
 # Audio features
 PRODUCT_PACKAGES += \
