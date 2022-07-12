@@ -205,6 +205,10 @@ on boot
 on init
     # Add preload partition.
     mkdir /preload 0771 system system
+	
+# Prevent bloatware apps from being installed
+	mount none /odm/lost+found /odm/app bind
+	mount none /odm/lost+found /odm/priv-app bind
 
 # setup cgroup mountpoint
     mount tmpfs cgroup /sys/fs/cgroup
