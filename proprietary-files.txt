@@ -1096,7 +1096,6 @@ vendor/lib/vendor.qti.hardware.wigig.netperftuner@1.0.so
 vendor/lib/vendor.qti.hardware.wigig.supptunnel@1.0.so
 vendor/lib/vendor.trustonic.tee@1.0.so
 vendor/lib/vendor.trustonic.teeregistry@1.0.so
-vendor/lib64/hw/activity_recognition.msm8953.so
 vendor/lib64/hw/audio.sec_primary.default.so
 vendor/lib64/hw/com.qualcomm.qti.ant@1.0-impl.so
 vendor/lib64/hw/face.default.so
