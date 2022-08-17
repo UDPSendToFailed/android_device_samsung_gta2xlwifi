@@ -87,6 +87,10 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 TARGET_USERIMAGES_USE_F2FS := true
 TARGET_USERIMAGES_USE_EXT4 := true
 
+# Init
+TARGET_INIT_VENDOR_LIB := libinit_gta2xlwifi
+TARGET_RECOVERY_DEVICE_MODULES := libinit_gta2xlwifi
+
 # Use these flags if the board has a ext4 partition larger than 2gb
 BOARD_HAS_LARGE_FILESYSTEM := true
 TARGET_USERIMAGES_USE_EXT4 := true
