@@ -49,6 +49,7 @@ PRODUCT_PACKAGES += \
     init.msm.usb.configfs.rc \
     init.qcom.rc \
     init.qcom.factory.rc \
+    init.qcom.post_boot.sh \
     init.qcom.rc \
     init.qcom.usb.rc \
     init.samsung.bsp.rc \
