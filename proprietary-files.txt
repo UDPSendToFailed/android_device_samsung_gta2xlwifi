@@ -468,8 +468,6 @@ lib/libsavscmn.so
 lib/libsecnativefeature.so
 lib/libsfextcp.so
 vendor/lib/libOmxAacDec.so
-vendor/lib/libOmxAlacDec.so
-vendor/lib/libOmxAlacDecSw.so
 vendor/lib/libOmxAmrDec.so
 vendor/lib/libOmxAmrwbplusDec.so
 vendor/lib/libOmxApeDec.so
@@ -480,8 +478,6 @@ vendor/lib/libOmxG711Dec.so
 vendor/lib/libOmxQcelp13Dec.so
 vendor/lib/libOmxWmaDec.so
 vendor/lib64/libOmxAacDec.so
-vendor/lib64/libOmxAlacDec.so
-vendor/lib64/libOmxAlacDecSw.so
 vendor/lib64/libOmxAmrDec.so
 vendor/lib64/libOmxAmrwbplusDec.so
 vendor/lib64/libOmxApeDec.so
@@ -783,7 +779,6 @@ vendor/lib/hw/audio.sec_primary.default.so
 vendor/lib/hw/com.qualcomm.qti.ant@1.0-impl.so
 vendor/lib/com.qualcomm.qti.ant@1.0.so
 vendor/lib/ftm_fm_lib.so
-vendor/lib/libAlacSwDec.so
 vendor/lib/libApeSwDec.so
 vendor/lib/libC2D2.so
 vendor/lib/libCB.so
@@ -1074,7 +1069,6 @@ vendor/lib64/interfaces.factoryAta@1.0.so
 vendor/lib64/interfaces.factoryInterface@1.0.so
 vendor/lib64/lib-rtpcore.so
 vendor/lib64/lib-rtpsl.so
-vendor/lib64/libAlacSwDec.so
 vendor/lib64/libAncUnlock.so
 vendor/lib64/libApeSwDec.so
 vendor/lib64/libC2D2.so
