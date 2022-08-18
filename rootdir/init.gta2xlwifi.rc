@@ -71,10 +71,6 @@ on boot
     chown system radio /sys/class/input_booster/head
     chown system radio /sys/class/input_booster/tail
 
-
-# SSWAP
-    write /proc/sys/vm/swappiness 130
-
 # POC
     chown system system /dev/poc
     chmod 0660 /dev/poc
@@ -296,3 +292,6 @@ on property:sys.boot_completed=1
     write /sys/block/zram0/disksize 2048M
     start mkswap
     start swapon
+
+    # KTweak
+    exec /system/bin/sh /vendor/bin/ktweak.sh

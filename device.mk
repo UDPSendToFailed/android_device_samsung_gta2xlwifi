@@ -55,6 +55,7 @@ PRODUCT_PACKAGES += \
     init.samsung.bsp.rc \
     init.samsung.rc \
     init.target.rc \
+    ktweak.sh \
     ueventd.qcom.rc
 
 # Permissions

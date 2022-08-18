@@ -42,7 +42,6 @@ on fs
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
     mount_all /vendor/etc/fstab.qcom
     setprop ro.crypto.fde_algorithm AES-256-XTS
-    write /proc/sys/vm/swappiness 100
 
     wait /dev/block/bootdevice/by-name/cache
     mount ext4 /dev/block/bootdevice/by-name/cache /cache nosuid nodev noatime noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic
@@ -57,7 +56,6 @@ on fs
     mkdir /mnt/vendor/persist/bms 0700 root system
     restorecon_recursive /mnt/vendor/persist
 
-    #write /proc/sys/vm/swappiness 100
     #write /sys/kernel/boot_adsp/boot 1
 
     wait /dev/block/bootdevice/by-name/efs
