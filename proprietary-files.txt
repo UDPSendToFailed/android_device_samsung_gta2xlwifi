@@ -333,7 +333,6 @@ vendor/firmware/a630_sqe.fw
 # Dolby
 lib/libdeccfg.so
 lib/libprofileparamstorage.so
-vendor/etc/dolby/dax-default.xml
 
 # DPM
 vendor/lib/com.qualcomm.qti.dpm.api@1.0.so
@@ -488,44 +487,12 @@ vendor/lib64/libOmxG711Dec.so
 vendor/lib64/libOmxQcelp13Dec.so
 vendor/lib64/libOmxWmaDec.so
 
-# Media configs
-vendor/etc/media_codecs.xml
-vendor/etc/media_codecs_8953.xml
-vendor/etc/media_codecs_8953_v1.xml
-vendor/etc/media_codecs_ac4.xml
-vendor/etc/media_codecs_ddp.xml
-vendor/etc/media_codecs_dolby_audio.xml
-vendor/etc/media_codecs_google_audio.xml
-vendor/etc/media_codecs_google_telephony.xml
-vendor/etc/media_codecs_google_video.xml
-vendor/etc/media_codecs_google_video_le.xml
-vendor/etc/media_codecs_performance.xml
-vendor/etc/media_codecs_performance_8953.xml
-vendor/etc/media_codecs_performance_8953_v1.xml
-vendor/etc/media_codecs_sec_ape.xml
-vendor/etc/media_codecs_sec_primary.xml
-vendor/etc/media_codecs_sec_qcp.xml
-vendor/etc/media_codecs_sec_secondary.xml
-vendor/etc/media_codecs_sec_video_primary.xml
-vendor/etc/media_codecs_vendor.xml
-vendor/etc/media_codecs_vendor_audio.xml
-vendor/etc/media_profiles.xml
-vendor/etc/media_profiles_8953_v1.xml
-vendor/etc/media_profiles_V1_0.xml
-vendor/etc/media_profiles_vendor.xml
-
 # PASR
 vendor/lib64/vendor.qti.power.pasrmanager@1.0.so
 
 # Perf
-etc/powerhint.xml
 vendor/bin/hw/vendor.qti.hardware.perf@2.2-service
 vendor/etc/init/vendor.qti.hardware.perf@2.2-service.rc
-vendor/etc/perf/commonresourceconfigs.xml
-vendor/etc/perf/perfboostsconfig.xml
-vendor/etc/perf/perfconfigstore.xml
-vendor/etc/perf/targetconfig.xml
-vendor/etc/perf/targetresourceconfigs.xml
 vendor/lib/libperfconfig.so
 vendor/lib/libperfgluelayer.so
 vendor/lib/libperfioctl.so
@@ -598,9 +565,6 @@ vendor/lib/libthermalioctl.so
 vendor/lib64/hw/thermal.msm8953.so
 vendor/lib64/libthermalclient.so
 
-# Thermal configs
-vendor/etc/thermal-engine.conf
-
 # Time services
 vendor/app/TimeService/TimeService.apk
 vendor/bin/time_daemon
@@ -619,12 +583,6 @@ vendor/lib64/vendor.qti.hardware.tui_comm@1.0.so
 lib/vendor.qti.hardware.fstman@1.0.so
 vendor/etc/init/vendor.qti.hardware.fstman@1.0-service.rc
 vendor/lib/libucsengine.so
-
-# Wi-Fi configs
-vendor/etc/wifi/fstman.ini
-vendor/etc/wifi/indoorchannel.info
-vendor/etc/wifi/p2p_supplicant_overlay.conf
-vendor/etc/wifi/wpa_supplicant_overlay.conf
 
 # Wi-Fi firmware
 vendor/firmware/wlan/prima/WCNSS_cfg.dat
@@ -695,8 +653,6 @@ vendor/bin/test_model.json
 vendor/bin/time_client
 vendor/bin/vendor_cmd_tool
 vendor/bin/wvkprov
-vendor/etc/data/dsi_config.xml
-vendor/etc/data/netmgr_config.xml
 vendor/etc/init/icd_over_five_vendor.rc
 vendor/etc/init/init.qti.fm.rc
 vendor/etc/init/init.vendor.rilcommon.rc
@@ -732,23 +688,9 @@ vendor/etc/Hdmi_cal.acdb
 vendor/etc/Headset_cal.acdb
 vendor/etc/SoundBoosterParam.txt
 vendor/etc/Speaker_cal.acdb
-vendor/etc/apdr.conf
-vendor/etc/audio_output_policy.conf
-vendor/etc/audio_policy.conf
 vendor/etc/cacert_location.pem
-vendor/etc/floating_feature.xml
-vendor/etc/flp.conf
-vendor/etc/gps.conf
-vendor/etc/izat.conf
-vendor/etc/lowi.conf
-vendor/etc/msm_irqbalance.conf
-vendor/etc/msm_irqbalance_little_big.conf
-vendor/etc/public.libraries.txt
-vendor/etc/public.libraries.txt.backup
-vendor/etc/sap.conf
 vendor/etc/sec_config
 vendor/etc/snap_gpu_kernel_32.bin
-vendor/etc/somxreg.conf
 vendor/etc/wlan_common_rc
 vendor/etc/wlan_vendor_rc
 vendor/etc/workspaceFile.qwsp
