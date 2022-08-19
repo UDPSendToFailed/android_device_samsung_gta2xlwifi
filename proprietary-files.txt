@@ -519,10 +519,8 @@ vendor/lib64/vendor.qti.power.pasrmanager@1.0.so
 
 # Perf
 etc/powerhint.xml
-lib/vendor.qti.hardware.perf@1.0.so
-lib/vendor.qti.hardware.perf@2.0.so
-vendor/bin/hw/vendor.qti.hardware.perf@2.0-service
-vendor/etc/init/vendor.qti.hardware.perf@2.0-service.rc
+vendor/bin/hw/vendor.qti.hardware.perf@2.2-service
+vendor/etc/init/vendor.qti.hardware.perf@2.2-service.rc
 vendor/etc/perf/commonresourceconfigs.xml
 vendor/etc/perf/perfboostsconfig.xml
 vendor/etc/perf/perfconfigstore.xml
@@ -530,12 +528,17 @@ vendor/etc/perf/targetconfig.xml
 vendor/etc/perf/targetresourceconfigs.xml
 vendor/lib/libperfconfig.so
 vendor/lib/libperfgluelayer.so
+vendor/lib/libperfioctl.so
 vendor/lib/libqti-perfd-client.so
 vendor/lib/libqti-util.so
+vendor/lib/libqti-util-vendor.so
 vendor/lib64/libperfconfig.so
 vendor/lib64/libperfgluelayer.so
+vendor/lib64/libperfioctl.so
 vendor/lib64/libqti-perfd-client.so
+vendor/lib64/libqti-perfd-client-vendor.so
 vendor/lib64/libqti-util.so
+vendor/lib64/libqti-util-vendor.so
 
 # Perf IOP
 lib/vendor.qti.hardware.iop@1.0.so
@@ -659,7 +662,6 @@ vendor/bin/diag_mdlog
 vendor/bin/diag_socket_log
 vendor/bin/diag_uart_log
 vendor/bin/e_loop
-vendor/bin/energy-awareness
 vendor/bin/fm_qsoc_patches
 vendor/bin/fmconfig
 vendor/bin/fmfactorytest
