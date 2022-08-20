@@ -24,8 +24,6 @@ vendor/lib/vendor.qti.hardware.alarm@1.0.so
 # Audio
 vendor/lib/hw/audio.primary.default.so
 vendor/lib/hw/audio.primary.msm8953.so
-vendor/lib64/hw/audio.primary.default.so
-vendor/lib64/hw/audio.primary.msm8953.so
 vendor/lib/hw/sound_trigger.primary.msm8953.so
 vendor/lib/lib_SamsungRec_06005.so
 vendor/lib/lib_SoundAlive_SRC384_ver320.so
@@ -38,6 +36,8 @@ vendor/lib/libsamsungVoipResampler.so
 vendor/lib/libsecaudioinfo.so
 vendor/lib/libsecnativefeature.so
 vendor/lib/libtinycompress_vendor.so
+vendor/lib64/hw/audio.primary.default.so
+vendor/lib64/hw/audio.primary.msm8953.so
 vendor/lib64/libaudio_log_utils.so
 vendor/lib64/libfloatingfeature.so
 vendor/lib64/libsecnativefeature.so
@@ -72,8 +72,8 @@ vendor/lib64/libsecaudiocoreutils.so
 
 # Bluetooth
 vendor/bin/hw/android.hardware.bluetooth@1.0-service-qti
-vendor/lib64/hw/android.hardware.bluetooth@1.0-impl-qti.so
 vendor/lib/hw/android.hardware.bluetooth@1.0-impl-qti.so
+vendor/lib64/hw/android.hardware.bluetooth@1.0-impl-qti.so
 
 # Bluetooth (A2DP)
 lib/com.qualcomm.qti.bluetooth_audio@1.0.so
@@ -194,10 +194,10 @@ vendor/lib64/libmmcamera_dbg.so
 vendor/lib64/vendor.qti.hardware.scve.objecttracker@1.0.so
 vendor/lib64/vendor.qti.hardware.scve.panorama@1.0.so
 
-vendor/lib/libmmcamera_ppeiscore.so
 vendor/lib/libMOTION.so
-vendor/lib/libsomp.so
+vendor/lib/libmmcamera_ppeiscore.so
 vendor/lib/libmmcamera_sw_tnr.so
+vendor/lib/libsomp.so
 vendor/lib/libtrueportrait.so
 
 vendor/lib/libgui.so
@@ -344,10 +344,13 @@ vendor/etc/init/android.hardware.drm@1.4-service.widevine.rc
 vendor/lib/mediadrm/libwvdrmengine.so
 vendor/lib/libcpion.so
 vendor/lib/libdiag.so
+vendor/lib/libdisplayconfig.qti.so
 vendor/lib/libdrmfs.so
 vendor/lib/libhdcpsrm.so
 vendor/lib/liboemcrypto.so
-vendor/lib64/libwvhidl.so
+vendor/lib/libops.so
+vendor/lib/libspl.so
+vendor/lib/vendor.display.config@2.0.so
 vendor/lib64/libcpion.so
 vendor/lib64/libdiag.so
 vendor/lib64/libdrmfs.so
@@ -355,10 +358,7 @@ vendor/lib64/libhdcpsrm.so
 vendor/lib64/liboemcrypto.so
 vendor/lib64/libops.so
 vendor/lib64/libspl.so
-vendor/lib/libops.so
-vendor/lib/libspl.so
-vendor/lib/libdisplayconfig.qti.so
-vendor/lib/vendor.display.config@2.0.so
+vendor/lib64/libwvhidl.so
 
 # DRM (Qualcomm Secure Execution Environment)
 lib/vendor.qti.hardware.qseecom@1.0.so
@@ -390,9 +390,13 @@ lib/vendor.qti.gnss@1.2.so
 lib/vendor.qti.gnss@2.0.so
 lib/vendor.qti.gnss@2.1.so
 lib/vendor.qti.gnss@3.0.so
+vendor/bin/hw/android.hardware.gnss@2.0-service-qti
 vendor/bin/loc_launcher
 vendor/bin/lowi-server
 vendor/bin/xtra-daemon
+vendor/etc/init/android.hardware.gnss@2.0-service-qti.rc
+-vendor/etc/vintf/manifest/android.hardware.gnss@2.0-service-qti.xml
+-vendor/etc/vintf/manifest/vendor.qti.gnss@3.0-service.xml
 vendor/lib/libdataitems.so
 vendor/lib/libdsutils.so
 vendor/lib/libgps.utils.so
@@ -423,6 +427,7 @@ vendor/lib/vendor.qti.gnss@2.0.so
 vendor/lib/vendor.qti.gnss@2.1.so
 vendor/lib/vendor.qti.gnss@3.0-service.so
 vendor/lib/vendor.qti.gnss@3.0.so
+vendor/lib64/hw/android.hardware.gnss@2.0-impl-qti.so
 vendor/lib64/hw/vendor.qti.gnss@3.0-impl.so
 vendor/lib64/libdataitems.so
 vendor/lib64/libdsutils.so
@@ -454,11 +459,6 @@ vendor/lib64/vendor.qti.gnss@2.0.so
 vendor/lib64/vendor.qti.gnss@2.1.so
 vendor/lib64/vendor.qti.gnss@3.0-service.so
 vendor/lib64/vendor.qti.gnss@3.0.so
--vendor/etc/vintf/manifest/android.hardware.gnss@2.0-service-qti.xml
--vendor/etc/vintf/manifest/vendor.qti.gnss@3.0-service.xml
-vendor/bin/hw/android.hardware.gnss@2.0-service-qti
-vendor/etc/init/android.hardware.gnss@2.0-service-qti.rc
-vendor/lib64/hw/android.hardware.gnss@2.0-impl-qti.so
 
 # Media (OMX)
 lib/libQSEEComAPI_system.so
@@ -496,15 +496,15 @@ vendor/lib/libperfconfig.so
 vendor/lib/libperfgluelayer.so
 vendor/lib/libperfioctl.so
 vendor/lib/libqti-perfd-client.so
-vendor/lib/libqti-util.so
 vendor/lib/libqti-util-vendor.so
+vendor/lib/libqti-util.so
 vendor/lib64/libperfconfig.so
 vendor/lib64/libperfgluelayer.so
 vendor/lib64/libperfioctl.so
-vendor/lib64/libqti-perfd-client.so
 vendor/lib64/libqti-perfd-client-vendor.so
-vendor/lib64/libqti-util.so
+vendor/lib64/libqti-perfd-client.so
 vendor/lib64/libqti-util-vendor.so
+vendor/lib64/libqti-util.so
 
 # Perf IOP
 lib/vendor.qti.hardware.iop@1.0.so
@@ -527,19 +527,19 @@ vendor/lib/vendor.qti.esepowermanager@1.0.so
 vendor/lib64/vendor.qti.esepowermanager@1.0.so
 
 # Sensors
+vendor/bin/hw/android.hardware.sensors@1.0-service
+vendor/bin/init.qcom.sensors.sh
+vendor/bin/init.qti.qseecomd.sh
+vendor/etc/init/android.hardware.sensors@1.0-service.rc
+vendor/lib/hw/android.hardware.sensors@1.0-impl.so
 vendor/lib/hw/sensors.msm8953.so
 vendor/lib/vendor.qti.hardware.sensorscalibrate@1.0.so
+vendor/lib64/hw/android.hardware.sensors@1.0-impl.so
 vendor/lib64/libsensor1.so
 vendor/lib64/libsensor_reg.so
 vendor/lib64/sensors.rp.so
 vendor/lib64/sensors.ssc.so
 vendor/lib64/vendor.qti.hardware.sensorscalibrate@1.0.so
-vendor/bin/hw/android.hardware.sensors@1.0-service
-vendor/lib/hw/android.hardware.sensors@1.0-impl.so
-vendor/lib64/hw/android.hardware.sensors@1.0-impl.so
-vendor/bin/init.qcom.sensors.sh
-vendor/bin/init.qti.qseecomd.sh
-vendor/etc/init/android.hardware.sensors@1.0-service.rc
 
 # Soter
 lib/vendor.qti.hardware.soter@1.0.so
