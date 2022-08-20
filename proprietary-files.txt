@@ -463,7 +463,6 @@ vendor/lib64/hw/android.hardware.gnss@2.0-impl-qti.so
 # Media (OMX)
 lib/libQSEEComAPI_system.so
 lib/libhdcp2.so
-lib/libsavscmn.so
 lib/libsecnativefeature.so
 lib/libsfextcp.so
 vendor/lib/libOmxAacDec.so
@@ -964,7 +963,6 @@ vendor/lib/libsnap_compute_wrapper.so
 vendor/lib/libsnap_vndk.so
 vendor/lib/libsnaplite_native.so
 vendor/lib/libsnaplite_wrapper.so
-vendor/lib/libsomxcore_vendor.so
 vendor/lib/libssc_default_listener.so
 vendor/lib/libssd.so
 vendor/lib/libstr_capture_core.so
@@ -1038,7 +1036,6 @@ vendor/lib64/libadaptlaunch.so
 vendor/lib64/libadiertac.so
 vendor/lib64/libaoa.so
 vendor/lib64/libappclassifier.so
-vendor/lib64/libarac.so
 vendor/lib64/libaudcal.so
 vendor/lib64/libaudioalsa.so
 vendor/lib64/libaudioconfigstore.so
@@ -1137,9 +1134,6 @@ vendor/lib64/librmp.so
 vendor/lib64/librpmb.so
 vendor/lib64/librs_adreno.so
 vendor/lib64/librs_adreno_sha1.so
-vendor/lib64/libsavsac.so
-vendor/lib64/libsavscmn.so
-vendor/lib64/libsavsvc.so
 vendor/lib64/libscalar.so
 vendor/lib64/libscveBlobDescriptor.so
 vendor/lib64/libscveBlobDescriptor_stub.so
@@ -1164,32 +1158,10 @@ vendor/lib64/libseemore.so
 vendor/lib64/libsemnativecarrierfeature.so
 vendor/lib64/libsi.so
 vendor/lib64/libskewknob.so
-vendor/lib64/libsnaace.so
-vendor/lib64/libsnamrnb.so
-vendor/lib64/libsnamrwb.so
-vendor/lib64/libsomx263dsw.so
-vendor/lib64/libsomx264dsw.so
-vendor/lib64/libsomxaacd.so
-vendor/lib64/libsomxadpcmd.so
-vendor/lib64/libsomxamrd.so
-vendor/lib64/libsomxcmn.so
-vendor/lib64/libsomxcore_vendor.so
-vendor/lib64/libsomxflacd.so
-vendor/lib64/libsomxhevcdsw.so
-vendor/lib64/libsomxmp3d.so
-vendor/lib64/libsomxmp43d.so
-vendor/lib64/libsomxmp4vdsw.so
-vendor/lib64/libsomxnaace.so
-vendor/lib64/libsomxvc1dsw.so
-vendor/lib64/libsomxvp8d.so
-vendor/lib64/libsomxwmad.so
-vendor/lib64/libsomxwmv7d.so
-vendor/lib64/libsomxwmv8d.so
 vendor/lib64/libssc_default_listener.so
 vendor/lib64/libssd.so
 vendor/lib64/libstreamparser.so
 vendor/lib64/libsubsystem_control.so
-vendor/lib64/libsxqk.so
 vendor/lib64/libsynergy_loc_api.so
 vendor/lib64/libsysmon_cdsp_skel.so
 vendor/lib64/libsystem_health_mon.so
