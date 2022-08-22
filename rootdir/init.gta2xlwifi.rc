@@ -212,20 +212,6 @@ on init
 # Create mb_po folder for Activation TA
     mkdir /efs/mb_po 0700 system system
 
-# Swap services
-
-service mkswap /system/bin/mkswap /dev/block/zram0
-    class core
-    user root
-    group root
-    oneshot
-
-service swapon /system/bin/swapon /dev/block/zram0
-    class core
-    user root
-    group root
-    oneshot
-
 # faced
 service faced /system/bin/faced
     class late_start
@@ -288,10 +274,7 @@ on property:sys.boot_completed=1
     setprop persist.vendor.mmi.misc_dev_path /dev/block/bootdevice/by-name/misc
 
     # ZRAM
-    write /sys/block/zram0/comp_algorithm lz4
-    write /sys/block/zram0/disksize 2048M
-    start mkswap
-    start swapon
+    swapon_all vendor/etc/fstab.qcom
 
     # KTweak
     exec /system/bin/sh /vendor/bin/ktweak.sh
