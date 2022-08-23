@@ -105,7 +105,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libhfp_32 \
     libsndmonitor_32 \
-    libspkrprot_32
+    libspkrprot_32 \
+    SamsungDAP
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
