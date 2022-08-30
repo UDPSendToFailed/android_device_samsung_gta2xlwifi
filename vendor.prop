@@ -87,9 +87,6 @@ ro.vendor.extension_library=libqti-perfd-client.so
 ro.soc.manufacturer=Qualcomm
 ro.soc.model=SDM450
 
-# Tcp
-net.tcp.2g_init_rwnd=10
-
 # Usb
 persist.vendor.usb.config.extra=none
 
