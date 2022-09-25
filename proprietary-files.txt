@@ -603,7 +603,6 @@ vendor/app/mcRegistry/07010000000000000000000000000000.tlbin
 vendor/bin/hw/capabilityconfigstoretest
 vendor/bin/hw/macloader
 vendor/bin/hw/mfgloader
-vendor/bin/hw/vendor.qti.hardware.cryptfshw@1.0-service-qti
 vendor/bin/hw/vendor.trustonic.tee@1.0-service
 vendor/bin/hw/vendor.trustonic.teeregistry@1.0-service
 vendor/bin/qmi-framework-tests/qmi_test_mt_client_init_instance
@@ -659,7 +658,6 @@ vendor/etc/init/init.qti.fm.rc
 vendor/etc/init/init.vendor.rilcommon.rc
 vendor/etc/init/pa_daemon_qsee.rc
 vendor/etc/init/snap_utility.rc
-vendor/etc/init/vendor.qti.hardware.cryptfshw@1.0-service-qti.rc
 vendor/etc/init/vendor.trustonic.tee@1.0-service.rc
 vendor/etc/init/vendor.trustonic.teeregistry@1.0-service.rc
 vendor/etc/init/wifi.rc
@@ -757,8 +755,6 @@ vendor/lib/libcapiv2svacnn.so
 vendor/lib/libcapiv2vop.so
 vendor/lib/libchromaflash.so
 vendor/lib/libcppf.so
-vendor/lib/libcryptfshwcommon.so
-vendor/lib/libcryptfshwhidl.so
 vendor/lib/libdiagjni.so
 vendor/lib/libdisp-aba.so
 vendor/lib/libdrc.so
@@ -1055,8 +1051,6 @@ vendor/lib64/libcapiv2vop.so
 vendor/lib64/libcne.so
 vendor/lib64/libcneoplookup.so
 vendor/lib64/libcneqmiutils.so
-vendor/lib64/libcryptfshwcommon.so
-vendor/lib64/libcryptfshwhidl.so
 vendor/lib64/libdiagjni.so
 vendor/lib64/libdisp-aba.so
 vendor/lib64/libdk_vnd_service_core.so

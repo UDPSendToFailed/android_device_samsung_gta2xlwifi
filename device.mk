@@ -361,7 +361,6 @@ PRODUCT_COPY_FILES += \
 
 # Misc
 PRODUCT_PACKAGES += \
-    vendor.qti.hardware.cryptfshw@1.0.vendor \
     vendor.qti.hardware.capabilityconfigstore@1.0.vendor \
     libnl.vendor \
     libdemangle.vendor
