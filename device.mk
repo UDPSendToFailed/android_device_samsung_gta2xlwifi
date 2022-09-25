@@ -147,6 +147,7 @@ PRODUCT_PACKAGES += \
     vendor.qti.hardware.camera.device@1.0.vendor \
     libshim_camera \
     libmm-qcamera \
+    libgui_shim_vendor
 
 # Display
 PRODUCT_PACKAGES += \
