@@ -229,6 +229,9 @@
         <item>1</item> <!-- COLOR_MODE_BOOSTED -->
     </integer-array>
 
+    <!-- Minimum color temperature, in Kelvin, supported by Night display. -->
+    <integer name="config_nightDisplayColorTemperatureMin">0</integer>
+
     <!-- Whether the display blanks itself when going from a doze to a non-doze state -->
     <bool name="config_displayBlanksAfterDoze">true</bool>
 
