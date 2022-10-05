@@ -101,9 +101,6 @@ PRODUCT_PACKAGES += \
 
 # Audio features
 PRODUCT_PACKAGES += \
-    libhfp_32 \
-    libsndmonitor_32 \
-    libspkrprot_32 \
     SamsungDAP
 
 # Audio configuration
@@ -128,7 +125,6 @@ PRODUCT_COPY_FILES += \
 
 # Bluetooth
 PRODUCT_PACKAGES += \
-    android.hardware.bluetooth@1.0-impl-qti \
     android.hardware.bluetooth@1.0-service \
     android.hardware.bluetooth@1.0.vendor \
     libbt-vendor
@@ -137,7 +133,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.frameworks.displayservice@1.0.vendor \
     android.frameworks.sensorservice@1.0.vendor \
-    android.frameworks.bufferhub@1.0.vendor \
     android.hardware.camera.common@1.0.vendor \
     android.hardware.camera.device@3.7.vendor \
     android.hardware.camera.provider@2.7.vendor \
@@ -145,7 +140,6 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.5-service \
     vendor.qti.hardware.camera.device@1.0.vendor \
     libshim_camera \
-    libmm-qcamera \
     libgui_shim_vendor
 
 # Display
@@ -156,7 +150,6 @@ PRODUCT_PACKAGES += \
     gralloc.msm8953
 
 PRODUCT_PACKAGES += \
-    android.hardware.graphics.composer@2.1-impl \
     android.hardware.graphics.composer@2.1-service \
     hwcomposer.msm8953
 
@@ -194,13 +187,9 @@ PRODUCT_PACKAGES += \
 
 # GPS
 PRODUCT_PACKAGES += \
-    android.hardware.gnss@2.0-impl-qti \
     android.hardware.gnss@2.0-service \
     android.hardware.gnss@2.0.vendor \
-    gps.msm8953 \
     libcurl \
-    libgnss \
-    libgnsspps
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/gps/apdr.conf:$(TARGET_COPY_OUT_VENDOR)/etc/apdr.conf \
@@ -234,7 +223,6 @@ PRODUCT_COPY_FILES += \
 
 # Keymaster
 PRODUCT_PACKAGES += \
-    android.hardware.keymaster@4.1-impl \
     android.hardware.keymaster@4.1-service
 
 # Keylayouts
@@ -283,7 +271,6 @@ PRODUCT_PACKAGES += \
     libOmxEvrcEnc \
     libOmxG711Enc \
     libOmxQcelp13Enc \
-    libOmxSwVencHevc \
     libOmxVdec \
     libOmxVenc \
     libstagefrighthw \
@@ -318,7 +305,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.thermal@1.0-impl \
     android.hardware.thermal@1.0-service \
-    thermal.msm8953
 
 # USB
 PRODUCT_PACKAGES += \
@@ -337,10 +323,7 @@ PRODUCT_PACKAGES += \
     android.hardware.wifi.offload@1.0.vendor \
     android.hardware.wifi.supplicant@1.4.vendor \
     libcld80211 \
-    libqsap_sdk \
-    libQWiFiSoftApCfg \
     libwpa_client \
-    dhcpcd.conf \
     macloader \
     hostapd \
     wificond \
