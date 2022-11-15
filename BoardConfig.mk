@@ -59,7 +59,7 @@ BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $
 
 # Kernel config
 TARGET_KERNEL_SOURCE := kernel/samsung/gta2xlwifi
-TARGET_KERNEL_CONFIG := Slayer_defconfig
+TARGET_KERNEL_CONFIG := gta2xlwifi_defconfig
 
 # Kernel Toolchain
 TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
