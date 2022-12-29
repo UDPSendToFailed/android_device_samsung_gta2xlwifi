@@ -100,8 +100,8 @@ PRODUCT_PACKAGES += \
     audioloader
 
 # Audio features
-PRODUCT_PACKAGES += \
-    SamsungDAP
+#PRODUCT_PACKAGES += \
+#    SamsungDAP
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
