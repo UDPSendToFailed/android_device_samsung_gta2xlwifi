@@ -56,6 +56,7 @@ bluetooth.profile.sap.server.enabled=true
 persist.vendor.qcom.bluetooth.enable.splita2dp=false
 persist.vendor.qcom.bluetooth.soc=pronto
 ro.vendor.bluetooth.wipower=false
+ro.vendor.bt.bdaddr_path=/mnt/vendor/efs/bluetooth/bt_addr
 
 # Camera
 debug.gralloc.gfx_ubwc_disable=1
