@@ -137,7 +137,8 @@ PRODUCT_PACKAGES += \
     libshim_camera \
     libgui_shim_vendor \
     libstdc++_vendor \
-    camera.msm8953
+    camera.msm8953 \
+    GrapheneCamera
 
 # Configstore
 PRODUCT_PACKAGES += \
