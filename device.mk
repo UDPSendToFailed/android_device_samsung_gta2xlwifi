@@ -324,7 +324,6 @@ PRODUCT_PACKAGES += \
     android.hardware.wifi.supplicant@1.4.vendor \
     libcld80211 \
     libwpa_client \
-    macloader \
     hostapd \
     wificond \
     wpa_supplicant \
