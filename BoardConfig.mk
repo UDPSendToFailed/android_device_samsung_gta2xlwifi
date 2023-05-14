@@ -152,7 +152,7 @@ QCOM_BT_USE_SMD_TTY := true
 TARGET_USES_QTI_CAMERA_DEVICE := true
 BOARD_QTI_CAMERA_32BIT_ONLY := true
 TARGET_TS_MAKEUP := true
-TARGET_LD_SHIM_LIBS += /vendor/lib/libmmcamera_ppeiscore.so|/vendor/lib/libshim_camera.so
+TARGET_LD_SHIM_LIBS += /vendor/lib/hw/camera.msm8953.so|/vendor/lib/libshim_camera.so
 
 # CNE
 BOARD_USES_QCNE := true
