@@ -54,12 +54,12 @@ PRODUCT_PACKAGES += \
     fstab.qcom \
     fstab.qcom.ramdisk \
     init.gta2xlwifi.rc \
-    init.msm.usb.configfs.rc \
-    init.qcom.rc \
     init.qcom.factory.rc \
     init.qcom.post_boot.sh \
     init.qcom.rc \
+    init.qcom.rc \
     init.qcom.usb.rc \
+    init.qcom.usb.sh \
     init.samsung.bsp.rc \
     init.samsung.rc \
     init.target.rc \
@@ -295,6 +295,9 @@ PRODUCT_PACKAGES += \
     android.hardware.thermal-service.samsung-gta2xlwifi
 
 # USB
+PRODUCT_SOONG_NAMESPACES += \
+    vendor/qcom/opensource/usb/etc
+
 PRODUCT_PACKAGES += \
     android.hardware.usb-service.qti
 

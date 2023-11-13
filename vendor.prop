@@ -112,8 +112,5 @@ ro.soc.model=SDM450
 # System
 persist.sys.binary_xml=false
 
-# Usb
-persist.vendor.usb.config.extra=none
-
 # Wifi
 wifi.interface=wlan0
