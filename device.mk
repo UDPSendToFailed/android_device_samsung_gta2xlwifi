@@ -312,7 +312,6 @@ PRODUCT_PACKAGES += \
 
 # VNDK
 PRODUCT_PACKAGES += \
-    libstdc++.vendor \
     vndservicemanager
 
 # Wifi
@@ -320,7 +319,6 @@ PRODUCT_PACKAGES += \
     android.hardware.wifi@1.0-service \
     android.hardware.wifi@1.5.vendor \
     android.hardware.wifi.hostapd@1.3.vendor \
-    android.hardware.wifi.offload@1.0.vendor \
     android.hardware.wifi.supplicant@1.4.vendor \
     libcld80211 \
     libwpa_client \
