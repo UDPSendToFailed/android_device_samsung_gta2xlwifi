@@ -716,12 +716,3 @@ vendor/lib64/vendor.qti.hardware.tui_comm@1.0.so
 # Wi-Fi
 vendor/bin/cnss-daemon
 vendor/bin/cnss_diag
-
-# Wi-Fi Display
-vendor/bin/athdiag
-vendor/bin/sigma_dut
-vendor/lib/vendor.qti.hardware.sigma_miracast@1.0-halimpl.so
-vendor/lib/vendor.qti.hardware.sigma_miracast@1.0-impl.so
-vendor/lib/vendor.qti.hardware.sigma_miracast@1.0.so
-vendor/lib64/libmiracast.so
-vendor/lib64/vendor.qti.hardware.sigma_miracast@1.0.so
