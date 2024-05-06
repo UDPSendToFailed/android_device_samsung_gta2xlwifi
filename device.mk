@@ -281,6 +281,10 @@ PRODUCT_PACKAGES += \
     android.hardware.power.stats@1.0-service.mock \
     SamsungDoze
 
+ # RemovePackages
+ PRODUCT_PACKAGES += \
+    RemovePackages
+
 # Thermal
 PRODUCT_PACKAGES += \
     android.hardware.thermal@1.0-impl \
