@@ -360,6 +360,7 @@ service vendor.per_mgr /vendor/bin/pm-service
     class core
     user system
     group system net_raw
+    disabled
 
 service vendor.per_proxy /vendor/bin/pm-proxy
     class core
