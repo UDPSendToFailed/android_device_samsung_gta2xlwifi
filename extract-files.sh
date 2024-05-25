@@ -56,6 +56,17 @@ if [ -z "$SRC" ]; then
     SRC=adb
 fi
 
+function blob_fixup() {
+    case "${1}" in
+
+        # Fix pm-service crash
+        vendor/bin/pm-service)
+        grep -q libutils-v33.so "${2}" || "${PATCHELF}" --add-needed "libutils-v33.so" "${2}"
+        ;;
+
+    esac
+}
+
 # Initialize the helper
 setup_vendor "$DEVICE" "$VENDOR" "$LINEAGE_ROOT" true "$CLEAN_VENDOR"
 
