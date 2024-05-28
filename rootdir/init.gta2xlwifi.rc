@@ -206,6 +206,9 @@ on init
 	mount none /odm/lost+found /odm/app bind
 	mount none /odm/lost+found /odm/priv-app bind
 
+# Permission for Lineage Health HAL
+    chown system system /sys/class/power_supply/battery/batt_slate_mode
+
 # setup cgroup mountpoint
     mount tmpfs cgroup /sys/fs/cgroup
 
