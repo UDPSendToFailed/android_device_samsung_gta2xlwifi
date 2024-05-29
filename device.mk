@@ -276,7 +276,8 @@ PRODUCT_PACKAGES += \
     libcodec2_soft_common.vendor \
     libcodec2_vndk.vendor \
     libsfplugin_ccodec_utils.vendor \
-    libstagefright_foundation-v33
+    libstagefright_foundation-v33 \
+    XiaomiDolby
 
 # Netutils
 PRODUCT_PACKAGES += \
