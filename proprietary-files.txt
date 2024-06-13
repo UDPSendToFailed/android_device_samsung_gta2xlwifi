@@ -554,13 +554,6 @@ lib/vendor.qti.hardware.fstman@1.0.so
 vendor/etc/init/vendor.qti.hardware.fstman@1.0-service.rc
 vendor/lib/libucsengine.so
 
-# Wi-Fi firmware
-vendor/firmware/wlan/prima/WCNSS_cfg.dat
-vendor/firmware/wlan/prima/WCNSS_qcom_cfg.ini
-vendor/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
-vendor/firmware/wlan/prima/WCNSS_wlan_dictionary.dat
-vendor/firmware/wlan/prima/grippower.info
-
 # Wi-Fi Display
 vendor/lib/vendor.qti.hardware.sigma_miracast@1.0-halimpl.so
 vendor/lib/vendor.qti.hardware.sigma_miracast@1.0-impl.so
