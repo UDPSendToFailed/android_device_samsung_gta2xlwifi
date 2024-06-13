@@ -1072,7 +1072,7 @@
     </path>
 
     <!-- TX part -->
-    <path name="main-mic">
+    <path name="handset-mic">
         <ctl name="Main Mic Switch" value="1"/>
         <ctl name="Mono DMIC L Mux" value="DMIC2 L"/>
         <ctl name="Mono DMIC R Mux" value="DMIC2 R"/>
@@ -1102,7 +1102,7 @@
        <ctl name="Headset Mic Switch" value="1" />
     </path>
 
-    <path name="main-sub-mic">
+    <path name="handset-stereo-dmic-ef">
         <ctl name="MI2S_TX Channels" value="Two" />
         <ctl name="Main Mic Switch" value="1"/>
         <ctl name="Sub Mic Switch" value="1"/>
