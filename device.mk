@@ -97,11 +97,6 @@ PRODUCT_PACKAGES += \
     libqcomvoiceprocessing \
     libqcompostprocbundle \
     tinymix \
-    audioloader
-
-# Audio features
-#PRODUCT_PACKAGES += \
-#    SamsungDAP
 
 # Audio configuration
 PRODUCT_COPY_FILES += \
