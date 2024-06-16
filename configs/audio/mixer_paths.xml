@@ -1067,11 +1067,31 @@
         <ctl name="HP Switch" value="1" />
     </path>
 
+    <path name="headphones">
+        <ctl name="MI2S_RX Channels" value="Two" />
+        <ctl name="Stereo1 DAC MIXL DAC L1 Switch" value="1"/>
+        <ctl name="Stereo1 DAC MIXR DAC R1 Switch" value="1"/>
+        <ctl name="HPO Playback Switch" value="1"/>
+        <ctl name="HP Switch" value="1" />
+    </path>
+
     <path name="spk-ear">
         <path name="ear" />
     </path>
 
     <!-- TX part -->
+    <path name="main-mic">
+        <ctl name="Main Mic Switch" value="1"/>
+        <ctl name="Mono DMIC L Mux" value="DMIC2 L"/>
+        <ctl name="Mono DMIC R Mux" value="DMIC2 R"/>
+        <ctl name="Mono ADC L2 Mux" value="DMIC"/>
+        <ctl name="Mono ADC R2 Mux" value="DMIC"/>
+        <ctl name="Mono ADC MIXL ADC2 Switch" value="1"/>
+        <ctl name="Mono ADC MIXR ADC2 Switch" value="1"/>
+        <ctl name="IF1_1 01 ADC Swap Mux" value="L/L" />
+        <ctl name="TDM1 Data Mux" value="3124"/>
+    </path>
+
     <path name="handset-mic">
         <ctl name="Main Mic Switch" value="1"/>
         <ctl name="Mono DMIC L Mux" value="DMIC2 L"/>
@@ -1100,6 +1120,20 @@
        <ctl name="RECMIX1L BST1 Switch" value="1"/>
        <ctl name="RECMIX1R BST1 Switch" value="1"/>
        <ctl name="Headset Mic Switch" value="1" />
+    </path>
+
+    <path name="main-sub-mic">
+        <ctl name="MI2S_TX Channels" value="Two" />
+        <ctl name="Main Mic Switch" value="1"/>
+        <ctl name="Sub Mic Switch" value="1"/>
+        <ctl name="Mono DMIC L Mux" value="DMIC2 L"/>
+        <ctl name="Mono DMIC R Mux" value="DMIC1 R"/>
+        <ctl name="Mono ADC L2 Mux" value="DMIC"/>
+        <ctl name="Mono ADC R2 Mux" value="DMIC"/>
+        <ctl name="Mono ADC MIXL ADC2 Switch" value="1"/>
+        <ctl name="Mono ADC MIXR ADC2 Switch" value="1"/>
+        <ctl name="IF1_1 01 ADC Swap Mux" value="L/R" />
+        <ctl name="TDM1 Data Mux" value="3124"/>
     </path>
 
     <path name="handset-stereo-dmic-ef">
