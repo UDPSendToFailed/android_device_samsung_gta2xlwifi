@@ -63,6 +63,7 @@ vendor.gralloc.enable_fb_ubwc=1
 
 # eBPF
 ro.kernel.ebpf.supported=false
+bpf.progs_loaded=1
 
 # LMKD
 ro.lmk.log_stats=true
