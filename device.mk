@@ -134,6 +134,7 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
     android.hardware.camera.provider@2.5-service \
     vendor.qti.hardware.camera.device@1.0.vendor \
+    libion.vendor \
     libshim_camera \
     libgui_shim_vendor \
     libstdc++_vendor
@@ -196,7 +197,9 @@ PRODUCT_PACKAGES += \
     libbatching \
     libgeofencing \
     libloc_core \
-    libgnss
+    libgnss \
+    libsqlite.vendor \
+    libssl.vendor
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/gps/apdr.conf:$(TARGET_COPY_OUT_VENDOR)/etc/apdr.conf \
