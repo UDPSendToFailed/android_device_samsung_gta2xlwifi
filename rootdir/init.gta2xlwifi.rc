@@ -209,6 +209,10 @@ on init
 # Permission for Lineage Health HAL
     chown system system /sys/class/power_supply/battery/batt_slate_mode
 
+# Permission for kernelspace battery saver
+    chown system system /sys/module/battery_saver/parameters/enabled
+    chmod 0664 /sys/module/battery_saver/parameters/enabled
+
 # setup cgroup mountpoint
     mount tmpfs cgroup /sys/fs/cgroup
 

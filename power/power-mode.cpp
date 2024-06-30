@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-#include <android-base/file.h>
-
 #include <aidl/android/hardware/power/BnPower.h>
+#include <android-base/file.h>
+#include "power-common.h"
 
-using ::aidl::android::hardware::power::Mode;
+#define BATTERY_SAVER_NODE "/sys/module/battery_saver/parameters/enabled"
+#define DOUBLE_TAP_TO_WAKE_NODE "/sys/class/sec/tsp/cmd"
 
 namespace aidl {
 namespace android {
@@ -26,29 +27,33 @@ namespace hardware {
 namespace power {
 namespace impl {
 
+using ::aidl::android::hardware::power::Mode;
+
 bool isDeviceSpecificModeSupported(Mode type, bool* _aidl_return) {
     switch (type) {
+        case Mode::LOW_POWER:
         case Mode::DOUBLE_TAP_TO_WAKE:
             *_aidl_return = true;
             return true;
         default:
+            *_aidl_return = false;
             return false;
     }
 }
 
 bool setDeviceSpecificMode(Mode type, bool enabled) {
     switch (type) {
+        case Mode::LOW_POWER:
+            return ::android::base::WriteStringToFile(enabled ? "Y" : "N", BATTERY_SAVER_NODE, true);
         case Mode::DOUBLE_TAP_TO_WAKE:
-            ::android::base::WriteStringToFile(enabled ? "aot_enable,1" : "aot_enable,0",
-                                               "/sys/class/sec/tsp/cmd");
-            return true;
+            return ::android::base::WriteStringToFile(enabled ? "aot_enable,1" : "aot_enable,0", DOUBLE_TAP_TO_WAKE_NODE);
         default:
             return false;
     }
 }
 
-}  // namespace impl
-}  // namespace power
-}  // namespace hardware
-}  // namespace android
-}  // namespace aidl
+} // namespace impl
+} // namespace power
+} // namespace hardware
+} // namespace android
+} // namespace aidl
