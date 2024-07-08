@@ -371,3 +371,5 @@ PRODUCT_COPY_FILES += \
 # Call the proprietary setup
 $(call inherit-product, vendor/samsung/gta2xlwifi/gta2xlwifi-vendor.mk)
 
+# Add common definitions for Qualcomm
+$(call inherit-product, hardware/qcom-caf/common/common.mk)
