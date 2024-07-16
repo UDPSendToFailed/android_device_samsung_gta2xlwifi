@@ -67,6 +67,20 @@ prebuilt_etc {
 }
 
 prebuilt_etc {
+    name: "wifi_qcom.rc",
+    src: "wifi_qcom.rc",
+    vendor: true,
+    sub_dir: "init",
+}
+
+prebuilt_etc {
+    name: "wifi_samsung.rc",
+    src: "wifi_samsung.rc",
+    vendor: true,
+    sub_dir: "init",
+}
+
+prebuilt_etc {
     name: "ueventd.qcom.rc",
     filename: "ueventd.rc",
     src: "ueventd.qcom.rc",

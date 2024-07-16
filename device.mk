@@ -65,7 +65,9 @@ PRODUCT_PACKAGES += \
     init.samsung.bsp.rc \
     init.samsung.rc \
     init.target.rc \
-    ueventd.qcom.rc
+    ueventd.qcom.rc \
+    wifi_qcom.rc \
+    wifi_samsung.rc
 
 # Permissions
 PRODUCT_COPY_FILES += \
@@ -357,7 +359,8 @@ PRODUCT_PACKAGES += \
     wpa_supplicant \
     wpa_supplicant.conf \
     libwifi-hal \
-    wcnss_service
+    wcnss_service \
+    macloader.sh
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/wifi/indoorchannel.info:$(TARGET_COPY_OUT_VENDOR)/etc/wifi/indoorchannel.info \
