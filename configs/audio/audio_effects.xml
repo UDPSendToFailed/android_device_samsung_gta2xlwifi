@@ -39,7 +39,7 @@
         <library name="offload_bundle" path="libqcompostprocbundle.so"/>
         <library name="audio_pre_processing" path="libqcomvoiceprocessing.so"/>
         <!--DOLBY DAP-->
-        <library name="dap" path="libhwdap.so"/>
+        <library name="dap" path="libswdap.so"/>
         <!--DOLBY END-->
         <!--DOLBY GAME-->
         <library name="gamedap" path="libswgamedap.so"/>
