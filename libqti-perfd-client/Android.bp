@@ -12,4 +12,8 @@ cc_library_shared {
         "liblog",
         "libutils",
     ],
+    cflags: [
+        "-Wno-unused-parameter",
+        "-Wno-unused-variable",
+    ],
 }
