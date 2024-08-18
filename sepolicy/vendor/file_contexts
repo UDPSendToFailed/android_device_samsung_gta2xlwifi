@@ -28,6 +28,8 @@
 /data/vendor/secure_storage(/.*)?    u:object_r:secure_storage_vendor_data_file:s0
 /data/vendor/qcam(/.*)?              u:object_r:vendor_camera_data_file:s0
 
+# Data files
+/data/vendor/dolby(/.*)?                        u:object_r:vendor_data_file:s0
 
 # Devices
 /dev/\.pa(/.*)?                u:object_r:pa_daemon_device:s0
@@ -122,6 +124,7 @@
 /(vendor|system/vendor)/bin/vendor\.samsung\.security\.sem@1\.0-service                            u:object_r:hal_sem_default_exec:s0
 /(vendor|system/vendor)/bin/vendor\.samsung\.security\.skpm@1\.0-service                           u:object_r:hal_skpm_default_exec:s0
 /(vendor|system/vendor)/bin/vendor\.samsung\.security\.wvkprov_server@1\.0-service                 u:object_r:hal_wvkprov_default_exec:s0
+/vendor/bin/hw/vendor\.dolby\.hardware\.dms@2\.0-service                                           u:object_r:hal_dms_default_exec:s0
 
 # Rootfs
 /persist(/.*)?    u:object_r:persist_file:s0

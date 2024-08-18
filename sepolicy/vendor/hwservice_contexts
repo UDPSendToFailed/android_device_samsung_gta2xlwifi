@@ -16,3 +16,5 @@ vendor.samsung.hardware.biometrics.fingerprint::ISehBiometricsFingerprint u:obje
 vendor.samsung.hardware.health::ISehHealth                         u:object_r:hal_health_hwservice:s0
 vendor.samsung.hardware.vibrator::ISehVibrator                     u:object_r:hal_vibrator_hwservice:s0
 
+# Dolby
+vendor.dolby.hardware.dms::IDms                              u:object_r:hal_dms_hwservice:s0
