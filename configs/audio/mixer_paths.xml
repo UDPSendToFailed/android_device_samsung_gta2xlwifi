@@ -221,7 +221,6 @@
     <ctl name="QUIN_MI2S_RX Port Mixer INTERNAL_FM_TX" value="0" />
     <ctl name="PRI_TDM_RX_0 Port Mixer INTERNAL_FM_TX" value="0" />
     <ctl name="QUIN_MI2S_RX_DL_HL Switch" value="0" />
-    <ctl name="PRI_TDM_RX_0_DL_HL Switch" value="0" />
     <ctl name="MultiMedia1 Mixer INTERNAL_FM_TX" value="0" />
     <ctl name="MultiMedia2 Mixer INTERNAL_FM_TX" value="0" />
     <ctl name="INTERNAL_FM_RX Audio Mixer MultiMedia1" value="0" />
@@ -549,10 +548,6 @@
         <ctl name="MultiMedia1 Mixer INTERNAL_FM_TX" value="1" />
     </path>
 
-    <path name="audio-record-compress">
-        <ctl name="MultiMedia8 Mixer QUIN_MI2S_TX" value="1" />
-    </path>
-
     <path name="audio-record-compress bt-sco">
         <ctl name="MultiMedia8 Mixer INTERNAL_BT_SCO_TX" value="1" />
     </path>
@@ -644,7 +639,6 @@
     <path name="play-fm speaker">
         <ctl name="Internal FM RX Volume" value="1" />
         <ctl name="PRI_TDM_RX_0 Port Mixer INTERNAL_FM_TX" value="1" />
-        <ctl name="PRI_TDM_RX_0_DL_HL Switch" value="1" />
     </path>
 
     <path name="capture-fm">
