@@ -20,6 +20,7 @@ bluetooth.profile.pbap.server.enabled=true
 bluetooth.profile.sap.server.enabled=true
 
 # Camera
+persist.camera.HAL3.enabled=1
 persist.camera.gyro.android=0
 persist.camera.gyro.disable=1
 persist.camera.iface.logs=0
