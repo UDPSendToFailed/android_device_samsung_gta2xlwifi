@@ -5728,3 +5728,7 @@ esac
 misc_link=$(ls -l /dev/block/bootdevice/by-name/misc)
 real_path=${misc_link##*>}
 setprop persist.vendor.mmi.misc_dev_path $real_path
+
+# Set parameters for GPU input boost
+echo 1000 > /sys/module/governor_msm_adreno_tz/parameters/boost_duration
+echo 600000000 > /sys/module/governor_msm_adreno_tz/parameters/boost_freq
