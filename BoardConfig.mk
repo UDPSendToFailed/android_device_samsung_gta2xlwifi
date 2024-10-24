@@ -238,9 +238,6 @@ PRODUCT_VENDOR_MOVE_ENABLED := true
 # Vendor Security patch level
 VENDOR_SECURITY_PATCH := 2021-11-01
 
-# VNDK
-BOARD_VNDK_VERSION := current
-
 # Wi-Fi
 BOARD_HOSTAPD_DRIVER := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_qcwcn
