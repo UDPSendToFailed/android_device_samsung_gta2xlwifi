@@ -85,7 +85,6 @@ vendor/lib64/libbtnv.so
 # Bluetooth (A2DP)
 lib/com.qualcomm.qti.bluetooth_audio@1.0.so
 lib/vendor.qti.hardware.bluetooth_audio@2.0.so
-lib/vendor.qti.hardware.bluetooth_sar@1.0.so
 lib/vendor.qti.hardware.btconfigstore@1.0.so
 vendor/lib/vendor.qti.hardware.bluetooth_sar@1.0.so
 vendor/lib64/btaudio_offload_if.so
@@ -98,7 +97,6 @@ vendor/lib64/vendor.qti.hardware.bluetooth_sar@1.0.so
 
 # Camera
 lib/vendor.qti.hardware.camera.device@1.0.so
-lib/vendor.qti.hardware.seccam@1.0.so
 vendor/bin/mm-qcamera-app
 vendor/bin/mm-qcamera-daemon
 vendor/bin/mm-qjpeg-dec-test
@@ -381,9 +379,6 @@ vendor/lib/hw/vendor.qti.hardware.capabilityconfigstore@1.0-impl.so
 vendor/lib64/hw/vendor.qti.hardware.capabilityconfigstore@1.0-impl.so
 
 # Display
-lib/vendor.display.color@1.0.so
-lib/vendor.display.color@1.1.so
-lib/vendor.display.color@1.2.so
 lib/vendor.display.config@1.0.so
 lib/vendor.display.config@1.1.so
 lib/vendor.display.config@1.10.so
@@ -397,9 +392,7 @@ lib/vendor.display.config@1.6.so
 lib/vendor.display.config@1.7.so
 lib/vendor.display.config@1.8.so
 lib/vendor.display.config@1.9.so
-lib/vendor.display.postproc@1.0.so
 lib/vendor.qti.hardware.display.composer@2.0.so
-lib/vendor.qti.hardware.qdutils_disp@1.0.so
 vendor/bin/hw/android.hardware.graphics.allocator@2.0-service
 vendor/bin/hw/vendor.display.color@1.0-service
 vendor/bin/hw/vendor.qti.hardware.qdutils_disp@1.0-service-qti
@@ -462,7 +455,6 @@ vendor/lib64/libhdr_tm.so
 vendor/lib64/libllvm-glnext.so
 vendor/lib64/libllvm-qcom.so
 vendor/lib64/libpvr.so
-vendor/lib64/libq3dtools_adreno.so
 vendor/lib64/libscalar.so
 vendor/lib64/libsdedrm.so
 vendor/lib64/libsdm-color.so
@@ -541,7 +533,6 @@ vendor/lib64/libtzdrmgenprov.so
 
 # DRM (Qualcomm Secure Execution Environment)
 lib/libQSEEComAPI_system.so
-lib/vendor.qti.hardware.qseecom@1.0.so
 vendor/app/mcRegistry/07010000000000000000000000000000.tlbin
 vendor/bin/hw/vendor.qti.hardware.qseecom@1.0-service
 vendor/bin/init.qti.qseecomd.sh
@@ -605,12 +596,6 @@ vendor/lib64/hw/gatekeeper.msm8953.so
 # GNSS
 -vendor/etc/vintf/manifest/android.hardware.gnss@2.0-service-qti.xml
 -vendor/etc/vintf/manifest/vendor.qti.gnss@3.0-service.xml
-lib/vendor.qti.gnss@1.0.so
-lib/vendor.qti.gnss@1.1.so
-lib/vendor.qti.gnss@1.2.so
-lib/vendor.qti.gnss@2.0.so
-lib/vendor.qti.gnss@2.1.so
-lib/vendor.qti.gnss@3.0.so
 vendor/bin/hw/android.hardware.gnss@2.0-service-qti
 vendor/bin/loc_launcher
 vendor/bin/lowi-server
@@ -713,7 +698,6 @@ vendor/lib64/libqtikeymaster4.so
 
 # Media
 lib/libhdcp2.so
-lib/libsecnativefeature.so
 lib/libsfextcp.so
 vendor/etc/seccomp_policy/mediacodec.policy
 vendor/etc/seccomp_policy/mediaextractor.policy
@@ -777,8 +761,6 @@ vendor/lib64/libqti-utils.so
 vendor/lib64/libreffeature.so
 
 # Perf IOP
-lib/vendor.qti.hardware.iop@1.0.so
-lib/vendor.qti.hardware.iop@2.0.so
 vendor/lib/hw/vendor.qti.hardware.iop@2.0-impl.so
 vendor/lib/libqti-iopd-client.so
 vendor/lib/vendor.qti.hardware.iop@1.0.so
@@ -852,7 +834,6 @@ vendor/lib64/sensors.ssc.so
 vendor/lib64/vendor.qti.hardware.sensorscalibrate@1.0.so
 
 # Soter
-lib/vendor.qti.hardware.soter@1.0.so
 vendor/bin/SoterProvisioningTool
 vendor/bin/hw/vendor.qti.hardware.soter@1.0-service
 vendor/bin/vendor.qti.hardware.soter@1.0-provision
@@ -863,7 +844,6 @@ vendor/lib64/hw/vendor.qti.hardware.soter@1.0-impl.so
 vendor/lib64/vendor.qti.hardware.soter@1.0.so
 
 # Soundtrigger
-lib/vendor.qti.voiceprint@1.0.so
 vendor/lib/hw/sound_trigger.primary.msm8953.so
 vendor/lib/libcapiv2svacnn.so
 vendor/lib/libcapiv2vop.so
@@ -897,7 +877,6 @@ vendor/lib/libtime_genoff.so
 vendor/lib64/libtime_genoff.so
 
 # Trusted UI
-lib/vendor.qti.hardware.tui_comm@1.0.so
 vendor/bin/hw/vendor.qti.hardware.tui_comm@1.0-service-qti
 vendor/etc/init/vendor.qti.hardware.tui_comm@1.0-service-qti.rc
 vendor/lib/vendor.qti.hardware.tui_comm@1.0.so
