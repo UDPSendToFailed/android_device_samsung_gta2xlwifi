@@ -909,7 +909,6 @@ vendor/bin/cnss-daemon
 vendor/bin/cnss_diag
 vendor/bin/hw/macloader
 vendor/bin/hw/mfgloader
-vendor/bin/hw/wpa_supplicant
 vendor/etc/init/vendor.qti.hardware.fstman@1.0-service.rc
 vendor/etc/init/wifi.rc
 vendor/etc/init/wifi_qcom.rc
