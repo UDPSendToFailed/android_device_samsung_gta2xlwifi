@@ -83,10 +83,9 @@ vendor/lib64/libbthost_if.so
 vendor/lib64/libbtnv.so
 
 # Bluetooth (A2DP)
-lib/com.qualcomm.qti.bluetooth_audio@1.0.so
-lib/vendor.qti.hardware.bluetooth_audio@2.0.so
-lib/vendor.qti.hardware.btconfigstore@1.0.so
+vendor/lib/vendor.qti.hardware.bluetooth_audio@2.0.so
 vendor/lib/vendor.qti.hardware.bluetooth_sar@1.0.so
+vendor/lib/vendor.qti.hardware.btconfigstore@1.0.so
 vendor/lib64/btaudio_offload_if.so
 vendor/lib64/hw/audio.bluetooth_qti.default.so
 vendor/lib64/hw/vendor.qti.hardware.bluetooth_audio@2.0-impl.so
@@ -96,7 +95,6 @@ vendor/lib64/libbluetooth_audio_session_qti.so
 vendor/lib64/vendor.qti.hardware.bluetooth_sar@1.0.so
 
 # Camera
-lib/vendor.qti.hardware.camera.device@1.0.so
 vendor/bin/mm-qcamera-app
 vendor/bin/mm-qcamera-daemon
 vendor/bin/mm-qjpeg-dec-test
@@ -337,11 +335,11 @@ vendor/lib/libchromatix_s5k5e3yx_f2_2_zsl_preview_3a.so
 vendor/lib/libchromatix_s5k5e3yx_f2_2_zsl_video_3a.so
 
 # Camera configs
-etc/camera/s5k4h5yc_dw9807_chromatix_gta2s.xml
 vendor/etc/camera/N05QL_s5k5e3yx_module_info.xml
 vendor/etc/camera/P08QL_s5k4h5yc_module_info.xml
 vendor/etc/camera/Q08QL_s5k4h5yc_module_info.xml
 vendor/etc/camera/s5k4h5yc_chromatix.xml
+vendor/etc/camera/s5k4h5yc_dw9807_chromatix_gta2s.xml
 vendor/etc/camera/s5k5e3yx_f2_2_chromatix.xml
 vendor/etc/camera/sdm450_camera_gta2xllte.xml
 
@@ -373,27 +371,12 @@ vendor/lib64/libfastcvopt.so
 vendor/bin/hvdcp_opti
 
 # Configstore
-lib/vendor.qti.hardware.capabilityconfigstore@1.0.so
 vendor/bin/hw/vendor.qti.hardware.capabilityconfigstore@1.0-service
 vendor/etc/init/vendor.qti.hardware.capabilityconfigstore@1.0-service.rc
 vendor/lib/hw/vendor.qti.hardware.capabilityconfigstore@1.0-impl.so
 vendor/lib64/hw/vendor.qti.hardware.capabilityconfigstore@1.0-impl.so
 
 # Display
-lib/vendor.display.config@1.0.so
-lib/vendor.display.config@1.1.so
-lib/vendor.display.config@1.10.so
-lib/vendor.display.config@1.11.so
-lib/vendor.display.config@1.12.so
-lib/vendor.display.config@1.2.so
-lib/vendor.display.config@1.3.so
-lib/vendor.display.config@1.4.so
-lib/vendor.display.config@1.5.so
-lib/vendor.display.config@1.6.so
-lib/vendor.display.config@1.7.so
-lib/vendor.display.config@1.8.so
-lib/vendor.display.config@1.9.so
-lib/vendor.qti.hardware.display.composer@2.0.so
 vendor/bin/hw/android.hardware.graphics.allocator@2.0-service
 vendor/bin/hw/vendor.display.color@1.0-service
 vendor/etc/init/vendor.display.color@1.0-service.rc
@@ -486,16 +469,12 @@ vendor/firmware/a630_sqe.fw
 vendor/firmware/leia_pfp_470.fw
 vendor/firmware/leia_pm4_470.fw
 
-# Dolby
-lib/libdeccfg.so
-lib/libprofileparamstorage.so
-
 # DPM
 vendor/lib/com.qualcomm.qti.dpm.api@1.0.so
 vendor/lib64/com.qualcomm.qti.dpm.api@1.0.so
 
 # DRM
--vendor/etc/vintf/manifest/android.hardware.drm-service.widevine.xml
+vendor/etc/vintf/manifest/android.hardware.drm-service.widevine.xml
 vendor/bin/hw/android.hardware.drm-service.widevine
 vendor/bin/wvkprov
 vendor/etc/init/android.hardware.drm-service.widevine.rc
@@ -526,7 +505,6 @@ vendor/lib64/libspl.so
 vendor/lib64/libtzdrmgenprov.so
 
 # DRM (Qualcomm Secure Execution Environment)
-lib/libQSEEComAPI_system.so
 vendor/app/mcRegistry/07010000000000000000000000000000.tlbin
 vendor/bin/hw/vendor.qti.hardware.qseecom@1.0-service
 vendor/bin/init.qti.qseecomd.sh
@@ -588,8 +566,8 @@ vendor/lib/hw/gatekeeper.msm8953.so
 vendor/lib64/hw/gatekeeper.msm8953.so
 
 # GNSS
--vendor/etc/vintf/manifest/android.hardware.gnss@2.0-service-qti.xml
--vendor/etc/vintf/manifest/vendor.qti.gnss@3.0-service.xml
+vendor/etc/vintf/manifest/android.hardware.gnss@2.0-service-qti.xml
+vendor/etc/vintf/manifest/vendor.qti.gnss@3.0-service.xml
 vendor/bin/hw/android.hardware.gnss@2.0-service-qti
 vendor/bin/loc_launcher
 vendor/bin/lowi-server
@@ -688,8 +666,6 @@ vendor/lib64/libkeymasterutils.so
 vendor/lib64/libqtikeymaster4.so
 
 # Media
-lib/libhdcp2.so
-lib/libsfextcp.so
 vendor/etc/seccomp_policy/mediacodec.policy
 vendor/etc/seccomp_policy/mediaextractor.policy
 vendor/lib/libI420colorconvert.so
@@ -728,7 +704,7 @@ vendor/lib/libdapparamstorage.so
 vendor/lib/libdeccfg.so
 vendor/lib/libstagefright_soft_ac4dec.so
 vendor/lib/libstagefright_soft_ddpdec.so
-vendor/lib/soundfx/libswdap.so|810d0e266e4a77f06cba72fe8bdde2e1ede4f9f9
+vendor/lib/soundfx/libswdap.so
 vendor/lib/soundfx/libswgamedap.so
 vendor/lib/soundfx/libswvqe.so
 vendor/lib/vendor.dolby.hardware.dms@2.0.so
@@ -859,7 +835,6 @@ vendor/lib/vendor.qti.hardware.tui_comm@1.0.so
 vendor/lib64/vendor.qti.hardware.tui_comm@1.0.so
 
 # Wi-Fi
-lib/vendor.qti.hardware.fstman@1.0.so
 vendor/bin/cnss-daemon
 vendor/bin/cnss_diag
 vendor/bin/hw/macloader
