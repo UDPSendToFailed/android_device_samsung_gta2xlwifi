@@ -67,6 +67,7 @@ typedef struct {
     bool use_sysfs_torch;
     bool use_manual_exposure;
     bool use_preview_window_stub;
+    bool use_hwcomposer;
 } adapter_config_t;
 
 struct CameraMemory {
@@ -90,6 +91,7 @@ adapter_config_t properties = {
     .use_sysfs_torch = false,
     .use_manual_exposure = false,
     .use_preview_window_stub = false,
+    .use_hwcomposer = false,
 };
 
 // Put your sysfs path here or use HAL1 torch mode
@@ -397,7 +399,11 @@ static int camera3_configure_streams(const struct camera3_device *dev, camera3_s
                 if (stream->usage == 0x00010000)
                     stream->format = 0x102;
 
-                stream->usage = GRALLOC_USAGE_HW_COMPOSER;
+                if (properties.use_hwcomposer)
+                    stream->usage = GRALLOC_USAGE_HW_COMPOSER;
+                else
+                    stream->usage = GRALLOC_USAGE_SW_WRITE_OFTEN;
+
                 break;
             }
         }
@@ -1175,8 +1181,9 @@ static int camera3_process_capture_request(const camera3_device_t* device, camer
         uint8_t *buf = NULL;
         int usage = GRALLOC_USAGE_SW_WRITE_OFTEN;
 
-        if (output_buffer.stream->format == HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED ||
-            output_buffer.stream->format == HAL_PIXEL_FORMAT_YCrCb_420_SP)
+        if ((output_buffer.stream->format == HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED ||
+            output_buffer.stream->format == HAL_PIXEL_FORMAT_YCrCb_420_SP) &&
+            properties.use_hwcomposer)
             usage = GRALLOC_USAGE_HW_COMPOSER;
 
         GraphicBufferMapper::get().lock(*output_buffer.buffer, usage, rect, (void **)&buf);
@@ -2300,6 +2307,12 @@ static int init()
     if (atoi(value) == 1) {
         ALOGI("HAL3on1: using preview window stub");
         properties.use_preview_window_stub = true;
+    }
+
+    property_get("persist.camera.hal3on1.use_hwcomposer", value, "0");
+    if (atoi(value) == 1) {
+        ALOGI("HAL3on1: using hwcomposer for preview buffers");
+        properties.use_hwcomposer = true;
     }
 
     return NO_ERROR;
