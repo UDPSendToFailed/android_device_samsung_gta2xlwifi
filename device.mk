@@ -136,7 +136,8 @@ PRODUCT_PACKAGES += \
     libion.vendor \
     libshim_camera \
     libgui_shim_vendor \
-    libstdc++_vendor
+    libstdc++_vendor \
+    camera.msm8953
 
 # Configstore
 PRODUCT_PACKAGES += \

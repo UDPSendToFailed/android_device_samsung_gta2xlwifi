@@ -103,6 +103,7 @@ vendor/bin/mm-qjpeg-dec-test
 vendor/bin/mm-qjpeg-enc-test
 vendor/bin/mm-qomx-idec-test
 vendor/bin/mm-qomx-ienc-test
+vendor/lib/hw/camera.legacy.msm8953.so
 vendor/lib/libMOTION.so
 vendor/lib/libactuator_dw9807.so
 vendor/lib/libbase64.so
@@ -407,7 +408,6 @@ vendor/lib/egl/libQTapGLES.so
 vendor/lib/egl/libq3dtools_adreno.so
 vendor/lib/egl/libq3dtools_esx.so
 vendor/lib/hw/android.hardware.graphics.allocator@2.0-impl.so
-vendor/lib/hw/camera.msm8953.so
 vendor/lib/hw/gralloc.default.so
 vendor/lib/hw/gralloc.msm8953.so
 vendor/lib/hw/vulkan.adreno.so
