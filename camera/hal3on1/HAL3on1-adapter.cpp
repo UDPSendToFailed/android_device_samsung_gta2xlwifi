@@ -397,7 +397,7 @@ static int camera3_configure_streams(const struct camera3_device *dev, camera3_s
                 if (stream->usage == 0x00010000)
                     stream->format = 0x102;
 
-                stream->usage = GRALLOC_USAGE_SW_WRITE_OFTEN;
+                stream->usage = GRALLOC_USAGE_HW_COMPOSER;
                 break;
             }
         }
@@ -1177,7 +1177,7 @@ static int camera3_process_capture_request(const camera3_device_t* device, camer
 
         if (output_buffer.stream->format == HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED ||
             output_buffer.stream->format == HAL_PIXEL_FORMAT_YCrCb_420_SP)
-            usage = GRALLOC_USAGE_SW_WRITE_OFTEN;
+            usage = GRALLOC_USAGE_HW_COMPOSER;
 
         GraphicBufferMapper::get().lock(*output_buffer.buffer, usage, rect, (void **)&buf);
 
@@ -2174,8 +2174,6 @@ static int get_camera_info(int camera_id, struct camera_info *info)
 static int set_callbacks(const camera_module_callbacks_t *callbacks)
 {
     adapter_callbacks.hal3_callbacks = callbacks;
-    if (hal1_module->set_callbacks)
-        hal1_module->set_callbacks(callbacks);
 
     return NO_ERROR;
 }
