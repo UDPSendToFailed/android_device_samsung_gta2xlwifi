@@ -2209,7 +2209,7 @@ static int sysfs_torch_mode(const char* camera_id, bool enabled)
     }
 
     if (enabled) {
-        int bytes = snprintf(buffer, sizeof(buffer), "1");
+        int bytes = snprintf(buffer, sizeof(buffer), "1010");
         ret = write(fd_brightness, buffer, (size_t)bytes);
         if (ret <= 0) {
             ALOGE("%s: failed to write to '%s'\n", __FUNCTION__, SYSFS_FLASH_PATH_BRIGHTNESS);
