@@ -138,7 +138,8 @@ PRODUCT_PACKAGES += \
     libgui_shim_vendor \
     libstdc++_vendor \
     camera.msm8953 \
-    GrapheneCamera
+    GrapheneCamera \
+    FlashControl
 
 # Configstore
 PRODUCT_PACKAGES += \
