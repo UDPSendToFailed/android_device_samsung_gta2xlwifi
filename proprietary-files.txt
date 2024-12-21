@@ -421,7 +421,6 @@ vendor/lib/libgpustats.so
 vendor/lib/libgsl.so
 vendor/lib/libhdr_tm.so
 vendor/lib/libllvm-glnext.so
-vendor/lib/libllvm-qcom.so
 vendor/lib/libpvr.so
 vendor/lib/libscalar.so
 vendor/lib/libsdedrm.so
@@ -453,7 +452,6 @@ vendor/lib64/libgpustats.so
 vendor/lib64/libgsl.so
 vendor/lib64/libhdr_tm.so
 vendor/lib64/libllvm-glnext.so
-vendor/lib64/libllvm-qcom.so
 vendor/lib64/libpvr.so
 vendor/lib64/libscalar.so
 vendor/lib64/libsdedrm.so
