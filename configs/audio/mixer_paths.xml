@@ -105,7 +105,7 @@
     <ctl name="Stereo1 ADC MIXL ADC2 Switch" value="0" />
     <ctl name="Stereo1 ADC MIXR ADC2 Switch" value="0" />
     <ctl name="IF1_1 01 ADC Swap Mux" value="L/L" />
-    <ctl name="Headphone Playback Volume" value="0 0"/>
+    <ctl name="Headphone Playback Volume" value="0"/>
     <ctl name="STO1 ADC Left Capture Volume" value="47"/>
     <ctl name="STO1 ADC Right Capture Volume" value="47"/>
     <ctl name="Mono ADC Left Capture Volume" value="47"/>
