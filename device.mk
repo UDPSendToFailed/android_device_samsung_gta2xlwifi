@@ -52,6 +52,7 @@ PRODUCT_PACKAGES += \
 # Ramdisk
 PRODUCT_PACKAGES += \
     fstab.qcom \
+    fstab.qcom.ramdisk \
     init.gta2xlwifi.rc \
     init.msm.usb.configfs.rc \
     init.qcom.rc \

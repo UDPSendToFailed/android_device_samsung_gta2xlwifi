@@ -206,7 +206,7 @@ BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QC_TIME_SERVICES := true
 
 # Recovery
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/fstab.recovery.qcom
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/init/fstab.recovery.qcom
 
 # SELinux
 include device/qcom/sepolicy-legacy-um/SEPolicy.mk
