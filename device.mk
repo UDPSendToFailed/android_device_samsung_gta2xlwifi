@@ -294,6 +294,12 @@ PRODUCT_PACKAGES += \
     libvorbisidec.vendor \
     libvpx.vendor
 
+# Partitions
+PRODUCT_PACKAGES += \
+    vendor_dsp_mountpoint \
+    vendor_firmware_mnt_mountpoint \
+    vendor_firmware-modem_mountpoint
+
 # Perf
 PRODUCT_PACKAGES += \
     libqti-perfd-client
