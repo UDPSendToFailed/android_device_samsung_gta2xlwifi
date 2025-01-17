@@ -18,6 +18,13 @@ LOCAL_PATH := device/samsung/gta2xlwifi
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += $(LOCAL_PATH)
 
+# Add common definitions for Qualcomm
+$(call soong_config_set,rfs,mpss_firmware_symlink_target,firmware_modem)
+$(call inherit-product, hardware/qcom-caf/common/common.mk)
+
+# Call the proprietary setup
+$(call inherit-product, vendor/samsung/gta2xlwifi/gta2xlwifi-vendor.mk)
+
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
     $(LOCAL_PATH)/overlay-lineage
@@ -368,9 +375,3 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/dsi_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/data/dsi_config.xml \
     $(LOCAL_PATH)/configs/netmgr_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/data/netmgr_config.xml
-
-# Call the proprietary setup
-$(call inherit-product, vendor/samsung/gta2xlwifi/gta2xlwifi-vendor.mk)
-
-# Add common definitions for Qualcomm
-$(call inherit-product, hardware/qcom-caf/common/common.mk)
