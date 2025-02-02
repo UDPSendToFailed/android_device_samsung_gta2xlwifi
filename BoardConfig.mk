@@ -182,9 +182,6 @@ TARGET_HEALTH_CHARGING_CONTROL_SUPPORTS_DEADLINE := false
 # Media
 TARGET_USES_MEDIA_EXTENSIONS := true
 
-# Peripheral manager
-TARGET_PER_MGR_ENABLED := true
-
 # Product
 TARGET_COPY_OUT_PRODUCT := system/product
 
