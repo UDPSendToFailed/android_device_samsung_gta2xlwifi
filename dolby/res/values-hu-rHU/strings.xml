@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">Sikeresen visszaállította %1$s profil beállításait</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">Dinamikus</string>
-  <string name="dolby_profile_video">Film/Videó</string>
+  <string name="dolby_profile_movie">Film/Videó</string>
   <string name="dolby_profile_music">Zene</string>
   <string name="dolby_profile_voice">Hang</string>
   <!-- Dolby equalizer presets -->

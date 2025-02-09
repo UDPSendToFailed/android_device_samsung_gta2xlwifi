@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">Успешный сброс настроек для профиля %1$s.</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">Динамический</string>
-  <string name="dolby_profile_video">Фильм/Видео</string>
+  <string name="dolby_profile_movie">Фильм/Видео</string>
   <string name="dolby_profile_music">Музыка</string>
   <string name="dolby_profile_voice">Голос</string>
   <!-- Dolby equalizer presets -->

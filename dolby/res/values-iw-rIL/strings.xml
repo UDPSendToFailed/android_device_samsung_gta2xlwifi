@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">אפס בהצלחה את ההגדרות עבור פרופיל %1$s</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">דִינָמִי</string>
-  <string name="dolby_profile_video">סרט/וידאו</string>
+  <string name="dolby_profile_movie">סרט/וידאו</string>
   <string name="dolby_profile_music">מוּסִיקָה</string>
   <string name="dolby_profile_voice">קוֹל</string>
   <!-- Dolby equalizer presets -->

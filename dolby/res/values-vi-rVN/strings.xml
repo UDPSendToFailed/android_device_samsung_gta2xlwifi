@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">Đặt lại thành công cài đặt cho hồ sơ %1$s</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">Năng động</string>
-  <string name="dolby_profile_video">Phim/Video</string>
+  <string name="dolby_profile_movie">Phim/Video</string>
   <string name="dolby_profile_music">Âm nhạc</string>
   <string name="dolby_profile_voice">Tiếng nói</string>
   <!-- Dolby equalizer presets -->

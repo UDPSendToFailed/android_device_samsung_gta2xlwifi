@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">تنظیمات نمایه %1$s با موفقیت بازنشانی شد</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">پویا</string>
-  <string name="dolby_profile_video">فیلم/فیلم</string>
+  <string name="dolby_profile_movie">فیلم/فیلم</string>
   <string name="dolby_profile_music">موسیقی</string>
   <string name="dolby_profile_voice">صدا</string>
   <!-- Dolby equalizer presets -->

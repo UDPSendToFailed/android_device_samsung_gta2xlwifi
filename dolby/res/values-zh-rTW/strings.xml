@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">成功重置 %1$s 設定檔的設置</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">動態的</string>
-  <string name="dolby_profile_video">電影/影片</string>
+  <string name="dolby_profile_movie">電影/影片</string>
   <string name="dolby_profile_music">音樂</string>
   <string name="dolby_profile_voice">嗓音</string>
   <!-- Dolby equalizer presets -->

@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">%1$s சுயவிவரத்திற்கான அமைப்புகளை மீட்டமைக்க முடிந்தது</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">டைனமிக்</string>
-  <string name="dolby_profile_video">திரைப்படம்/வீடியோ</string>
+  <string name="dolby_profile_movie">திரைப்படம்/வீடியோ</string>
   <string name="dolby_profile_music">இசை</string>
   <string name="dolby_profile_voice">குரல்</string>
   <!-- Dolby equalizer presets -->

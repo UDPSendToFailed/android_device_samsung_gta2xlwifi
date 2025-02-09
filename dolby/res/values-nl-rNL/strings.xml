@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">Instellingen voor %1$s profiel opnieuw ingesteld</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">Dynamisch</string>
-  <string name="dolby_profile_video">Film/Video</string>
+  <string name="dolby_profile_movie">Film/Video</string>
   <string name="dolby_profile_music">Muziek</string>
   <string name="dolby_profile_voice">Stem</string>
   <!-- Dolby equalizer presets -->

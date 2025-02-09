@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">Паспяхова скінуты налады для профілю %1$s</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">Дынамічны</string>
-  <string name="dolby_profile_video">Фільм/Відэа</string>
+  <string name="dolby_profile_movie">Фільм/Відэа</string>
   <string name="dolby_profile_music">Музыка</string>
   <string name="dolby_profile_voice">Голас</string>
   <!-- Dolby equalizer presets -->

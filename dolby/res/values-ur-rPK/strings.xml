@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">%1$s پروفائل کے لیے سیٹنگز کو کامیابی سے ری سیٹ کر دیا گیا۔</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">متحرک</string>
-  <string name="dolby_profile_video">فلم/ویڈیو</string>
+  <string name="dolby_profile_movie">فلم/ویڈیو</string>
   <string name="dolby_profile_music">موسیقی</string>
   <string name="dolby_profile_voice">آواز</string>
   <!-- Dolby equalizer presets -->

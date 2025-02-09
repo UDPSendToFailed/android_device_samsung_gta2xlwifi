@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">Uspešno ponastavljene nastavitve za profil %1$s</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">Dinamično</string>
-  <string name="dolby_profile_video">Film/video</string>
+  <string name="dolby_profile_movie">Film/video</string>
   <string name="dolby_profile_music">Glasba</string>
   <string name="dolby_profile_voice">Glas</string>
   <!-- Dolby equalizer presets -->

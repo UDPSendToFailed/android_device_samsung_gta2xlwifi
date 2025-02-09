@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">Profiili %1$s seadete lähtestamine õnnestus</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">Dünaamiline</string>
-  <string name="dolby_profile_video">Film/video</string>
+  <string name="dolby_profile_movie">Film/video</string>
   <string name="dolby_profile_music">Muusika</string>
   <string name="dolby_profile_voice">Hääl</string>
   <!-- Dolby equalizer presets -->

@@ -29,7 +29,7 @@
   <string name="dolby_reset_profile_toast">Återställ inställningarna för %1$s profil</string>
   <!-- Dolby profiles -->
   <string name="dolby_profile_dynamic">Dynamisk</string>
-  <string name="dolby_profile_video">Film/video</string>
+  <string name="dolby_profile_movie">Film/video</string>
   <string name="dolby_profile_music">Musik</string>
   <string name="dolby_profile_voice">Röst</string>
   <!-- Dolby equalizer presets -->
