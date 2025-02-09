@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">Dynamický</string>
   <string name="dolby_profile_movie">Film/Video</string>
   <string name="dolby_profile_music">Hudba</string>
-  <string name="dolby_profile_voice">Hlas</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">Výchozí</string>
   <string name="dolby_preset_rock">Rock</string>

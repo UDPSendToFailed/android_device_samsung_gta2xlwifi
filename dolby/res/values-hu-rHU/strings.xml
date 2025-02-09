@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">Dinamikus</string>
   <string name="dolby_profile_movie">Film/Videó</string>
   <string name="dolby_profile_music">Zene</string>
-  <string name="dolby_profile_voice">Hang</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">Alapértelmezett</string>
   <string name="dolby_preset_rock">Rock</string>

@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">Динамический</string>
   <string name="dolby_profile_movie">Фильм/Видео</string>
   <string name="dolby_profile_music">Музыка</string>
-  <string name="dolby_profile_voice">Голос</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">По умолчанию</string>
   <string name="dolby_preset_rock">Рок</string>

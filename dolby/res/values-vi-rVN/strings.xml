@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">Năng động</string>
   <string name="dolby_profile_movie">Phim/Video</string>
   <string name="dolby_profile_music">Âm nhạc</string>
-  <string name="dolby_profile_voice">Tiếng nói</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">Mặc định</string>
   <string name="dolby_preset_rock">Rock</string>

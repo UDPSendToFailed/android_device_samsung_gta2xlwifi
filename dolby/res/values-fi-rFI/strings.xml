@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">Dynaaminen</string>
   <string name="dolby_profile_movie">Elokuva/video</string>
   <string name="dolby_profile_music">Musiikki</string>
-  <string name="dolby_profile_voice">Ääni</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">Oletus</string>
   <string name="dolby_preset_rock">Rock</string>

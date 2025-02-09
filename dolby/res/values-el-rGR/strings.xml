@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">Δυναμικός</string>
   <string name="dolby_profile_movie">Ταινία/Βίντεο</string>
   <string name="dolby_profile_music">Μουσική</string>
-  <string name="dolby_profile_voice">Φωνή</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">Προεπιλογή</string>
   <string name="dolby_preset_rock">Ροκ</string>

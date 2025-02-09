@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">Dynamisch</string>
   <string name="dolby_profile_movie">Film/Video</string>
   <string name="dolby_profile_music">Musik</string>
-  <string name="dolby_profile_voice">Stimme</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">Standard</string>
   <string name="dolby_preset_rock">Rock</string>

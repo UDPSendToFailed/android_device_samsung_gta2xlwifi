@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">டைனமிக்</string>
   <string name="dolby_profile_movie">திரைப்படம்/வீடியோ</string>
   <string name="dolby_profile_music">இசை</string>
-  <string name="dolby_profile_voice">குரல்</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">இயல்புநிலை</string>
   <string name="dolby_preset_rock">ராக்</string>

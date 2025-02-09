@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">متحرك</string>
   <string name="dolby_profile_movie">فيلم/فيديو</string>
   <string name="dolby_profile_music">موسيقى</string>
-  <string name="dolby_profile_voice">صوت</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">الافتراضي</string>
   <string name="dolby_preset_rock">روك</string>

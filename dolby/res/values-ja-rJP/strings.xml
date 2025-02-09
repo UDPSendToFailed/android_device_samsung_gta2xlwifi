@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">動的</string>
   <string name="dolby_profile_movie">映画/ビデオ</string>
   <string name="dolby_profile_music">音楽</string>
-  <string name="dolby_profile_voice">声</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">デフォルト</string>
   <string name="dolby_preset_rock">ロック</string>

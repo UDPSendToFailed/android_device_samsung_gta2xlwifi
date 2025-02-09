@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">דִינָמִי</string>
   <string name="dolby_profile_movie">סרט/וידאו</string>
   <string name="dolby_profile_music">מוּסִיקָה</string>
-  <string name="dolby_profile_voice">קוֹל</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">ברירת מחדל</string>
   <string name="dolby_preset_rock">רוק</string>

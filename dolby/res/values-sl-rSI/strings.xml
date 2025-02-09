@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">Dinamično</string>
   <string name="dolby_profile_movie">Film/video</string>
   <string name="dolby_profile_music">Glasba</string>
-  <string name="dolby_profile_voice">Glas</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">Privzeto</string>
   <string name="dolby_preset_rock">Rock</string>

@@ -31,7 +31,7 @@
   <string name="dolby_profile_dynamic">动态的</string>
   <string name="dolby_profile_movie">电影/视频</string>
   <string name="dolby_profile_music">音乐</string>
-  <string name="dolby_profile_voice">嗓音</string>
+
   <!-- Dolby equalizer presets -->
   <string name="dolby_preset_default">无</string>
   <string name="dolby_preset_rock">摇滚</string>
