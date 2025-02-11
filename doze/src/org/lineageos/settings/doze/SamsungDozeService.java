@@ -168,6 +168,9 @@ public class SamsungDozeService extends Service {
             }
         }
 
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
         /**
          * Determines if the pickup gesture is detected based on sensor data.
          */
