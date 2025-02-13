@@ -1,0 +1,18 @@
+android_app_import {
+    name: "GrapheneCamera",
+
+    apk: "GrapheneCamera.apk",
+    certificate: "platform",
+
+    overrides: [
+        "Snap",
+        "Camera2",
+        "Aperture",
+        "ApertureDev",
+    ],
+    dex_preopt: {
+        enabled: true,
+    },
+    product_specific: true,
+    optional_uses_libs: ["androidx.camera.extensions.impl"],
+}
