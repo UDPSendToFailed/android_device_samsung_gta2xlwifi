@@ -68,6 +68,7 @@ typedef struct {
     bool use_sysfs_torch;
     bool use_preview_window_stub;
     bool use_hwcomposer;
+    bool use_sysfs_focus;
 } adapter_config_t;
 
 struct CameraMemory {
@@ -95,6 +96,10 @@ adapter_config_t properties = {
 
 // Put your sysfs path here or use HAL1 torch mode
 #define SYSFS_FLASH_PATH_BRIGHTNESS "/sys/class/camera/flash/rear_flash"
+
+// Change those to your device's camera actuator path
+#define SYSFS_FOCUS_CONTROL_PATH "/sys/devices/soc/1b0c000.qcom,cci/1b0c000.qcom,cci:qcom,actuator@18/focus_control"
+#define SYSFS_MANUAL_FOCUS_PATH  "/sys/devices/soc/1b0c000.qcom,cci/1b0c000.qcom,cci:qcom,actuator@18/manual_focus"
 
 static CameraMetadata static_metadata[2];
 static CameraParameters default_parameters[2];
@@ -671,6 +676,128 @@ int hal3_to_hal1_zoom(int crop_left, int crop_top, int crop_right, int crop_bott
     return zoom_value;
 }
 
+static float buffered_focus_distance_request = -1.0f;
+static bool previous_manual_focus_state = false;
+static float previous_focus_distance_set = -1.0f;
+
+static nsecs_t last_focus_update_time_ns = 0;
+static const long focus_update_interval_us = 30000;
+
+static void set_manual_focus_enabled(bool enabled) {
+    int fd_manual_focus_enable(-1);
+    char buffer_manual_focus[2];
+    const char *manual_focus_value = enabled ? "1" : "0";
+
+    fd_manual_focus_enable = open(SYSFS_MANUAL_FOCUS_PATH, O_RDWR);
+    if (fd_manual_focus_enable < 0) {
+        ALOGE("HAL3on1: failed to open '%s': %s", SYSFS_MANUAL_FOCUS_PATH, strerror(errno));
+        return;
+    }
+
+    int bytes_manual_focus = snprintf(buffer_manual_focus, sizeof(buffer_manual_focus), "%s", manual_focus_value);
+    if (bytes_manual_focus < 0 || bytes_manual_focus >= sizeof(buffer_manual_focus)) {
+        ALOGE("HAL3on1: snprintf failed or buffer too small for manual_focus value");
+        close(fd_manual_focus_enable);
+        return;
+    }
+
+    int ret_manual_focus = write(fd_manual_focus_enable, buffer_manual_focus, (size_t)bytes_manual_focus);
+    if (ret_manual_focus < 0) {
+        ALOGE("HAL3on1: failed to write '%s' to '%s': %s", manual_focus_value, SYSFS_MANUAL_FOCUS_PATH, strerror(errno));
+    } else {
+        ALOGV("HAL3on1: Wrote '%s' to %s (manual_focus: %d)", manual_focus_value, SYSFS_MANUAL_FOCUS_PATH, enabled);
+    }
+    close(fd_manual_focus_enable);
+}
+
+static int map_focus_distance_to_step(float focus_distance) {
+    float max_hal3_distance = 10.0f;
+    int max_step = 400;
+
+    int step = static_cast<int>((focus_distance / max_hal3_distance) * max_step);
+
+    if (step < 0) {
+        step = 0;
+    } else if (step > max_step) {
+        step = max_step;
+    }
+
+    return step;
+}
+
+static void handle_manual_focus_distance(CameraMetadata &cm, CameraParameters current_params) {
+
+    bool new_manual_focus_requested = false;
+
+    if (cm.exists(ANDROID_CONTROL_AF_MODE)) {
+        uint8_t af_mode = cm.find(ANDROID_CONTROL_AF_MODE).data.u8[0];
+        new_manual_focus_requested = (af_mode == ANDROID_CONTROL_AF_MODE_OFF);
+    }
+
+    if (new_manual_focus_requested != previous_manual_focus_state) {
+        set_manual_focus_enabled(new_manual_focus_requested);
+        previous_manual_focus_state = new_manual_focus_requested;
+    }
+
+    if (new_manual_focus_requested && cm.exists(ANDROID_LENS_FOCUS_DISTANCE)) {
+        buffered_focus_distance_request = cm.find(ANDROID_LENS_FOCUS_DISTANCE).data.f[0];
+        ALOGV("HAL3on1: Received ANDROID_LENS_FOCUS_DISTANCE: %.2f", buffered_focus_distance_request);
+    } else {
+        buffered_focus_distance_request = -1.0f;
+        if (new_manual_focus_requested) {
+            ALOGW("HAL3on1: Manual focus is ON, but no ANDROID_LENS_FOCUS_DISTANCE in metadata.");
+        } else {
+            return;
+        }
+    }
+
+    nsecs_t current_time_ns = systemTime();
+    long time_elapsed_us = (current_time_ns - last_focus_update_time_ns) / 1000;
+
+    if (time_elapsed_us >= focus_update_interval_us) {
+
+        if (buffered_focus_distance_request != -1.0f && buffered_focus_distance_request != previous_focus_distance_set)
+        {
+             float focus_distance_to_apply = buffered_focus_distance_request;
+
+            ALOGV("HAL3on1: Applying manual focus distance from buffer: %.2f", focus_distance_to_apply);
+
+            int actuator_step = map_focus_distance_to_step(focus_distance_to_apply);
+
+            if (actuator_step < 0 || actuator_step > 400) {
+                ALOGE("HAL3on1: Calculated actuator step %d is out of range [0, 400]. Skipping sysfs write to '%s'",
+                      actuator_step, SYSFS_FOCUS_CONTROL_PATH);
+            } else {
+                int fd_focus_control(-1);
+                char buffer[16];
+
+                fd_focus_control = open(SYSFS_FOCUS_CONTROL_PATH, O_RDWR);
+                if (fd_focus_control < 0) {
+                    ALOGE("HAL3on1: failed to open '%s': %s", SYSFS_FOCUS_CONTROL_PATH, strerror(errno));
+                } else {
+                    int bytes = snprintf(buffer, sizeof(buffer), "%d", actuator_step);
+                    if (bytes < 0 || bytes >= sizeof(buffer)) {
+                        ALOGE("HAL3on1: snprintf failed or buffer too small for step %d", actuator_step);
+                    } else {
+                        int ret = write(fd_focus_control, buffer, (size_t)bytes);
+                        if (ret < 0) {
+                            ALOGE("HAL3on1: failed to write to '%s': %s", SYSFS_FOCUS_CONTROL_PATH, strerror(errno));
+                        } else {
+                            ALOGV("HAL3on1: Wrote step %d to %s for distance %.2f", actuator_step, SYSFS_FOCUS_CONTROL_PATH, focus_distance_to_apply);
+                            previous_focus_distance_set = focus_distance_to_apply;
+                            last_focus_update_time_ns = current_time_ns;
+                            buffered_focus_distance_request = -1.0f;
+                        }
+                    }
+                    close(fd_focus_control);
+                }
+            }
+        }
+    } else {
+        ALOGW("HAL3on1: focus_control: Rate limiting - waiting for interval.");
+    }
+}
+
 static CameraParameters previous_params;
 
 static int camera3_process_capture_request(const camera3_device_t* device, camera3_capture_request_t* request)
@@ -691,6 +818,10 @@ static int camera3_process_capture_request(const camera3_device_t* device, camer
     if (!request || request->num_output_buffers == 0 || !request->output_buffers) {
         ALOGE("Invalid capture request");
         return -EINVAL;
+    }
+
+    if (properties.use_sysfs_focus) {
+        handle_manual_focus_distance(cm, current_params);
     }
 
     if (cm.exists(ANDROID_CONTROL_MODE)) {
@@ -1459,10 +1590,57 @@ static void camera_convert_parameters(int camera_id, const char *settings, Camer
     static const float min_focus_distance = 10.0;
     metadata->update(ANDROID_LENS_INFO_MINIMUM_FOCUS_DISTANCE, &min_focus_distance, 1);
 
-    const char* focus_mode_values = params.get("focus-mode-values");
-    char fm_modes[128];
-    strcpy(fm_modes, focus_mode_values);
-    token = strtok(fm_modes, ",");
+    if (!properties.use_sysfs_focus) {
+        const char* focus_mode_values = params.get("focus-mode-values");
+        char fm_modes[128];
+        strcpy(fm_modes, focus_mode_values);
+        token = strtok(fm_modes, ",");
+    }
+
+    else {
+        if (camera_id == 0) {
+                const char* focus_mode_values = params.get("focus-mode-values");
+                ALOGI("HAL3on1: Original HAL1 focus-mode-values: %s", focus_mode_values);
+
+                String8 modified_fm_values_str(focus_mode_values ? focus_mode_values : "");
+                bool manual_focus_in_hal1_params = false;
+
+                if (focus_mode_values) {
+                    char fm_modes[256];
+                    strcpy(fm_modes, focus_mode_values);
+                    token = strtok(fm_modes, ",");
+
+                    while (token != NULL) {
+                        if (!strcmp(token, "manual")) {
+                            manual_focus_in_hal1_params = true;
+                            break;
+                        }
+                        token = strtok(NULL, ",");
+                    }
+                }
+
+                ALOGI("HAL3on1: manual_focus_in_hal1_params: %d", manual_focus_in_hal1_params);
+
+                if (!manual_focus_in_hal1_params) {
+                    if (modified_fm_values_str.length() > 0) {
+                        modified_fm_values_str.append(",");
+                    }
+                    modified_fm_values_str.append("manual");
+                    params.set("focus-mode-values", modified_fm_values_str);
+                    ALOGI("HAL3on1: Modified focus-mode-values to: %s", modified_fm_values_str.c_str());
+                }
+
+                ALOGI("HAL3on1: Final focus-mode-values: %s", focus_mode_values);
+                char fm_modes[256];
+                if (focus_mode_values)
+                    strcpy(fm_modes, focus_mode_values);
+                else
+                    fm_modes[0] = '\0';
+
+                token = strtok(fm_modes, ",");
+
+            }
+        }
 
     int fm_counter = 0;
     uint8_t avail_af_modes[6];
@@ -2343,6 +2521,12 @@ static int init()
     if (atoi(value) == 1) {
         ALOGI("HAL3on1: using hwcomposer for preview buffers");
         properties.use_hwcomposer = true;
+    }
+
+    property_get("persist.camera.hal3on1.use_sysfs_focus", value, "0");
+    if (atoi(value) == 1) {
+        ALOGI("HAL3on1: using sysfs manual focus control");
+        properties.use_sysfs_focus = true;
     }
 
     return NO_ERROR;

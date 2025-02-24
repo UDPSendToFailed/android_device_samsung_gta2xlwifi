@@ -20,6 +20,8 @@ bluetooth.profile.pbap.server.enabled=true
 bluetooth.profile.sap.server.enabled=true
 
 # Camera
+persist.camera.hal3on1.use_limited_level=1
+persist.camera.hal3on1.use_sysfs_focus=1
 persist.camera.hal3on1.use_sysfs_torch=1
 persist.camera.HAL3.enabled=1
 persist.camera.gyro.android=0
