@@ -680,9 +680,6 @@ static float buffered_focus_distance_request = -1.0f;
 static bool previous_manual_focus_state = false;
 static float previous_focus_distance_set = -1.0f;
 
-static nsecs_t last_focus_update_time_ns = 0;
-static const long focus_update_interval_us = 30000;
-
 static void set_manual_focus_enabled(bool enabled) {
     int fd_manual_focus_enable(-1);
     char buffer_manual_focus[2];
@@ -751,11 +748,6 @@ static void handle_manual_focus_distance(CameraMetadata &cm, CameraParameters cu
         }
     }
 
-    nsecs_t current_time_ns = systemTime();
-    long time_elapsed_us = (current_time_ns - last_focus_update_time_ns) / 1000;
-
-    if (time_elapsed_us >= focus_update_interval_us) {
-
         if (buffered_focus_distance_request != -1.0f && buffered_focus_distance_request != previous_focus_distance_set)
         {
              float focus_distance_to_apply = buffered_focus_distance_request;
@@ -785,16 +777,12 @@ static void handle_manual_focus_distance(CameraMetadata &cm, CameraParameters cu
                         } else {
                             ALOGV("HAL3on1: Wrote step %d to %s for distance %.2f", actuator_step, SYSFS_FOCUS_CONTROL_PATH, focus_distance_to_apply);
                             previous_focus_distance_set = focus_distance_to_apply;
-                            last_focus_update_time_ns = current_time_ns;
                             buffered_focus_distance_request = -1.0f;
                         }
                     }
                     close(fd_focus_control);
                 }
             }
-        }
-    } else {
-        ALOGW("HAL3on1: focus_control: Rate limiting - waiting for interval.");
     }
 }
 
