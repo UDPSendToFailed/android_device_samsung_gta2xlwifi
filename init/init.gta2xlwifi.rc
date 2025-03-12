@@ -208,6 +208,10 @@ on boot
    chown system system /sys/devices/soc/1b0c000.qcom,cci/1b0c000.qcom,cci:qcom,actuator@18/manual_focus
    chmod 0666 /sys/devices/soc/1b0c000.qcom,cci/1b0c000.qcom,cci:qcom,actuator@18/manual_focus
 
+# Lift to wake (SX9320)
+   chown system system /sys/class/input/input5/enable
+   write /sys/class/input/input5/enable 1
+
 on init
     # Add preload partition.
     mkdir /preload 0771 system system
