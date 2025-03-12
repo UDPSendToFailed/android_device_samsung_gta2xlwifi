@@ -40,13 +40,11 @@ public class SamsungDozeService extends Service {
     private static final boolean DEBUG = false;
 
     private static final String DOZE_INTENT = "com.android.systemui.doze.pulse";
-    private static final int MIN_PULSE_INTERVAL_MS = 1000;
+    private static final int MIN_PULSE_INTERVAL_MS = 5000;
 
     private Context mContext;
     private AccelerometerPickUpSensor mPickUpSensor;
     private PowerManager mPowerManager;
-    private PowerManager.WakeLock mWakeLock;
-
     /**
      * Inner class for handling accelerometer-based pickup detection.
      * Sensor events are delivered on a dedicated HandlerThread.
@@ -61,14 +59,10 @@ public class SamsungDozeService extends Service {
         private float lastMagnitude = 0f;
         private float lastZValue = 0f;
 
-        private float pickupThresholdMagnitude = 8.0f;
-        private float pickupThresholdChange = 0.6f;
-        private float minimumMagnitude = 5.0f;
-        private float zAxisPickupThresholdChange = -1.5f;
+        private float pickupThresholdMagnitude = 9.8f;
+        private float pickupThresholdChange = 1.0f;
+        private float zAxisPickupThresholdChange = -2.5f;
         private float zAxisMinimumMagnitude = 2.0f;
-
-        private int detectionCount = 0;
-        private static final int CONSECUTIVE_DETECTIONS_THRESHOLD = 3;
 
         public AccelerometerPickUpSensor(Context context) {
             mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -88,12 +82,7 @@ public class SamsungDozeService extends Service {
         protected void enable() {
             lastPulseTimestamp = SystemClock.elapsedRealtime();
             mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL, mHandler);
-            try {
-                mWakeLock.acquire();
-                Log.d(TAG, "Accelerometer Pickup Sensor Enabled and WakeLock acquired");
-            } catch (Exception e) {
-                Log.e(TAG, "Error acquiring wake lock", e);
-            }
+            Log.d(TAG, "Accelerometer Pickup Sensor Enabled");
         }
 
         /**
@@ -102,14 +91,6 @@ public class SamsungDozeService extends Service {
          */
         protected void disable() {
             mSensorManager.unregisterListener(this, mSensor);
-            try {
-                if (mWakeLock.isHeld()) {
-                    mWakeLock.release();
-                    Log.d(TAG, "WakeLock released");
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error releasing wake lock", e);
-            }
             Log.d(TAG, "Accelerometer Pickup Sensor Disabled");
         }
 
@@ -153,19 +134,10 @@ public class SamsungDozeService extends Service {
             }
 
             if (isPickupDetected(magnitude, accelerationChange, zChange, z)) {
-                detectionCount++;
-                if (DEBUG) {
-                    Log.d(TAG, "Pickup Detected - Consecutive Count: " + detectionCount);
+                if (DEBUG) { Log.d(TAG, "Pickup Detected - WAKE UP"); }
+                lastPulseTimestamp = SystemClock.elapsedRealtime();
+                wakeOrLaunchDozePulse();
                 }
-                if (detectionCount >= CONSECUTIVE_DETECTIONS_THRESHOLD) {
-                    Log.d(TAG, "Consecutive pickup detections met - WAKE UP");
-                    lastPulseTimestamp = SystemClock.elapsedRealtime();
-                    wakeOrLaunchDozePulse();
-                    detectionCount = 0;
-                }
-            } else {
-                detectionCount = 0;
-            }
         }
 
         @Override
@@ -175,8 +147,8 @@ public class SamsungDozeService extends Service {
          * Determines if the pickup gesture is detected based on sensor data.
          */
         private boolean isPickupDetected(float magnitude, float accelerationChange, float zChange, float zValue) {
-            return (magnitude > pickupThresholdMagnitude && accelerationChange > pickupThresholdChange && magnitude > minimumMagnitude) ||
-                   (zChange < zAxisPickupThresholdChange && zValue > zAxisMinimumMagnitude && magnitude > minimumMagnitude);
+            return (magnitude > pickupThresholdMagnitude && accelerationChange > pickupThresholdChange) ||
+                   (zChange < zAxisPickupThresholdChange && zValue > zAxisMinimumMagnitude);
         }
     }
 
@@ -185,7 +157,6 @@ public class SamsungDozeService extends Service {
         if (DEBUG) Log.d(TAG, "SamsungDozeService onCreate");
         mContext = this;
         mPowerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
-        mWakeLock = mPowerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
         mPickUpSensor = new AccelerometerPickUpSensor(mContext);
         if (!isInteractive()) {
             mPickUpSensor.enable();
