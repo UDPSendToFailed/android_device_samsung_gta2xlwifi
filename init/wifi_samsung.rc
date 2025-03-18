@@ -46,7 +46,3 @@ service mfgloader /vendor/bin/hw/mfgloader
     capabilities NET_ADMIN NET_RAW SYS_MODULE
     disabled
     oneshot
-
-# for macloader shell script
-    chown wifi wifi /sys/devices/soc/a000000.qcom,wcnss-wlan/wcnss_mac_addr
-    chmod 0664 /sys/devices/soc/a000000.qcom,wcnss-wlan/wcnss_mac_addr
