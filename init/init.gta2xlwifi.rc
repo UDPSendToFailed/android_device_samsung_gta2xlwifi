@@ -211,6 +211,9 @@ on boot
 # Lift to wake (SX9320)
    chown system system /sys/class/input/input5/enable
 
+# Swappiness
+   write /proc/sys/vm/swappiness 100
+
 on init
     # Add preload partition.
     mkdir /preload 0771 system system
