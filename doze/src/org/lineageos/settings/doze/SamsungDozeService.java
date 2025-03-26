@@ -33,6 +33,10 @@ import android.os.SystemClock;
 import android.os.UserHandle;
 import android.util.Log;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 import static java.lang.Math.sqrt;
 
 public class SamsungDozeService extends Service {
@@ -41,6 +45,8 @@ public class SamsungDozeService extends Service {
 
     private static final String DOZE_INTENT = "com.android.systemui.doze.pulse";
     private static final int MIN_PULSE_INTERVAL_MS = 5000;
+
+    private static final String SAR_SENSOR_ENABLE_PATH = "/sys/class/input/input5/enable";
 
     private Context mContext;
     private AccelerometerPickUpSensor mPickUpSensor;
@@ -70,9 +76,11 @@ public class SamsungDozeService extends Service {
             if (mSensor == null) {
                 Log.e(TAG, "Accelerometer sensor not available");
             }
-            mHandlerThread = new HandlerThread("AccelSensorThread");
-            mHandlerThread.start();
-            mHandler = new Handler(mHandlerThread.getLooper());
+            if (mSensor != null) {
+                mHandlerThread = new HandlerThread("AccelSensorThread");
+                mHandlerThread.start();
+                mHandler = new Handler(mHandlerThread.getLooper());
+            }
         }
 
         /**
@@ -80,6 +88,10 @@ public class SamsungDozeService extends Service {
          * Registers this as a listener on a dedicated HandlerThread.
          */
         protected void enable() {
+            if (mSensor == null || mHandler == null) {
+                 Log.w(TAG, "Cannot enable Accelerometer: Sensor or Handler not initialized.");
+                 return;
+            }
             lastPulseTimestamp = SystemClock.elapsedRealtime();
             mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL, mHandler);
             Log.d(TAG, "Accelerometer Pickup Sensor Enabled");
@@ -90,8 +102,16 @@ public class SamsungDozeService extends Service {
          * Unregisters this listener and stops the HandlerThread.
          */
         protected void disable() {
-            mSensorManager.unregisterListener(this, mSensor);
-            Log.d(TAG, "Accelerometer Pickup Sensor Disabled");
+             if (mSensor == null || mSensorManager == null) {
+                 Log.w(TAG, "Cannot disable Accelerometer: Sensor or Manager not initialized.");
+                 return;
+             }
+            try {
+                mSensorManager.unregisterListener(this, mSensor);
+                Log.d(TAG, "Accelerometer Pickup Sensor Disabled");
+            } catch (Exception e) {
+                 Log.w(TAG, "Error unregistering accelerometer listener", e);
+            }
         }
 
         /**
@@ -101,6 +121,7 @@ public class SamsungDozeService extends Service {
             if (mHandlerThread != null) {
                 mHandlerThread.quitSafely();
                 mHandlerThread = null;
+                mHandler = null;
             }
         }
 
@@ -152,14 +173,29 @@ public class SamsungDozeService extends Service {
         }
     }
 
-    @Override
+@Override
     public void onCreate() {
+        super.onCreate();
         if (DEBUG) Log.d(TAG, "SamsungDozeService onCreate");
         mContext = this;
         mPowerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         mPickUpSensor = new AccelerometerPickUpSensor(mContext);
-        if (!isInteractive()) {
+
+        boolean pickupEnabled = Utils.isPickUpGestureEnabled(this);
+        boolean sensorsShouldBeActive = !isInteractive() &&
+                                        Utils.isDozeEnabled(this) &&
+                                        pickupEnabled;
+
+        if (DEBUG) Log.d(TAG, "onCreate: isInteractive=" + isInteractive() +
+                             ", isDozeEnabled=" + Utils.isDozeEnabled(this) +
+                             ", isPickupEnabled=" + pickupEnabled +
+                             ", sensorsShouldBeActive=" + sensorsShouldBeActive);
+
+        if (sensorsShouldBeActive) {
+            setSarSensorEnabled(true);
             mPickUpSensor.enable();
+        } else {
+            setSarSensorEnabled(false);
         }
     }
 
@@ -180,7 +216,12 @@ public class SamsungDozeService extends Service {
     @Override
     public void onDestroy() {
         if (DEBUG) Log.d(TAG, "SamsungDozeService onDestroy");
-        mContext.unregisterReceiver(mScreenStateReceiver);
+        try {
+            mContext.unregisterReceiver(mScreenStateReceiver);
+        } catch (IllegalArgumentException e) {
+            Log.w(TAG, "Receiver not registered or already unregistered?", e);
+        }
+        setSarSensorEnabled(false);
         mPickUpSensor.disable();
         mPickUpSensor.shutdown();
         super.onDestroy();
@@ -189,23 +230,29 @@ public class SamsungDozeService extends Service {
     private void wakeOrLaunchDozePulse() {
         if (Utils.isWakeOnGestureEnabled(mContext)) {
             if (DEBUG) Log.d(TAG, "Wake up display");
-            try{
-                mPowerManager.wakeUp(SystemClock.uptimeMillis(), PowerManager.WAKE_REASON_GESTURE, TAG);
-            } catch (Exception e) {
-                Log.e(TAG, "Error waking up display", e);
+            if (mPowerManager != null) {
+                try {
+                    mPowerManager.wakeUp(SystemClock.uptimeMillis(), PowerManager.WAKE_REASON_GESTURE, TAG);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error waking up display", e);
+                }
+            } else {
+                Log.w(TAG, "PowerManager not available, cannot wake up display.");
             }
         } else {
             if (DEBUG) Log.d(TAG, "Launch doze pulse");
-            mContext.sendBroadcastAsUser(new Intent(DOZE_INTENT), new UserHandle(UserHandle.USER_CURRENT));
+            Intent intent = new Intent(DOZE_INTENT);
+            mContext.sendBroadcastAsUser(intent, UserHandle.CURRENT);
         }
     }
 
     private boolean isInteractive() {
-        return mPowerManager.isInteractive();
+        return mPowerManager != null && mPowerManager.isInteractive();
     }
 
     private void onDisplayOn() {
         if (DEBUG) Log.d(TAG, "Display on");
+        setSarSensorEnabled(false);
         if (Utils.isPickUpGestureEnabled(this)) {
             mPickUpSensor.disable();
         }
@@ -213,19 +260,47 @@ public class SamsungDozeService extends Service {
 
     private void onDisplayOff() {
         if (DEBUG) Log.d(TAG, "Display off");
-        if (Utils.isPickUpGestureEnabled(this)) {
+
+        boolean pickupEnabled = Utils.isPickUpGestureEnabled(this);
+        boolean sensorsShouldBeActive = Utils.isDozeEnabled(this) && pickupEnabled;
+
+        if (DEBUG) Log.d(TAG, "onDisplayOff: isDozeEnabled=" + Utils.isDozeEnabled(this) +
+                             ", isPickupEnabled=" + pickupEnabled +
+                             ", sensorsShouldBeActive=" + sensorsShouldBeActive);
+
+        if (sensorsShouldBeActive) {
+             setSarSensorEnabled(true);
             mPickUpSensor.enable();
+        }
+        else {
+            setSarSensorEnabled(false);
+            mPickUpSensor.disable();
         }
     }
 
     private final BroadcastReceiver mScreenStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
+             if (intent == null || intent.getAction() == null) {
+                 return;
+             }
+             String action = intent.getAction();
+            if (Intent.ACTION_SCREEN_OFF.equals(action)) {
                 onDisplayOff();
-            } else if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
+            } else if (Intent.ACTION_SCREEN_ON.equals(action)) {
                 onDisplayOn();
             }
         }
     };
+
+    private void setSarSensorEnabled(boolean enable) {
+        String value = enable ? "1" : "0";
+        try (FileOutputStream fos = new FileOutputStream(SAR_SENSOR_ENABLE_PATH)) {
+            fos.write(value.getBytes(StandardCharsets.UTF_8));
+            fos.flush();
+            if (DEBUG) Log.d(TAG, "Successfully wrote '" + value + "' to " + SAR_SENSOR_ENABLE_PATH);
+        } catch (IOException | SecurityException e) {
+            Log.e(TAG, "Exception writing '" + value + "' to SAR sysfs node: " + SAR_SENSOR_ENABLE_PATH, e);
+        }
+    }
 }
