@@ -32,27 +32,38 @@ lib_fixups: lib_fixups_user_type = {
 # Define the blob fixups
 blob_fixups: blob_fixups_user_type = {
 
-    ('vendor/lib/libmmcamera_hdr_gb_lib.so',
-     'vendor/lib/libstr_preview_core.so'): blob_fixup()
+    ('vendor/lib/hw/camera.legacy.msm8953.so'): blob_fixup()
+    .fix_soname()
+    .replace_needed('libgui.so', 'libgui_vendor.so'),
+
+    ('vendor/lib/libchromaflash.so',
+    'vendor/lib/libmmcamera_hdr_gb_lib.so',
+    'vendor/lib/libMOTION.so',
+    'vendor/lib/liboptizoom.so',
+    'vendor/lib/libseemore.so',
+    'vendor/lib/libstr_capture_core.so',
+    'vendor/lib/libstr_preview_core.so',
+    'vendor/lib/libtrueportrait.so',
+    'vendor/lib/libubifocus.so'): blob_fixup()
     .replace_needed('libstdc++.so', 'libstdc++_vendor.so'),
 
     ('vendor/lib/libhifills.so'): blob_fixup()
-    .replace_needed('libcutils.so', "libprocessgroup.so"),
-
-    ('vendor/lib/libmmcamera_ppeiscore.so'): blob_fixup()
-    .replace_needed('libGLESv2.so', 'libGLESv2_adreno.so'),
-
-    ('vendor/lib/hw/gatekeeper.mdfpp.so',): blob_fixup()
-    .replace_needed('libcrypto.so', 'libcrypto-v33.so'),
-
-    ('vendor/lib/hw/camera.legacy.msm8953.so'): blob_fixup()
-    .fix_soname(),
+    .add_needed('libdemangle.so')
+    .add_needed('libprocessgroup.so'),
 
     ('vendor/lib/libmmcamera_faceproc2.so'): blob_fixup()
     .fix_soname()
     .clear_symbol_version('__aeabi_memcpy')
     .clear_symbol_version('__aeabi_memset')
     .clear_symbol_version('__gnu_Unwind_Find_exidx'),
+
+    ('vendor/lib/libmmcamera_ppeiscore.so'): blob_fixup()
+    .replace_needed('libGLESv2.so', 'libGLESv2_adreno.so')
+    .replace_needed('libgui.so', 'libgui_vendor.so')
+    .add_needed('libshim_camera.so'),
+
+    ('vendor/lib/hw/gatekeeper.mdfpp.so',): blob_fixup()
+    .replace_needed('libcrypto.so', 'libcrypto-v33.so'),
 
     ('vendor/lib/hw/vulkan.adreno.so',
      'vendor/lib64/hw/vulkan.adreno.so'): blob_fixup()
@@ -63,8 +74,8 @@ blob_fixups: blob_fixups_user_type = {
     .clear_symbol_version('AHardwareBuffer_getNativeHandle')
     .clear_symbol_version('AHardwareBuffer_release'),
 
-    ('vendor/lib/hw/gralloc.gta2xl.so'): blob_fixup()
-    .fix_soname(),
+    ('vendor/bin/pm-service'): blob_fixup()
+    .replace_needed('libutils.so', 'libutils-v33.so'),
 
 }
 
