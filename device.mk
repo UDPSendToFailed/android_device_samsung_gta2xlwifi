@@ -45,9 +45,6 @@ TARGET_SCREEN_WIDTH := 1200
 
 # QMI
 PRODUCT_PACKAGES += \
-    libjson \
-    libqti_vndfwk_detect \
-    libqti_vndfwk_detect.vendor \
     libvndfwk_detect_jni.qti \
     libvndfwk_detect_jni.qti.vendor
 
@@ -92,7 +89,6 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.sip.voip.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
 
-
 # Audio
 PRODUCT_PACKAGES += \
     android.hardware.audio@7.1-impl \
@@ -133,19 +129,14 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.bluetooth.audio-impl \
     android.hardware.bluetooth@1.0-service \
-    android.hardware.bluetooth@1.0.vendor \
     libbt-vendor
 
 # Camera
 PRODUCT_PACKAGES += \
-    android.frameworks.sensorservice@1.0.vendor \
     android.hardware.camera.provider@2.4-impl \
     android.hardware.camera.provider@2.4-service \
     vendor.qti.hardware.camera.device@1.0.vendor \
-    libion.vendor \
-    libshim_camera \
     libgui_shim_vendor \
-    libstdc++_vendor \
     camera.msm8953 \
     GrapheneCamera \
     FlashControl
@@ -156,7 +147,6 @@ PRODUCT_PACKAGES += \
 
 # Display
 PRODUCT_PACKAGES += \
-    android.frameworks.displayservice@1.0.vendor \
     android.hardware.graphics.allocator@2.0-impl \
     android.hardware.graphics.allocator@2.0-service \
     android.hardware.graphics.mapper@2.0-impl-2.1 \
@@ -170,10 +160,8 @@ PRODUCT_PACKAGES += \
     vendor.qti.hardware.memtrack-service
 	
 PRODUCT_PACKAGES += \
-    libqdMetaData \
     libtinyxml \
     libvulkan \
-    vendor.display.config@1.0.vendor
 
 # Display Device Config
 PRODUCT_COPY_FILES += \
@@ -181,7 +169,6 @@ PRODUCT_COPY_FILES += \
 
 # DRM
 PRODUCT_PACKAGES += \
-    android.hardware.drm-V1-ndk.vendor \
     android.hardware.drm-service.clearkey
 
 # FastCharge
@@ -197,14 +184,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.gnss@2.0-impl-qti \
     android.hardware.gnss@2.0-service-qti \
-    liblocation_api \
-    libgps.utils \
     libbatching \
     libgeofencing \
-    libloc_core \
     libgnss \
-    libsqlite.vendor \
-    libssl.vendor
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/gps/apdr.conf:$(TARGET_COPY_OUT_VENDOR)/etc/apdr.conf \
@@ -219,16 +201,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     android.hardware.health-service.qti \
     android.hardware.health-service.qti_recovery
-
-# HIDL
-PRODUCT_PACKAGES += \
-    android.hidl.base@1.0 \
-    android.hidl.base@1.0.vendor \
-    android.hidl.manager@1.0 \
-    libhidltransport \
-    libhidltransport.vendor \
-    libhwbinder \
-    libhwbinder.vendor \
 
 # IRQ
 PRODUCT_COPY_FILES += \
@@ -275,14 +247,7 @@ PRODUCT_PACKAGES += \
     libcodec2_soft_common.vendor \
     libcodec2_vndk.vendor \
     libsfplugin_ccodec_utils.vendor \
-    libstagefright_foundation-v33 \
     XiaomiDolby
-
-# Netutils
-PRODUCT_PACKAGES += \
-    netutils-wrapper-1.0 \
-    android.system.net.netd@1.0 \
-    libandroid_net
 
 # OMX
 PRODUCT_PACKAGES += \
@@ -297,7 +262,6 @@ PRODUCT_PACKAGES += \
     libstagefright_enc_common.vendor \
     libstagefrighthw \
     libstagefright_softomx_plugin.vendor \
-    libstagefright_softomx.vendor \
     libvorbisidec.vendor \
     libvpx.vendor
 
@@ -313,15 +277,9 @@ PRODUCT_PACKAGES += \
 
 # Power
 PRODUCT_PACKAGES += \
-    android.hardware.power@1.2.vendor \
     android.hardware.power-service-qti \
     android.hardware.power.stats@1.0-service.mock \
     SamsungDoze
-
-# Protobuf
-PRODUCT_PACKAGES += \
-    libprotobuf-cpp-full-3.9.1-vendorcompat \
-    libprotobuf-cpp-lite-3.9.1-vendorcompat
 
 # Thermal
 PRODUCT_PACKAGES += \
@@ -343,8 +301,6 @@ PRODUCT_PACKAGES += \
     android.hardware.wifi@1.5.vendor \
     android.hardware.wifi.hostapd@1.3.vendor \
     android.hardware.wifi.supplicant@1.4.vendor \
-    libcld80211 \
-    libwpa_client \
     hostapd \
     wificond \
     wpa_supplicant \
@@ -362,12 +318,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/wifi/prima/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_VENDOR)/firmware/wlan/prima/WCNSS_qcom_cfg.ini \
     $(LOCAL_PATH)/configs/wifi/prima/WCNSS_qcom_wlan_nv.bin:$(TARGET_COPY_OUT_VENDOR)/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin \
     $(LOCAL_PATH)/configs/wifi/prima/WCNSS_wlan_dictionary.dat:$(TARGET_COPY_OUT_VENDOR)/firmware/wlan/prima/WCNSS_wlan_dictionary.dat
-
-# Misc
-PRODUCT_PACKAGES += \
-    vendor.qti.hardware.capabilityconfigstore@1.0.vendor \
-    libnl.vendor \
-    libdemangle.vendor
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/dsi_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/data/dsi_config.xml \
