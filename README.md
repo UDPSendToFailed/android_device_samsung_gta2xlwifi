@@ -13,6 +13,7 @@
 | **Battery**      | 7300 mAh Li-Po (non-removable)                      |
 | **Display**      | 10.5 inches, 1920x1200 (WUXGA), ~216 PPI, IPS LCD   |
 | **Display Panel**      | BOE 82790D (HX8279_TV101WUM_WUXGA)            |
+| **Display Power IC**      | Renesas ISL98608                           |
 | **Touch Panel**      | STMicroelectronics FTS1BA90A                    |
 | **Rear Camera**  | 8 MP, AF, LED Flash (Samsung S5K4H5YC)              |
 | **Rear Camera Flash**  | Kinetic Technologies KTD2692                  |
