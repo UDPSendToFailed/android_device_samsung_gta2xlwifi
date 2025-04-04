@@ -16,3 +16,13 @@ fi
 sysfs_macaddr_path="/sys/devices/soc/a000000.qcom,wcnss-wlan/wcnss_mac_addr"
 
 echo $mac_address > $sysfs_macaddr_path
+
+efs_bt_mac_path="/efs/bluetooth/bt_addr"
+target_bt_prop="persist.vendor.service.bdroid.bdaddr"
+
+if [ -f "$efs_bt_mac_path" ]; then
+    bt_mac=$(cat "$efs_bt_mac_path")
+    if [ -n "$bt_mac" ]; then
+        setprop "$target_bt_prop" "$bt_mac"
+    fi
+fi
