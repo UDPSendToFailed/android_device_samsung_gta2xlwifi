@@ -440,8 +440,6 @@ vendor/bin/init.qti.qseecomd.sh
 vendor/bin/mcDriverDaemon
 vendor/bin/qseecom_sample_client
 vendor/bin/qseecomd
-vendor/etc/init/icd_over_five_vendor.rc
-vendor/etc/init/pa_daemon_qsee.rc
 vendor/etc/init/vendor.qti.hardware.qseecom@1.0-service.rc
 vendor/lib/hw/vendor.qti.hardware.qseecom@1.0-impl.so
 vendor/lib/libGPreqcancel.so
