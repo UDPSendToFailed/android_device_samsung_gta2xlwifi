@@ -81,9 +81,6 @@ persist.vendor.dpmhalservice.enable=1
 # DRM
 drm.service.enabled=true
 
-# Frp
-ro.frp.pst=/dev/block/bootdevice/by-name/config
-
 # Media
 debug.stagefright.omx_default_rank=0
 vendor.vidc.disable.split.mode=1
