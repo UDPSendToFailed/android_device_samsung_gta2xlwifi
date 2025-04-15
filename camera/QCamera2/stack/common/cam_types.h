@@ -1007,6 +1007,7 @@ typedef struct {
 typedef struct {
     uint32_t num_batch;  /*Number of frames batch requested*/
     cam_capture_settings_t configs[MAX_CAPTURE_BATCH_NUM];
+    volatile char samsung_reserved[264];
 } cam_capture_frame_config_t;
 
 typedef struct {
@@ -1081,6 +1082,7 @@ typedef struct {
 typedef struct {
     uint32_t fd_mode;          /* mask of face process */
     uint32_t num_fd;
+    volatile char samsung_reserved[4];
 } cam_fd_set_parm_t;
 
 typedef enum {
@@ -1392,6 +1394,7 @@ typedef struct {
     uint32_t stream_id;
     cam_rect_t crop;
     cam_rect_t roi_map;
+    volatile char samsung_reserved[12];
 } cam_stream_crop_info_t;
 
 typedef struct {
@@ -1438,6 +1441,7 @@ typedef struct {
     uint32_t frame_skip_count;
     // Batch id for each picture request
     uint32_t config_batch_idx;
+    volatile char samsung_reserved[4]; 
 } cam_frame_idx_range_t;
 
 typedef enum {
@@ -1527,6 +1531,7 @@ typedef struct {
     int32_t est_snap_iso_value;
     uint32_t est_snap_luma;
     uint32_t est_snap_target;
+    volatile char samsung_reserved[1608];
 } cam_3a_params_t;
 
 typedef struct {
@@ -1670,6 +1675,7 @@ typedef struct {
     uint32_t dt[MAX_NUM_STREAMS];
     uint32_t vc[MAX_NUM_STREAMS];
     cam_sub_format_type_t sub_format_type[MAX_NUM_STREAMS];
+    volatile char samsung_reserved[64];
 } cam_stream_size_info_t;
 
 typedef enum {
