@@ -28,7 +28,7 @@
 */
 
 #define LOG_TAG "QCamera3HWI"
-//#define LOG_NDEBUG 0
+#define LOG_NDEBUG 0
 
 #define __STDC_LIMIT_MACROS
 
@@ -9218,13 +9218,13 @@ camera_metadata_t* QCamera3HardwareInterface::translateCapabilityToMetadata(int 
     }
 
     //Update Link tags to default
-    int32_t sync_type = CAM_TYPE_STANDALONE;
-    settings.update(QCAMERA3_DUALCAM_LINK_ENABLE, &sync_type, 1);
+    //int32_t sync_type = CAM_TYPE_STANDALONE;
+    //settings.update(QCAMERA3_DUALCAM_LINK_ENABLE, &sync_type, 1);
 
-    int32_t is_main = 0; //this doesn't matter as app should overwrite
-    settings.update(QCAMERA3_DUALCAM_LINK_IS_MAIN, &is_main, 1);
+    //int32_t is_main = 0; //this doesn't matter as app should overwrite
+    //settings.update(QCAMERA3_DUALCAM_LINK_IS_MAIN, &is_main, 1);
 
-    settings.update(QCAMERA3_DUALCAM_LINK_RELATED_CAMERA_ID, &is_main, 1);
+    //settings.update(QCAMERA3_DUALCAM_LINK_RELATED_CAMERA_ID, &is_main, 1);
 
     /* CDS default */
     char prop[PROPERTY_VALUE_MAX];
