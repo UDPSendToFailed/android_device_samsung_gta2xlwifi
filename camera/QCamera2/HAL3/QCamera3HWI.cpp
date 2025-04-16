@@ -7441,6 +7441,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
 
     staticInfo.update(ANDROID_INFO_SUPPORTED_HARDWARE_LEVEL,
             &supportedHwLvl, 1);
+    LOGD("Static Metadata: ANDROID_INFO_SUPPORTED_HARDWARE_LEVEL = %d", supportedHwLvl); // Log added
 
     bool facingBack = false;
     if ((gCamCapability[cameraId]->position == CAM_POSITION_BACK) ||
@@ -7450,27 +7451,51 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     /*HAL 3 only*/
     staticInfo.update(ANDROID_LENS_INFO_MINIMUM_FOCUS_DISTANCE,
                     &gCamCapability[cameraId]->min_focus_distance, 1);
+    LOGD("Static Metadata: ANDROID_LENS_INFO_MINIMUM_FOCUS_DISTANCE = %f", gCamCapability[cameraId]->min_focus_distance); // Log added
 
     staticInfo.update(ANDROID_LENS_INFO_HYPERFOCAL_DISTANCE,
                     &gCamCapability[cameraId]->hyper_focal_distance, 1);
+    LOGD("Static Metadata: ANDROID_LENS_INFO_HYPERFOCAL_DISTANCE = %f", gCamCapability[cameraId]->hyper_focal_distance); // Log added
 
     /*should be using focal lengths but sensor doesn't provide that info now*/
     staticInfo.update(ANDROID_LENS_INFO_AVAILABLE_FOCAL_LENGTHS,
                       &gCamCapability[cameraId]->focal_length,
                       1);
+    LOGD("Static Metadata: ANDROID_LENS_INFO_AVAILABLE_FOCAL_LENGTHS = %f", gCamCapability[cameraId]->focal_length); // Log added
 
     staticInfo.update(ANDROID_LENS_INFO_AVAILABLE_APERTURES,
             gCamCapability[cameraId]->apertures,
             MIN(CAM_APERTURES_MAX, gCamCapability[cameraId]->apertures_count));
+    { // Log added - block to limit scope of i
+        String8 apertures_str;
+        for(size_t i = 0; i < MIN(CAM_APERTURES_MAX, gCamCapability[cameraId]->apertures_count); ++i) {
+            apertures_str.appendFormat("%f ", gCamCapability[cameraId]->apertures[i]);
+        }
+        LOGD("Static Metadata: ANDROID_LENS_INFO_AVAILABLE_APERTURES = [%s]", apertures_str.c_str());
+    }
 
     staticInfo.update(ANDROID_LENS_INFO_AVAILABLE_FILTER_DENSITIES,
             gCamCapability[cameraId]->filter_densities,
             MIN(CAM_FILTER_DENSITIES_MAX, gCamCapability[cameraId]->filter_densities_count));
+    { // Log added - block to limit scope of i
+        String8 filter_densities_str;
+        for(size_t i = 0; i < MIN(CAM_FILTER_DENSITIES_MAX, gCamCapability[cameraId]->filter_densities_count); ++i) {
+            filter_densities_str.appendFormat("%f ", gCamCapability[cameraId]->filter_densities[i]);
+        }
+        LOGD("Static Metadata: ANDROID_LENS_INFO_AVAILABLE_FILTER_DENSITIES = [%s]", filter_densities_str.c_str());
+    }
 
 
     staticInfo.update(ANDROID_LENS_INFO_AVAILABLE_OPTICAL_STABILIZATION,
             (uint8_t *)gCamCapability[cameraId]->optical_stab_modes,
             MIN((size_t)CAM_OPT_STAB_MAX, gCamCapability[cameraId]->optical_stab_modes_count));
+    { // Log added - block to limit scope of i
+        String8 optical_stab_modes_str;
+        for(size_t i = 0; i < MIN((size_t)CAM_OPT_STAB_MAX, gCamCapability[cameraId]->optical_stab_modes_count); ++i) {
+            optical_stab_modes_str.appendFormat("%d ", gCamCapability[cameraId]->optical_stab_modes[i]);
+        }
+        LOGD("Static Metadata: ANDROID_LENS_INFO_AVAILABLE_OPTICAL_STABILIZATION = [%s]", optical_stab_modes_str.c_str());
+    }
 
     int32_t lens_shading_map_size[] = {
             MIN(CAM_MAX_SHADING_MAP_WIDTH, gCamCapability[cameraId]->lens_shading_map_size.width),
@@ -7478,29 +7503,36 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_LENS_INFO_SHADING_MAP_SIZE,
                       lens_shading_map_size,
                       sizeof(lens_shading_map_size)/sizeof(int32_t));
+    LOGD("Static Metadata: ANDROID_LENS_INFO_SHADING_MAP_SIZE = [%d, %d]", lens_shading_map_size[0], lens_shading_map_size[1]); // Log added
 
     staticInfo.update(ANDROID_SENSOR_INFO_PHYSICAL_SIZE,
             gCamCapability[cameraId]->sensor_physical_size, SENSOR_PHYSICAL_SIZE_CNT);
+    LOGD("Static Metadata: ANDROID_SENSOR_INFO_PHYSICAL_SIZE = [%f, %f]", gCamCapability[cameraId]->sensor_physical_size[0], gCamCapability[cameraId]->sensor_physical_size[1]); // Log added
 
     staticInfo.update(ANDROID_SENSOR_INFO_EXPOSURE_TIME_RANGE,
             gCamCapability[cameraId]->exposure_time_range, EXPOSURE_TIME_RANGE_CNT);
+    LOGD("Static Metadata: ANDROID_SENSOR_INFO_EXPOSURE_TIME_RANGE = [%lld, %lld]", gCamCapability[cameraId]->exposure_time_range[0], gCamCapability[cameraId]->exposure_time_range[1]); // Log added
 
     staticInfo.update(ANDROID_SENSOR_INFO_MAX_FRAME_DURATION,
             &gCamCapability[cameraId]->max_frame_duration, 1);
+    LOGD("Static Metadata: ANDROID_SENSOR_INFO_MAX_FRAME_DURATION = %lld", gCamCapability[cameraId]->max_frame_duration); // Log added
 
     camera_metadata_rational baseGainFactor = {
             gCamCapability[cameraId]->base_gain_factor.numerator,
             gCamCapability[cameraId]->base_gain_factor.denominator};
     staticInfo.update(ANDROID_SENSOR_BASE_GAIN_FACTOR,
                       &baseGainFactor, 1);
+    LOGD("Static Metadata: ANDROID_SENSOR_BASE_GAIN_FACTOR = [%d/%d]", baseGainFactor.numerator, baseGainFactor.denominator); // Log added
 
     staticInfo.update(ANDROID_SENSOR_INFO_COLOR_FILTER_ARRANGEMENT,
                      (uint8_t *)&gCamCapability[cameraId]->color_arrangement, 1);
+    LOGD("Static Metadata: ANDROID_SENSOR_INFO_COLOR_FILTER_ARRANGEMENT = %d", gCamCapability[cameraId]->color_arrangement); // Log added
 
     int32_t pixel_array_size[] = {gCamCapability[cameraId]->pixel_array_size.width,
             gCamCapability[cameraId]->pixel_array_size.height};
     staticInfo.update(ANDROID_SENSOR_INFO_PIXEL_ARRAY_SIZE,
                       pixel_array_size, sizeof(pixel_array_size)/sizeof(pixel_array_size[0]));
+    LOGD("Static Metadata: ANDROID_SENSOR_INFO_PIXEL_ARRAY_SIZE = [%d, %d]", pixel_array_size[0], pixel_array_size[1]); // Log added
 
     int32_t active_array_size[] = {gCamCapability[cameraId]->active_array_size.left,
             gCamCapability[cameraId]->active_array_size.top,
@@ -7508,12 +7540,18 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
             gCamCapability[cameraId]->active_array_size.height};
     staticInfo.update(ANDROID_SENSOR_INFO_ACTIVE_ARRAY_SIZE,
             active_array_size, sizeof(active_array_size)/sizeof(active_array_size[0]));
+    LOGD("Static Metadata: ANDROID_SENSOR_INFO_ACTIVE_ARRAY_SIZE = [%d, %d, %d, %d]", active_array_size[0], active_array_size[1], active_array_size[2], active_array_size[3]); // Log added
 
     staticInfo.update(ANDROID_SENSOR_INFO_WHITE_LEVEL,
             &gCamCapability[cameraId]->white_level, 1);
+    LOGD("Static Metadata: ANDROID_SENSOR_INFO_WHITE_LEVEL = %d", gCamCapability[cameraId]->white_level); // Log added
 
     staticInfo.update(ANDROID_SENSOR_BLACK_LEVEL_PATTERN,
             gCamCapability[cameraId]->black_level_pattern, BLACK_LEVEL_PATTERN_CNT);
+    LOGD("Static Metadata: ANDROID_SENSOR_BLACK_LEVEL_PATTERN = [%d, %d, %d, %d]",
+         gCamCapability[cameraId]->black_level_pattern[0], gCamCapability[cameraId]->black_level_pattern[1],
+         gCamCapability[cameraId]->black_level_pattern[2], gCamCapability[cameraId]->black_level_pattern[3]); // Log added
+
 
 #ifndef USE_HAL_3_3
     bool hasBlackRegions = false;
@@ -7529,24 +7567,30 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
         }
         staticInfo.update(ANDROID_SENSOR_OPTICAL_BLACK_REGIONS,
                 opticalBlackRegions, gCamCapability[cameraId]->optical_black_region_count * 4);
+        LOGD("Static Metadata: ANDROID_SENSOR_OPTICAL_BLACK_REGIONS - count = %zu", gCamCapability[cameraId]->optical_black_region_count); // Log added
         hasBlackRegions = true;
     }
 #endif
     staticInfo.update(ANDROID_FLASH_INFO_CHARGE_DURATION,
             &gCamCapability[cameraId]->flash_charge_duration, 1);
+    LOGD("Static Metadata: ANDROID_FLASH_INFO_CHARGE_DURATION = %d", gCamCapability[cameraId]->flash_charge_duration); // Log added
 
     staticInfo.update(ANDROID_TONEMAP_MAX_CURVE_POINTS,
             &gCamCapability[cameraId]->max_tone_map_curve_points, 1);
+    LOGD("Static Metadata: ANDROID_TONEMAP_MAX_CURVE_POINTS = %d", gCamCapability[cameraId]->max_tone_map_curve_points); // Log added
 
     uint8_t timestampSource = TIME_SOURCE;
     staticInfo.update(ANDROID_SENSOR_INFO_TIMESTAMP_SOURCE,
             &timestampSource, 1);
+    LOGD("Static Metadata: ANDROID_SENSOR_INFO_TIMESTAMP_SOURCE = %d", timestampSource); // Log added
 
     staticInfo.update(ANDROID_STATISTICS_INFO_HISTOGRAM_BUCKET_COUNT,
             &gCamCapability[cameraId]->histogram_size, 1);
+    LOGD("Static Metadata: ANDROID_STATISTICS_INFO_HISTOGRAM_BUCKET_COUNT = %d", gCamCapability[cameraId]->histogram_size); // Log added
 
     staticInfo.update(ANDROID_STATISTICS_INFO_MAX_HISTOGRAM_COUNT,
             &gCamCapability[cameraId]->max_histogram_count, 1);
+    LOGD("Static Metadata: ANDROID_STATISTICS_INFO_MAX_HISTOGRAM_COUNT = %d", gCamCapability[cameraId]->max_histogram_count); // Log added
 
     int32_t sharpness_map_size[] = {
             gCamCapability[cameraId]->sharpness_map_size.width,
@@ -7554,9 +7598,11 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
 
     staticInfo.update(ANDROID_STATISTICS_INFO_SHARPNESS_MAP_SIZE,
             sharpness_map_size, sizeof(sharpness_map_size)/sizeof(int32_t));
+    LOGD("Static Metadata: ANDROID_STATISTICS_INFO_SHARPNESS_MAP_SIZE = [%d, %d]", sharpness_map_size[0], sharpness_map_size[1]); // Log added
 
     staticInfo.update(ANDROID_STATISTICS_INFO_MAX_SHARPNESS_MAP_VALUE,
             &gCamCapability[cameraId]->max_sharpness_map_value, 1);
+    LOGD("Static Metadata: ANDROID_STATISTICS_INFO_MAX_SHARPNESS_MAP_VALUE = %d", gCamCapability[cameraId]->max_sharpness_map_value); // Log added
 
     int32_t scalar_formats[] = {
             ANDROID_SCALER_AVAILABLE_FORMATS_RAW_OPAQUE,
@@ -7569,6 +7615,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_SCALER_AVAILABLE_FORMATS,
                       scalar_formats,
                       scalar_formats_count);
+    { // Log added - block to limit scope of i
+        String8 scalar_formats_str;
+        for(size_t i = 0; i < scalar_formats_count; ++i) {
+            scalar_formats_str.appendFormat("%d ", scalar_formats[i]);
+        }
+        LOGD("Static Metadata: ANDROID_SCALER_AVAILABLE_FORMATS = [%s]", scalar_formats_str.c_str());
+    }
 
     int32_t available_processed_sizes[MAX_SIZES_CNT * 2];
     count = MIN(gCamCapability[cameraId]->picture_sizes_tbl_cnt, MAX_SIZES_CNT);
@@ -7576,6 +7629,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
             count, MAX_SIZES_CNT, available_processed_sizes);
     staticInfo.update(ANDROID_SCALER_AVAILABLE_PROCESSED_SIZES,
             available_processed_sizes, count * 2);
+    { // Log added - block to limit scope of i
+        String8 available_processed_sizes_str;
+        for(size_t i = 0; i < count * 2; i+=2) {
+            available_processed_sizes_str.appendFormat("[%d, %d] ", available_processed_sizes[i], available_processed_sizes[i+1]);
+        }
+        LOGD("Static Metadata: ANDROID_SCALER_AVAILABLE_PROCESSED_SIZES = [%s]", available_processed_sizes_str.c_str());
+    }
 
     int32_t available_raw_sizes[MAX_SIZES_CNT * 2];
     count = MIN(gCamCapability[cameraId]->supported_raw_dim_cnt, MAX_SIZES_CNT);
@@ -7583,6 +7643,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
             count, MAX_SIZES_CNT, available_raw_sizes);
     staticInfo.update(ANDROID_SCALER_AVAILABLE_RAW_SIZES,
             available_raw_sizes, count * 2);
+    { // Log added - block to limit scope of i
+        String8 available_raw_sizes_str;
+        for(size_t i = 0; i < count * 2; i+=2) {
+            available_raw_sizes_str.appendFormat("[%d, %d] ", available_raw_sizes[i], available_raw_sizes[i+1]);
+        }
+        LOGD("Static Metadata: ANDROID_SCALER_AVAILABLE_RAW_SIZES = [%s]", available_raw_sizes_str.c_str());
+    }
 
     int32_t available_fps_ranges[MAX_SIZES_CNT * 2];
     count = MIN(gCamCapability[cameraId]->fps_ranges_tbl_cnt, MAX_SIZES_CNT);
@@ -7590,12 +7657,20 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
             count, MAX_SIZES_CNT, available_fps_ranges);
     staticInfo.update(ANDROID_CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES,
             available_fps_ranges, count * 2);
+    { // Log added - block to limit scope of i
+        String8 available_fps_ranges_str;
+        for(size_t i = 0; i < count * 2; i+=2) {
+            available_fps_ranges_str.appendFormat("[%d, %d] ", available_fps_ranges[i], available_fps_ranges[i+1]);
+        }
+        LOGD("Static Metadata: ANDROID_CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES = [%s]", available_fps_ranges_str.c_str());
+    }
 
     camera_metadata_rational exposureCompensationStep = {
             gCamCapability[cameraId]->exp_compensation_step.numerator,
             gCamCapability[cameraId]->exp_compensation_step.denominator};
     staticInfo.update(ANDROID_CONTROL_AE_COMPENSATION_STEP,
                       &exposureCompensationStep, 1);
+    LOGD("Static Metadata: ANDROID_CONTROL_AE_COMPENSATION_STEP = [%d/%d]", exposureCompensationStep.numerator, exposureCompensationStep.denominator); // Log added
 
     Vector<uint8_t> availableVstabModes;
     availableVstabModes.add(ANDROID_CONTROL_VIDEO_STABILIZATION_MODE_OFF);
@@ -7618,6 +7693,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     }
     staticInfo.update(ANDROID_CONTROL_AVAILABLE_VIDEO_STABILIZATION_MODES,
                       availableVstabModes.array(), availableVstabModes.size());
+    { // Log added - block to limit scope of i
+        String8 availableVstabModes_str;
+        for(size_t i = 0; i < availableVstabModes.size(); ++i) {
+            availableVstabModes_str.appendFormat("%d ", availableVstabModes[i]);
+        }
+        LOGD("Static Metadata: ANDROID_CONTROL_AVAILABLE_VIDEO_STABILIZATION_MODES = [%s]", availableVstabModes_str.c_str());
+    }
 
     /*HAL 1 and HAL 3 common*/
     uint32_t zoomSteps = gCamCapability[cameraId]->zoom_ratio_tbl_cnt;
@@ -7626,15 +7708,18 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     float maxZoom = maxZoomStep/minZoomStep;
     staticInfo.update(ANDROID_SCALER_AVAILABLE_MAX_DIGITAL_ZOOM,
             &maxZoom, 1);
+    LOGD("Static Metadata: ANDROID_SCALER_AVAILABLE_MAX_DIGITAL_ZOOM = %f", maxZoom); // Log added
 
     uint8_t croppingType = ANDROID_SCALER_CROPPING_TYPE_CENTER_ONLY;
     staticInfo.update(ANDROID_SCALER_CROPPING_TYPE, &croppingType, 1);
+    LOGD("Static Metadata: ANDROID_SCALER_CROPPING_TYPE = %d", croppingType); // Log added
 
     int32_t max3aRegions[3] = {/*AE*/1,/*AWB*/ 0,/*AF*/ 1};
     if (gCamCapability[cameraId]->supported_focus_modes_cnt == 1)
         max3aRegions[2] = 0; /* AF not supported */
     staticInfo.update(ANDROID_CONTROL_MAX_REGIONS,
             max3aRegions, 3);
+    LOGD("Static Metadata: ANDROID_CONTROL_MAX_REGIONS = [AE:%d, AWB:%d, AF:%d]", max3aRegions[0], max3aRegions[1], max3aRegions[2]); // Log added
 
     /* 0: OFF, 1: OFF+SIMPLE, 2: OFF+FULL, 3: OFF+SIMPLE+FULL */
     memset(prop, 0, sizeof(prop));
@@ -7663,8 +7748,16 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_STATISTICS_INFO_AVAILABLE_FACE_DETECT_MODES,
             availableFaceDetectModes.array(),
             availableFaceDetectModes.size());
+    { // Log added - block to limit scope of i
+        String8 availableFaceDetectModes_str;
+        for(size_t i = 0; i < availableFaceDetectModes.size(); ++i) {
+            availableFaceDetectModes_str.appendFormat("%d ", availableFaceDetectModes[i]);
+        }
+        LOGD("Static Metadata: ANDROID_STATISTICS_INFO_AVAILABLE_FACE_DETECT_MODES = [%s]", availableFaceDetectModes_str.c_str());
+    }
     staticInfo.update(ANDROID_STATISTICS_INFO_MAX_FACE_COUNT,
             (int32_t *)&maxFaces, 1);
+    LOGD("Static Metadata: ANDROID_STATISTICS_INFO_MAX_FACE_COUNT = %d", maxFaces); // Log added
 
     int32_t exposureCompensationRange[] = {
             gCamCapability[cameraId]->exposure_compensation_min,
@@ -7672,14 +7765,23 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_CONTROL_AE_COMPENSATION_RANGE,
             exposureCompensationRange,
             sizeof(exposureCompensationRange)/sizeof(int32_t));
+    LOGD("Static Metadata: ANDROID_CONTROL_AE_COMPENSATION_RANGE = [%d, %d]", exposureCompensationRange[0], exposureCompensationRange[1]); // Log added
 
     uint8_t lensFacing = (facingBack) ?
             ANDROID_LENS_FACING_BACK : ANDROID_LENS_FACING_FRONT;
     staticInfo.update(ANDROID_LENS_FACING, &lensFacing, 1);
+    LOGD("Static Metadata: ANDROID_LENS_FACING = %d", lensFacing); // Log added
 
     staticInfo.update(ANDROID_JPEG_AVAILABLE_THUMBNAIL_SIZES,
                       available_thumbnail_sizes,
                       sizeof(available_thumbnail_sizes)/sizeof(int32_t));
+    { // Log added - block to limit scope of i
+        String8 available_thumbnail_sizes_str;
+        for(size_t i = 0; i < sizeof(available_thumbnail_sizes)/sizeof(int32_t); i+=2) {
+            available_thumbnail_sizes_str.appendFormat("[%d, %d] ", available_thumbnail_sizes[i], available_thumbnail_sizes[i+1]);
+        }
+        LOGD("Static Metadata: ANDROID_JPEG_AVAILABLE_THUMBNAIL_SIZES = [%s]", available_thumbnail_sizes_str.c_str());
+    }
 
     /*all sizes will be clubbed into this tag*/
     count = MIN(gCamCapability[cameraId]->picture_sizes_tbl_cnt, MAX_SIZES_CNT);
@@ -7739,11 +7841,23 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
 
     staticInfo.update(ANDROID_SCALER_AVAILABLE_STREAM_CONFIGURATIONS,
                       available_stream_configs.array(), available_stream_configs.size());
+    { // Log added - block to limit scope of i
+        String8 available_stream_configs_str;
+        for(size_t i = 0; i < available_stream_configs.size(); i+=4) {
+            available_stream_configs_str.appendFormat("(format:%d, width:%d, height:%d, input/output:%d) ",
+                                                    available_stream_configs[i], available_stream_configs[i+1],
+                                                    available_stream_configs[i+2], available_stream_configs[i+3]);
+        }
+        LOGD("Static Metadata: ANDROID_SCALER_AVAILABLE_STREAM_CONFIGURATIONS = [%s]", available_stream_configs_str.c_str());
+    }
+
     static const uint8_t hotpixelMode = ANDROID_HOT_PIXEL_MODE_FAST;
     staticInfo.update(ANDROID_HOT_PIXEL_MODE, &hotpixelMode, 1);
+    LOGD("Static Metadata: ANDROID_HOT_PIXEL_MODE = %d", hotpixelMode); // Log added
 
     static const uint8_t hotPixelMapMode = ANDROID_STATISTICS_HOT_PIXEL_MAP_MODE_OFF;
     staticInfo.update(ANDROID_STATISTICS_HOT_PIXEL_MAP_MODE, &hotPixelMapMode, 1);
+    LOGD("Static Metadata: ANDROID_STATISTICS_HOT_PIXEL_MAP_MODE = %d", hotPixelMapMode); // Log added
 
     /* android.scaler.availableMinFrameDurations */
     Vector<int64_t> available_min_durations;
@@ -7773,6 +7887,15 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     }
     staticInfo.update(ANDROID_SCALER_AVAILABLE_MIN_FRAME_DURATIONS,
                       available_min_durations.array(), available_min_durations.size());
+    { // Log added - block to limit scope of i
+        String8 available_min_durations_str;
+        for(size_t i = 0; i < available_min_durations.size(); i+=4) {
+            available_min_durations_str.appendFormat("(format:%d, width:%d, height:%d, duration:%lld) ",
+                                                    (int)available_min_durations[i], (int)available_min_durations[i+1],
+                                                    (int)available_min_durations[i+2], (long long)available_min_durations[i+3]);
+        }
+        LOGD("Static Metadata: ANDROID_SCALER_AVAILABLE_MIN_FRAME_DURATIONS = [%s]", available_min_durations_str.c_str());
+    }
 
     Vector<int32_t> available_hfr_configs;
     for (size_t i = 0; i < gCamCapability[cameraId]->hfr_tbl_cnt; i++) {
@@ -7848,11 +7971,22 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
         staticInfo.update(
                 ANDROID_CONTROL_AVAILABLE_HIGH_SPEED_VIDEO_CONFIGURATIONS,
                 available_hfr_configs.array(), available_hfr_configs.size());
+        { // Log added - block to limit scope of i
+            String8 available_hfr_configs_str;
+            for(size_t i = 0; i < available_hfr_configs.size(); i+=5) {
+                available_hfr_configs_str.appendFormat("(width:%d, height:%d, fps_min:%d, fps_max:%d, batch_size_max:%d) ",
+                                                        available_hfr_configs[i], available_hfr_configs[i+1],
+                                                        available_hfr_configs[i+2], available_hfr_configs[i+3],
+                                                        available_hfr_configs[i+4]);
+            }
+            LOGD("Static Metadata: ANDROID_CONTROL_AVAILABLE_HIGH_SPEED_VIDEO_CONFIGURATIONS = [%s]", available_hfr_configs_str.c_str());
+        }
     }
 
     int32_t max_jpeg_size = (int32_t)calcMaxJpegSize(cameraId);
     staticInfo.update(ANDROID_JPEG_MAX_SIZE,
                       &max_jpeg_size, 1);
+    LOGD("Static Metadata: ANDROID_JPEG_MAX_SIZE = %d", max_jpeg_size); // Log added
 
     uint8_t avail_effects[CAM_EFFECT_MODE_MAX];
     size_t size = 0;
@@ -7869,6 +8003,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_CONTROL_AVAILABLE_EFFECTS,
                       avail_effects,
                       size);
+    { // Log added - block to limit scope of i
+        String8 avail_effects_str;
+        for(size_t i = 0; i < size; ++i) {
+            avail_effects_str.appendFormat("%d ", avail_effects[i]);
+        }
+        LOGD("Static Metadata: ANDROID_CONTROL_AVAILABLE_EFFECTS = [%s]", avail_effects_str.c_str());
+    }
 
     uint8_t avail_scene_modes[CAM_SCENE_MODE_MAX];
     uint8_t supported_indexes[CAM_SCENE_MODE_MAX];
@@ -7891,6 +8032,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_CONTROL_AVAILABLE_SCENE_MODES,
                       avail_scene_modes,
                       supported_scene_modes_cnt);
+    { // Log added - block to limit scope of i
+        String8 avail_scene_modes_str;
+        for(size_t i = 0; i < supported_scene_modes_cnt; ++i) {
+            avail_scene_modes_str.appendFormat("%d ", avail_scene_modes[i]);
+        }
+        LOGD("Static Metadata: ANDROID_CONTROL_AVAILABLE_SCENE_MODES = [%s]", avail_scene_modes_str.c_str());
+    }
 
     uint8_t scene_mode_overrides[CAM_SCENE_MODE_MAX  * 3];
     makeOverridesList(gCamCapability[cameraId]->scene_mode_overrides,
@@ -7907,6 +8055,14 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
 
     staticInfo.update(ANDROID_CONTROL_SCENE_MODE_OVERRIDES,
             scene_mode_overrides, supported_scene_modes_cnt * 3);
+    { // Log added - block to limit scope of i
+        String8 scene_mode_overrides_str;
+        for(size_t i = 0; i < supported_scene_modes_cnt * 3; i+=3) {
+            scene_mode_overrides_str.appendFormat("(scene_mode:%d, control_ae_mode_override:%d, control_awb_mode_override:%d) ",
+                                                    scene_mode_overrides[i], scene_mode_overrides[i+1], scene_mode_overrides[i+2]);
+        }
+        LOGD("Static Metadata: ANDROID_CONTROL_SCENE_MODE_OVERRIDES = [%s]", scene_mode_overrides_str.c_str());
+    }
 
     uint8_t available_control_modes[] = {ANDROID_CONTROL_MODE_OFF,
                                          ANDROID_CONTROL_MODE_AUTO,
@@ -7914,6 +8070,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_CONTROL_AVAILABLE_MODES,
             available_control_modes,
             3);
+    LOGD("Static Metadata: ANDROID_CONTROL_AVAILABLE_MODES = [%d, %d, %d]", available_control_modes[0], available_control_modes[1], available_control_modes[2]); // Log added
 
     uint8_t avail_antibanding_modes[CAM_ANTIBANDING_MODE_MAX];
     size = 0;
@@ -7931,6 +8088,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_CONTROL_AE_AVAILABLE_ANTIBANDING_MODES,
                       avail_antibanding_modes,
                       size);
+    { // Log added - block to limit scope of i
+        String8 avail_antibanding_modes_str;
+        for(size_t i = 0; i < size; ++i) {
+            avail_antibanding_modes_str.appendFormat("%d ", avail_antibanding_modes[i]);
+        }
+        LOGD("Static Metadata: ANDROID_CONTROL_AE_AVAILABLE_ANTIBANDING_MODES = [%s]", avail_antibanding_modes_str.c_str());
+    }
 
     uint8_t avail_abberation_modes[] = {
             ANDROID_COLOR_CORRECTION_ABERRATION_MODE_OFF,
@@ -7950,6 +8114,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_COLOR_CORRECTION_AVAILABLE_ABERRATION_MODES,
             avail_abberation_modes,
             size);
+    LOGD("Static Metadata: ANDROID_COLOR_CORRECTION_AVAILABLE_ABERRATION_MODES = [%d, %d, %d]", avail_abberation_modes[0], avail_abberation_modes[1], avail_abberation_modes[2]); // Log added
 
     uint8_t avail_af_modes[CAM_FOCUS_MODE_MAX];
     size = 0;
@@ -7966,6 +8131,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_CONTROL_AF_AVAILABLE_MODES,
                       avail_af_modes,
                       size);
+    { // Log added - block to limit scope of i
+        String8 avail_af_modes_str;
+        for(size_t i = 0; i < size; ++i) {
+            avail_af_modes_str.appendFormat("%d ", avail_af_modes[i]);
+        }
+        LOGD("Static Metadata: ANDROID_CONTROL_AF_AVAILABLE_MODES = [%s]", avail_af_modes_str.c_str());
+    }
 
     uint8_t avail_awb_modes[CAM_WB_MODE_MAX];
     size = 0;
@@ -7983,6 +8155,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_CONTROL_AWB_AVAILABLE_MODES,
                       avail_awb_modes,
                       size);
+    { // Log added - block to limit scope of i
+        String8 avail_awb_modes_str;
+        for(size_t i = 0; i < size; ++i) {
+            avail_awb_modes_str.appendFormat("%d ", avail_awb_modes[i]);
+        }
+        LOGD("Static Metadata: ANDROID_CONTROL_AWB_AVAILABLE_MODES = [%s]", avail_awb_modes_str.c_str());
+    }
 
     uint8_t available_flash_levels[CAM_FLASH_FIRING_LEVEL_MAX];
     count = CAM_FLASH_FIRING_LEVEL_MAX;
@@ -7994,6 +8173,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     }
     staticInfo.update(ANDROID_FLASH_FIRING_POWER,
             available_flash_levels, count);
+    { // Log added - block to limit scope of i
+        String8 available_flash_levels_str;
+        for(size_t i = 0; i < count; ++i) {
+            available_flash_levels_str.appendFormat("%d ", available_flash_levels[i]);
+        }
+        LOGD("Static Metadata: ANDROID_FLASH_FIRING_POWER = [%s]", available_flash_levels_str.c_str());
+    }
 
     uint8_t flashAvailable;
     if (gCamCapability[cameraId]->flash_available)
@@ -8002,6 +8188,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
         flashAvailable = ANDROID_FLASH_INFO_AVAILABLE_FALSE;
     staticInfo.update(ANDROID_FLASH_INFO_AVAILABLE,
             &flashAvailable, 1);
+    LOGD("Static Metadata: ANDROID_FLASH_INFO_AVAILABLE = %d", flashAvailable); // Log added
 
     Vector<uint8_t> avail_ae_modes;
     count = CAM_AE_MODE_MAX;
@@ -8017,6 +8204,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_CONTROL_AE_AVAILABLE_MODES,
                       avail_ae_modes.array(),
                       avail_ae_modes.size());
+    { // Log added - block to limit scope of i
+        String8 avail_ae_modes_str;
+        for(size_t i = 0; i < avail_ae_modes.size(); ++i) {
+            avail_ae_modes_str.appendFormat("%d ", avail_ae_modes[i]);
+        }
+        LOGD("Static Metadata: ANDROID_CONTROL_AE_AVAILABLE_MODES = [%s]", avail_ae_modes_str.c_str());
+    }
 
     int32_t sensitivity_range[2];
     sensitivity_range[0] = gCamCapability[cameraId]->sensitivity_range.min_sensitivity;
@@ -8024,15 +8218,18 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_SENSOR_INFO_SENSITIVITY_RANGE,
                       sensitivity_range,
                       sizeof(sensitivity_range) / sizeof(int32_t));
+    LOGD("Static Metadata: ANDROID_SENSOR_INFO_SENSITIVITY_RANGE = [%d, %d]", sensitivity_range[0], sensitivity_range[1]); // Log added
 
     staticInfo.update(ANDROID_SENSOR_MAX_ANALOG_SENSITIVITY,
                       &gCamCapability[cameraId]->max_analog_sensitivity,
                       1);
+    LOGD("Static Metadata: ANDROID_SENSOR_MAX_ANALOG_SENSITIVITY = %d", gCamCapability[cameraId]->max_analog_sensitivity); // Log added
 
     int32_t sensor_orientation = (int32_t)gCamCapability[cameraId]->sensor_mount_angle;
     staticInfo.update(ANDROID_SENSOR_ORIENTATION,
                       &sensor_orientation,
                       1);
+    LOGD("Static Metadata: ANDROID_SENSOR_ORIENTATION = %d", sensor_orientation); // Log added
 
     int32_t max_output_streams[] = {
             MAX_STALLING_STREAMS,
@@ -8041,10 +8238,12 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_REQUEST_MAX_NUM_OUTPUT_STREAMS,
             max_output_streams,
             sizeof(max_output_streams)/sizeof(max_output_streams[0]));
+    LOGD("Static Metadata: ANDROID_REQUEST_MAX_NUM_OUTPUT_STREAMS = [STALLING:%d, PROCESSED:%d, RAW:%d]", max_output_streams[0], max_output_streams[1], max_output_streams[2]); // Log added
 
     uint8_t avail_leds = 0;
     staticInfo.update(ANDROID_LED_AVAILABLE_LEDS,
                       &avail_leds, 0);
+    LOGD("Static Metadata: ANDROID_LED_AVAILABLE_LEDS - count = %d", 0); // Log added - count is 0 for no LEDs
 
     uint8_t focus_dist_calibrated;
     int val = lookupFwkName(FOCUS_CALIBRATION_MAP, METADATA_MAP_SIZE(FOCUS_CALIBRATION_MAP),
@@ -8053,6 +8252,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
         focus_dist_calibrated = (uint8_t)val;
         staticInfo.update(ANDROID_LENS_INFO_FOCUS_DISTANCE_CALIBRATION,
                      &focus_dist_calibrated, 1);
+        LOGD("Static Metadata: ANDROID_LENS_INFO_FOCUS_DISTANCE_CALIBRATION = %d", focus_dist_calibrated); // Log added
     }
 
     int32_t avail_testpattern_modes[MAX_TEST_PATTERN_CNT];
@@ -8070,19 +8270,29 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_SENSOR_AVAILABLE_TEST_PATTERN_MODES,
                       avail_testpattern_modes,
                       size);
+    { // Log added - block to limit scope of i
+        String8 avail_testpattern_modes_str;
+        for(size_t i = 0; i < size; ++i) {
+            avail_testpattern_modes_str.appendFormat("%d ", avail_testpattern_modes[i]);
+        }
+        LOGD("Static Metadata: ANDROID_SENSOR_AVAILABLE_TEST_PATTERN_MODES = [%s]", avail_testpattern_modes_str.c_str());
+    }
 
     uint8_t max_pipeline_depth = (uint8_t)(MAX_INFLIGHT_REQUESTS + EMPTY_PIPELINE_DELAY + FRAME_SKIP_DELAY);
     staticInfo.update(ANDROID_REQUEST_PIPELINE_MAX_DEPTH,
                       &max_pipeline_depth,
                       1);
+    LOGD("Static Metadata: ANDROID_REQUEST_PIPELINE_MAX_DEPTH = %d", max_pipeline_depth); // Log added
 
     int32_t partial_result_count = PARTIAL_RESULT_COUNT;
     staticInfo.update(ANDROID_REQUEST_PARTIAL_RESULT_COUNT,
                       &partial_result_count,
                        1);
+    LOGD("Static Metadata: ANDROID_REQUEST_PARTIAL_RESULT_COUNT = %d", partial_result_count); // Log added
 
     int32_t max_stall_duration = MAX_REPROCESS_STALL;
     staticInfo.update(ANDROID_REPROCESS_MAX_CAPTURE_STALL, &max_stall_duration, 1);
+    LOGD("Static Metadata: ANDROID_REPROCESS_MAX_CAPTURE_STALL = %d", max_stall_duration); // Log added
 
     Vector<uint8_t> available_capabilities;
     available_capabilities.add(ANDROID_REQUEST_AVAILABLE_CAPABILITIES_BACKWARD_COMPATIBLE);
@@ -8105,6 +8315,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_REQUEST_AVAILABLE_CAPABILITIES,
             available_capabilities.array(),
             available_capabilities.size());
+    { // Log added - block to limit scope of i
+        String8 available_capabilities_str;
+        for(size_t i = 0; i < available_capabilities.size(); ++i) {
+            available_capabilities_str.appendFormat("%d ", available_capabilities[i]);
+        }
+        LOGD("Static Metadata: ANDROID_REQUEST_AVAILABLE_CAPABILITIES = [%s]", available_capabilities_str.c_str());
+    }
 
     //aeLockAvailable to be set to true if capabilities has MANUAL_SENSOR or BURST_CAPTURE
     //Assumption is that all bayer cameras support MANUAL_SENSOR.
@@ -8113,6 +8330,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
 
     staticInfo.update(ANDROID_CONTROL_AE_LOCK_AVAILABLE,
             &aeLockAvailable, 1);
+    LOGD("Static Metadata: ANDROID_CONTROL_AE_LOCK_AVAILABLE = %d", aeLockAvailable); // Log added
 
     //awbLockAvailable to be set to true if capabilities has MANUAL_POST_PROCESSING or
     //BURST_CAPTURE. Assumption is that all bayer cameras support MANUAL_POST_PROCESSING.
@@ -8121,11 +8339,13 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
 
     staticInfo.update(ANDROID_CONTROL_AWB_LOCK_AVAILABLE,
             &awbLockAvailable, 1);
+    LOGD("Static Metadata: ANDROID_CONTROL_AWB_LOCK_AVAILABLE = %d", awbLockAvailable); // Log added
 
     int32_t max_input_streams = 1;
     staticInfo.update(ANDROID_REQUEST_MAX_NUM_INPUT_STREAMS,
                       &max_input_streams,
                       1);
+    LOGD("Static Metadata: ANDROID_REQUEST_MAX_NUM_INPUT_STREAMS = %d", max_input_streams); // Log added
 
     /* format of the map is : input format, num_output_formats, outputFormat1,..,outputFormatN */
     int32_t io_format_map[] = {HAL_PIXEL_FORMAT_IMPLEMENTATION_DEFINED, 2,
@@ -8134,11 +8354,19 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
             HAL_PIXEL_FORMAT_YCbCr_420_888};
     staticInfo.update(ANDROID_SCALER_AVAILABLE_INPUT_OUTPUT_FORMATS_MAP,
                       io_format_map, sizeof(io_format_map)/sizeof(io_format_map[0]));
+    { // Log added - block to limit scope of i
+        String8 io_format_map_str;
+        for(size_t i = 0; i < sizeof(io_format_map)/sizeof(io_format_map[0]); ++i) {
+            io_format_map_str.appendFormat("%d ", io_format_map[i]);
+        }
+        LOGD("Static Metadata: ANDROID_SCALER_AVAILABLE_INPUT_OUTPUT_FORMATS_MAP = [%s]", io_format_map_str.c_str());
+    }
 
     int32_t max_latency = ANDROID_SYNC_MAX_LATENCY_PER_FRAME_CONTROL;
     staticInfo.update(ANDROID_SYNC_MAX_LATENCY,
                       &max_latency,
                       1);
+    LOGD("Static Metadata: ANDROID_SYNC_MAX_LATENCY = %d", max_latency); // Log added
 
 #ifndef USE_HAL_3_3
     int32_t isp_sensitivity_range[2];
@@ -8149,6 +8377,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_CONTROL_POST_RAW_SENSITIVITY_BOOST_RANGE,
                       isp_sensitivity_range,
                       sizeof(isp_sensitivity_range) / sizeof(isp_sensitivity_range[0]));
+    LOGD("Static Metadata: ANDROID_CONTROL_POST_RAW_SENSITIVITY_BOOST_RANGE = [%d, %d]", isp_sensitivity_range[0], isp_sensitivity_range[1]); // Log added
 #endif
 
     uint8_t available_hot_pixel_modes[] = {ANDROID_HOT_PIXEL_MODE_FAST,
@@ -8156,6 +8385,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_HOT_PIXEL_AVAILABLE_HOT_PIXEL_MODES,
             available_hot_pixel_modes,
             sizeof(available_hot_pixel_modes)/sizeof(available_hot_pixel_modes[0]));
+    LOGD("Static Metadata: ANDROID_HOT_PIXEL_AVAILABLE_HOT_PIXEL_MODES = [%d, %d]", available_hot_pixel_modes[0], available_hot_pixel_modes[1]); // Log added
 
     uint8_t available_shading_modes[] = {ANDROID_SHADING_MODE_OFF,
                                          ANDROID_SHADING_MODE_FAST,
@@ -8163,12 +8393,14 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_SHADING_AVAILABLE_MODES,
                       available_shading_modes,
                       3);
+    LOGD("Static Metadata: ANDROID_SHADING_AVAILABLE_MODES = [%d, %d, %d]", available_shading_modes[0], available_shading_modes[1], available_shading_modes[2]); // Log added
 
     uint8_t available_lens_shading_map_modes[] = {ANDROID_STATISTICS_LENS_SHADING_MAP_MODE_OFF,
                                                   ANDROID_STATISTICS_LENS_SHADING_MAP_MODE_ON};
     staticInfo.update(ANDROID_STATISTICS_INFO_AVAILABLE_LENS_SHADING_MAP_MODES,
                       available_lens_shading_map_modes,
                       2);
+    LOGD("Static Metadata: ANDROID_STATISTICS_INFO_AVAILABLE_LENS_SHADING_MAP_MODES = [%d, %d]", available_lens_shading_map_modes[0], available_lens_shading_map_modes[1]); // Log added
 
     uint8_t available_edge_modes[] = {ANDROID_EDGE_MODE_OFF,
                                       ANDROID_EDGE_MODE_FAST,
@@ -8177,6 +8409,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_EDGE_AVAILABLE_EDGE_MODES,
             available_edge_modes,
             sizeof(available_edge_modes)/sizeof(available_edge_modes[0]));
+    LOGD("Static Metadata: ANDROID_EDGE_AVAILABLE_EDGE_MODES = [%d, %d, %d, %d]", available_edge_modes[0], available_edge_modes[1], available_edge_modes[2], available_edge_modes[3]); // Log added
 
     uint8_t available_noise_red_modes[] = {ANDROID_NOISE_REDUCTION_MODE_OFF,
                                            ANDROID_NOISE_REDUCTION_MODE_FAST,
@@ -8186,6 +8419,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_NOISE_REDUCTION_AVAILABLE_NOISE_REDUCTION_MODES,
             available_noise_red_modes,
             sizeof(available_noise_red_modes)/sizeof(available_noise_red_modes[0]));
+    LOGD("Static Metadata: ANDROID_NOISE_REDUCTION_AVAILABLE_NOISE_REDUCTION_MODES = [%d, %d, %d, %d, %d]", available_noise_red_modes[0], available_noise_red_modes[1], available_noise_red_modes[2], available_noise_red_modes[3], available_noise_red_modes[4]); // Log added
 
     uint8_t available_tonemap_modes[] = {ANDROID_TONEMAP_MODE_CONTRAST_CURVE,
                                          ANDROID_TONEMAP_MODE_FAST,
@@ -8193,17 +8427,20 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_TONEMAP_AVAILABLE_TONE_MAP_MODES,
             available_tonemap_modes,
             sizeof(available_tonemap_modes)/sizeof(available_tonemap_modes[0]));
+    LOGD("Static Metadata: ANDROID_TONEMAP_AVAILABLE_TONE_MAP_MODES = [%d, %d, %d]", available_tonemap_modes[0], available_tonemap_modes[1], available_tonemap_modes[2]); // Log added
 
     uint8_t available_hot_pixel_map_modes[] = {ANDROID_STATISTICS_HOT_PIXEL_MAP_MODE_OFF};
     staticInfo.update(ANDROID_STATISTICS_INFO_AVAILABLE_HOT_PIXEL_MAP_MODES,
             available_hot_pixel_map_modes,
             sizeof(available_hot_pixel_map_modes)/sizeof(available_hot_pixel_map_modes[0]));
+    LOGD("Static Metadata: ANDROID_STATISTICS_INFO_AVAILABLE_HOT_PIXEL_MAP_MODES = [%d]", available_hot_pixel_map_modes[0]); // Log added
 
     val = lookupFwkName(REFERENCE_ILLUMINANT_MAP, METADATA_MAP_SIZE(REFERENCE_ILLUMINANT_MAP),
             gCamCapability[cameraId]->reference_illuminant1);
     if (NAME_NOT_FOUND != val) {
         uint8_t fwkReferenceIlluminant = (uint8_t)val;
         staticInfo.update(ANDROID_SENSOR_REFERENCE_ILLUMINANT1, &fwkReferenceIlluminant, 1);
+        LOGD("Static Metadata: ANDROID_SENSOR_REFERENCE_ILLUMINANT1 = %d", fwkReferenceIlluminant); // Log added
     }
 
     val = lookupFwkName(REFERENCE_ILLUMINANT_MAP, METADATA_MAP_SIZE(REFERENCE_ILLUMINANT_MAP),
@@ -8211,31 +8448,92 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     if (NAME_NOT_FOUND != val) {
         uint8_t fwkReferenceIlluminant = (uint8_t)val;
         staticInfo.update(ANDROID_SENSOR_REFERENCE_ILLUMINANT2, &fwkReferenceIlluminant, 1);
+        LOGD("Static Metadata: ANDROID_SENSOR_REFERENCE_ILLUMINANT2 = %d", fwkReferenceIlluminant); // Log added
     }
 
     staticInfo.update(ANDROID_SENSOR_FORWARD_MATRIX1, (camera_metadata_rational_t *)
             (void *)gCamCapability[cameraId]->forward_matrix1,
             FORWARD_MATRIX_COLS * FORWARD_MATRIX_ROWS);
+    { // Log added - block to limit scope of i, j
+        String8 matrix_str;
+        for (int i = 0; i < FORWARD_MATRIX_ROWS; ++i) {
+            for (int j = 0; j < FORWARD_MATRIX_COLS; ++j) {
+                matrix_str.appendFormat("[%d/%d] ", ((cam_rational_type_t*)gCamCapability[cameraId]->forward_matrix1)[i * FORWARD_MATRIX_COLS + j].numerator,
+                                            ((cam_rational_type_t*)gCamCapability[cameraId]->forward_matrix1)[i * FORWARD_MATRIX_COLS + j].denominator);
+            }
+        }
+        LOGD("Static Metadata: ANDROID_SENSOR_FORWARD_MATRIX1 = [%s]", matrix_str.c_str());
+    }
 
     staticInfo.update(ANDROID_SENSOR_FORWARD_MATRIX2, (camera_metadata_rational_t *)
             (void *)gCamCapability[cameraId]->forward_matrix2,
             FORWARD_MATRIX_COLS * FORWARD_MATRIX_ROWS);
+    { // Log added - block to limit scope of i, j
+        String8 matrix_str;
+        for (int i = 0; i < FORWARD_MATRIX_ROWS; ++i) {
+            for (int j = 0; j < FORWARD_MATRIX_COLS; ++j) {
+                matrix_str.appendFormat("[%d/%d] ", ((cam_rational_type_t*)gCamCapability[cameraId]->forward_matrix2)[i * FORWARD_MATRIX_COLS + j].numerator,
+                                            ((cam_rational_type_t*)gCamCapability[cameraId]->forward_matrix2)[i * FORWARD_MATRIX_COLS + j].denominator);
+            }
+        }
+        LOGD("Static Metadata: ANDROID_SENSOR_FORWARD_MATRIX2 = [%s]", matrix_str.c_str());
+    }
 
     staticInfo.update(ANDROID_SENSOR_COLOR_TRANSFORM1, (camera_metadata_rational_t *)
             (void *)gCamCapability[cameraId]->color_transform1,
             COLOR_TRANSFORM_COLS * COLOR_TRANSFORM_ROWS);
+    { // Log added - block to limit scope of i, j
+        String8 matrix_str;
+        for (int i = 0; i < COLOR_TRANSFORM_ROWS; ++i) {
+            for (int j = 0; j < COLOR_TRANSFORM_COLS; ++j) {
+                matrix_str.appendFormat("[%d/%d] ", ((cam_rational_type_t*)gCamCapability[cameraId]->color_transform1)[i * COLOR_TRANSFORM_COLS + j].numerator,
+                                            ((cam_rational_type_t*)gCamCapability[cameraId]->color_transform1)[i * COLOR_TRANSFORM_COLS + j].denominator);
+            }
+        }
+        LOGD("Static Metadata: ANDROID_SENSOR_COLOR_TRANSFORM1 = [%s]", matrix_str.c_str());
+    }
 
     staticInfo.update(ANDROID_SENSOR_COLOR_TRANSFORM2, (camera_metadata_rational_t *)
             (void *)gCamCapability[cameraId]->color_transform2,
             COLOR_TRANSFORM_COLS * COLOR_TRANSFORM_ROWS);
+    { // Log added - block to limit scope of i, j
+        String8 matrix_str;
+        for (int i = 0; i < COLOR_TRANSFORM_ROWS; ++i) {
+            for (int j = 0; j < COLOR_TRANSFORM_COLS; ++j) {
+                matrix_str.appendFormat("[%d/%d] ", ((cam_rational_type_t*)gCamCapability[cameraId]->color_transform2)[i * COLOR_TRANSFORM_COLS + j].numerator,
+                                            ((cam_rational_type_t*)gCamCapability[cameraId]->color_transform2)[i * COLOR_TRANSFORM_COLS + j].denominator);
+            }
+        }
+        LOGD("Static Metadata: ANDROID_SENSOR_COLOR_TRANSFORM2 = [%s]", matrix_str.c_str());
+    }
 
     staticInfo.update(ANDROID_SENSOR_CALIBRATION_TRANSFORM1, (camera_metadata_rational_t *)
             (void *)gCamCapability[cameraId]->calibration_transform1,
             CAL_TRANSFORM_COLS * CAL_TRANSFORM_ROWS);
+    { // Log added - block to limit scope of i, j
+        String8 matrix_str;
+        for (int i = 0; i < CAL_TRANSFORM_ROWS; ++i) {
+            for (int j = 0; j < CAL_TRANSFORM_COLS; ++j) {
+                matrix_str.appendFormat("[%d/%d] ", ((cam_rational_type_t*)gCamCapability[cameraId]->calibration_transform1)[i * CAL_TRANSFORM_COLS + j].numerator,
+                                            ((cam_rational_type_t*)gCamCapability[cameraId]->calibration_transform1)[i * CAL_TRANSFORM_COLS + j].denominator);
+            }
+        }
+        LOGD("Static Metadata: ANDROID_SENSOR_CALIBRATION_TRANSFORM1 = [%s]", matrix_str.c_str());
+    }
 
     staticInfo.update(ANDROID_SENSOR_CALIBRATION_TRANSFORM2, (camera_metadata_rational_t *)
             (void *)gCamCapability[cameraId]->calibration_transform2,
             CAL_TRANSFORM_COLS * CAL_TRANSFORM_ROWS);
+    { // Log added - block to limit scope of i, j
+        String8 matrix_str;
+        for (int i = 0; i < CAL_TRANSFORM_ROWS; ++i) {
+            for (int j = 0; j < CAL_TRANSFORM_COLS; ++j) {
+                matrix_str.appendFormat("[%d/%d] ", ((cam_rational_type_t*)gCamCapability[cameraId]->calibration_transform2)[i * CAL_TRANSFORM_COLS + j].numerator,
+                                            ((cam_rational_type_t*)gCamCapability[cameraId]->calibration_transform2)[i * CAL_TRANSFORM_COLS + j].denominator);
+            }
+        }
+        LOGD("Static Metadata: ANDROID_SENSOR_CALIBRATION_TRANSFORM2 = [%s]", matrix_str.c_str());
+    }
 
     int32_t request_keys_basic[] = {ANDROID_COLOR_CORRECTION_MODE,
        ANDROID_COLOR_CORRECTION_TRANSFORM, ANDROID_COLOR_CORRECTION_GAINS,
@@ -8280,6 +8578,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
 
     staticInfo.update(ANDROID_REQUEST_AVAILABLE_REQUEST_KEYS,
             available_request_keys.array(), available_request_keys.size());
+    LOGD("Static Metadata: ANDROID_REQUEST_AVAILABLE_REQUEST_KEYS - Count = %zu", available_request_keys.size()); // Log added
 
     int32_t result_keys_basic[] = {ANDROID_COLOR_CORRECTION_TRANSFORM,
        ANDROID_COLOR_CORRECTION_GAINS, ANDROID_CONTROL_AE_MODE, ANDROID_CONTROL_AE_REGIONS,
@@ -8336,6 +8635,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
 #endif
     staticInfo.update(ANDROID_REQUEST_AVAILABLE_RESULT_KEYS,
             available_result_keys.array(), available_result_keys.size());
+    LOGD("Static Metadata: ANDROID_REQUEST_AVAILABLE_RESULT_KEYS - Count = %zu", available_result_keys.size()); // Log added
 
     int32_t characteristics_keys_basic[] = {ANDROID_CONTROL_AE_AVAILABLE_ANTIBANDING_MODES,
        ANDROID_CONTROL_AE_AVAILABLE_MODES, ANDROID_CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES,
@@ -8409,6 +8709,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_REQUEST_AVAILABLE_CHARACTERISTICS_KEYS,
                       available_characteristics_keys.array(),
                       available_characteristics_keys.size());
+    LOGD("Static Metadata: ANDROID_REQUEST_AVAILABLE_CHARACTERISTICS_KEYS - Count = %zu", available_characteristics_keys.size()); // Log added
 
     /*available stall durations depend on the hw + sw and will be different for different devices */
     /*have to add for raw after implementation*/
@@ -8438,6 +8739,15 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     staticInfo.update(ANDROID_SCALER_AVAILABLE_STALL_DURATIONS,
                       available_stall_durations.array(),
                       available_stall_durations.size());
+    { // Log added - block to limit scope of i
+        String8 available_stall_durations_str;
+        for(size_t i = 0; i < available_stall_durations.size(); i+=4) {
+            available_stall_durations_str.appendFormat("(format:%d, width:%d, height:%d, duration:%lld) ",
+                                                    (int)available_stall_durations[i], (int)available_stall_durations[i+1],
+                                                    (int)available_stall_durations[i+2], (long long)available_stall_durations[i+3]);
+        }
+        LOGD("Static Metadata: ANDROID_SCALER_AVAILABLE_STALL_DURATIONS = [%s]", available_stall_durations_str.c_str());
+    }
 
     //QCAMERA3_OPAQUE_RAW
     uint8_t raw_format = QCAMERA3_OPAQUE_RAW_FORMAT_LEGACY;
@@ -8467,6 +8777,7 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
         break;
     }
     staticInfo.update(QCAMERA3_OPAQUE_RAW_FORMAT, &raw_format, 1);
+    LOGD("Static Metadata: QCAMERA3_OPAQUE_RAW_FORMAT = %d", raw_format); // Log added
 
     Vector<int32_t> strides;
     for (size_t i = 0; i < MIN(MAX_SIZES_CNT,
@@ -8480,15 +8791,24 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
     }
     staticInfo.update(QCAMERA3_OPAQUE_RAW_STRIDES, strides.array(),
             strides.size());
+    { // Log added - block to limit scope of i
+        String8 strides_str;
+        for(size_t i = 0; i < strides.size(); i+=3) {
+            strides_str.appendFormat("(width:%d, height:%d, stride:%d) ", strides[i], strides[i+1], strides[i+2]);
+        }
+        LOGD("Static Metadata: QCAMERA3_OPAQUE_RAW_STRIDES = [%s]", strides_str.c_str());
+    }
 
     staticInfo.update(QCAMERA3_DUALCAM_CALIB_META_DATA_BLOB,
             (const uint8_t*)&gCamCapability[cameraId]->related_cam_calibration,
             sizeof(gCamCapability[cameraId]->related_cam_calibration));
+    LOGD("Static Metadata: QCAMERA3_DUALCAM_CALIB_META_DATA_BLOB - size = %zu", sizeof(gCamCapability[cameraId]->related_cam_calibration)); // Log added
 
     uint8_t isMonoOnly =
             (gCamCapability[cameraId]->color_arrangement == CAM_FILTER_ARRANGEMENT_Y);
     staticInfo.update(QCAMERA3_SENSOR_IS_MONO_ONLY,
             &isMonoOnly, 1);
+    LOGD("Static Metadata: QCAMERA3_SENSOR_IS_MONO_ONLY = %d", isMonoOnly); // Log added
 
 #ifndef USE_HAL_3_3
     Vector<int32_t> opaque_size;
@@ -8517,14 +8837,23 @@ int QCamera3HardwareInterface::initStaticMetadata(uint32_t cameraId)
         staticInfo.update(ANDROID_SENSOR_OPAQUE_RAW_SIZE, opaque_size.array(), opaque_size.size());
     else
         LOGW("Warning: ANDROID_SENSOR_OPAQUE_RAW_SIZE is using rough estimation(2 bytes/pixel)");
+    { // Log added - block to limit scope of i
+        String8 opaque_size_str;
+        for(size_t i = 0; i < opaque_size.size(); i+=3) {
+            opaque_size_str.appendFormat("(width:%d, height:%d, frame_len:%d) ", opaque_size[i], opaque_size[i+1], opaque_size[i+2]);
+        }
+        LOGD("Static Metadata: ANDROID_SENSOR_OPAQUE_RAW_SIZE = [%s]", opaque_size_str.c_str());
+    }
 #endif
 
     int32_t sharpness_range[] = {
             gCamCapability[cameraId]->sharpness_ctrl.min_value,
             gCamCapability[cameraId]->sharpness_ctrl.max_value};
     staticInfo.update(QCAMERA3_SHARPNESS_RANGE, sharpness_range, 2);
+    LOGD("Static Metadata: QCAMERA3_SHARPNESS_RANGE = [%d, %d]", sharpness_range[0], sharpness_range[1]); // Log added
 
     gStaticMetadata[cameraId] = staticInfo.release();
+    LOGD("Static Metadata Initialization Complete for camera ID: %d", cameraId); // Log added
     return rc;
 }
 
