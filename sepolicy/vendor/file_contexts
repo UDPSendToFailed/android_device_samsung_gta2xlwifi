@@ -12,7 +12,6 @@
 /dev/block/platform/soc/7824900\.sdhci/by-name/steady        u:object_r:steady_block_device:s0
 
 # Binaries
-/(vendor|system/vendor)/bin/macloader.sh					u:object_r:macloader_exec:s0
 /(vendor|system/vendor)/bin/hdcp1prov          u:object_r:hdcp_exec:s0
 /(vendor|system/vendor)/bin/hdcp2p2prov        u:object_r:hdcp_exec:s0
 /(vendor|system/vendor)/bin/pm_proxy_helper    u:object_r:per_proxy_helper_exec:s0

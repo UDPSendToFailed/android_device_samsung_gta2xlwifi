@@ -1,5 +1,0 @@
-service vendor.macloader-sh /vendor/bin/macloader.sh
-    class core
-    user root
-    group system wifi
-    oneshot
