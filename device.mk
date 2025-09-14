@@ -18,7 +18,8 @@ LOCAL_PATH := device/samsung/gta2xlwifi
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
-    bootable/deprecated-ota
+    bootable/deprecated-ota \
+    hardware/qcom/bt/msm8996/libbt-vendor
 
 # Add common definitions for Qualcomm
 $(call soong_config_set,rfs,mpss_firmware_symlink_target,firmware_modem)
