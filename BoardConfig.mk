@@ -184,7 +184,6 @@ TARGET_OTA_ASSERT_DEVICE := gta2xlwifi
 
 # Power
 TARGET_USES_INTERACTION_BOOST := true
-TARGET_POWERHAL_MODE_EXT := $(DEVICE_PATH)/power/power-mode.cpp
 
 # Properties
 TARGET_SYSTEM_PROP := $(DEVICE_PATH)/system.prop

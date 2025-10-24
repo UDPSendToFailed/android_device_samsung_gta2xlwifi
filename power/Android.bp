@@ -1,0 +1,20 @@
+//
+// SPDX-FileCopyrightText: 2024-2025 The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+cc_library_static {
+    name: "power-ext-gta2xl",
+    defaults: ["android.hardware.power-ndk_shared"],
+    vendor: true,
+    srcs: [
+        "power-mode.cpp",
+    ],
+    shared_libs: [
+        "libbase",
+    ],
+    header_libs: [
+        "qti_powerhal_headers",
+        "libhardware_headers",
+    ],
+}

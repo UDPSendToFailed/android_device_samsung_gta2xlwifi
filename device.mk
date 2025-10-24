@@ -267,6 +267,8 @@ PRODUCT_PACKAGES += \
     android.hardware.power-service-qti \
     SamsungDoze
 
+$(call soong_config_set,qtipower,mode_ext_lib,power-ext-gta2xl)
+
 # RemovePackages
  PRODUCT_PACKAGES += \
     RemovePackages
