@@ -80,16 +80,12 @@ BOARD_ROOT_EXTRA_SYMLINKS := \
     /mnt/vendor/efs:/efs \
 
 # Root Folders
-BOARD_ROOT_EXTRA_FOLDERS := config omr efs
+BOARD_ROOT_EXTRA_FOLDERS := config efs
 BOARD_FLASH_BLOCK_SIZE := 131072
 TARGET_USERIMAGES_USE_F2FS := true
 TARGET_USERIMAGES_USE_EXT4 := true
-AB_OTA_UPDATER := false
-
-# Use these flags if the board has a ext4 partition larger than 2gb
-BOARD_HAS_LARGE_FILESYSTEM := true
-TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
+AB_OTA_UPDATER := false
 
 # APEX Image
 DEXPREOPT_GENERATE_APEX_IMAGE := true
