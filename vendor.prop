@@ -102,9 +102,6 @@ ro.vendor.extension_library=libqti-perfd-client.so
 # Qualcomm
 ro.vendor.qti.va_aosp.support=1
 
-# Recovery
-persist.vendor.recovery_update=false
-
 # ScalarConfig
 vendor.display.disable_scaler=1
 

@@ -3,3 +3,6 @@ allow wcnss_service persist_file:lnk_file read;
 allow wcnss_service system_prop:file { getattr open read };
 allow wcnss_service self:capability net_raw;
 allow wcnss_service self:capability dac_override;
+
+# Allow loading kernel modules for WiFi
+allow wcnss_service self:capability sys_module;

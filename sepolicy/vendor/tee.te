@@ -38,6 +38,10 @@ allow tee sec_poc_file:file create_file_perms;
 allow tee vaultkeeper_efs_file:dir rw_dir_perms;
 allow tee vaultkeeper_efs_file:file rw_file_perms;
 
+# Trustonic hwservice
+add_hwservice(tee, hal_tee_hwservice)
+allow tee hal_tee_hwservice:hwservice_manager find;
+
 allow tee vendor_data_file:dir create_dir_perms;
 allow tee vendor_data_file:file create_file_perms;
 allow tee vendor_default_prop:property_service set;

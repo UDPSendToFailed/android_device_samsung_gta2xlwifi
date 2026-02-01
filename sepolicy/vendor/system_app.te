@@ -1,0 +1,3 @@
+# Allow system_app to set audio rotation property
+# sys.audio.rotation is used for audio based on device orientation
+set_prop(system_app, audio_prop)

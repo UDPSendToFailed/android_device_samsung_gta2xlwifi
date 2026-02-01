@@ -1,3 +1,8 @@
 allow zygote sysfs:dir create;
 allow zygote zygote_tmpfs:file { create open };
 allow zygote system_file:dir write;
+
+# Property file access - using coredomain_read macros where available
+# Only include properties that definitely exist in base policy
+get_prop(zygote, default_prop)
+get_prop(zygote, vendor_default_prop)

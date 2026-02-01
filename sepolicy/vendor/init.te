@@ -11,3 +11,15 @@ allow init efs_file:dir mounton;
 allow init hwservicemanager:binder { call transfer };
 allow init proc:file setattr;
 allow init same_process_hal_file:file execute;
+
+# Sysfs access for sensors HAL (poll_delay, enable, flush)
+allow init sysfs:file { write open };
+
+# Sysfs graphics access for light HAL (brightness)
+allow init sysfs_graphics:file { read write open getattr };
+
+# Sysfs sensors symlink access
+allow init sysfs_sensors:lnk_file read;
+
+# Discard max bytes sysfs access
+allow init sysfs:file write;
