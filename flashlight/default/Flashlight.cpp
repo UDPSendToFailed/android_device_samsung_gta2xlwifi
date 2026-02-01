@@ -18,13 +18,10 @@ namespace hardware {
 namespace camera {
 namespace flashlight {
 
-using ::android::base::GetIntProperty;
 using ::android::base::ReadFileToString;
-using ::android::base::SetProperty;
 using ::android::base::WriteStringToFile;
 
 static constexpr const char* FLASH_NODE = "/sys/class/camera/flash/rear_flash";
-static constexpr const char *FLASH_BRIGHTNESS_PROP = "persist.ext.flashlight.last_brightness";
 
 ndk::ScopedAStatus Flashlight::getCurrentBrightness(int32_t* _aidl_return) {
     std::string value;
@@ -32,74 +29,35 @@ ndk::ScopedAStatus Flashlight::getCurrentBrightness(int32_t* _aidl_return) {
 
     ReadFileToString(FLASH_NODE, &value);
     intvalue = stoi_safe(value);
-    switch (intvalue) {
-	    case 0:
-		    *_aidl_return = 0;
-		    break;
-	    case 1:
-		    *_aidl_return = GetIntProperty(FLASH_BRIGHTNESS_PROP, level_saved, 0, 5);
-		    break;
-	    case 1001:
-		    *_aidl_return = 1;
-		    break;
-	    case 1003:
-		    *_aidl_return = 2;
-		    break;
-	    case 1005:
-		    *_aidl_return = 3;
-		    break;
-	    case 1007:
-		    *_aidl_return = 4;
-		    break;
-	    case 1010:
-		    *_aidl_return = 5;
-		    break;
-	    default: {
-		    char debugBuffer[50] = {};
-		    snprintf(debugBuffer, sizeof(debugBuffer) - 1, "Unknown flash node value: %d", intvalue);
-		    return ndk::ScopedAStatus::fromExceptionCodeWithMessage(EX_ILLEGAL_STATE, debugBuffer);
-            }
+    
+    if (intvalue == 0) {
+        *_aidl_return = 0;
+    } else if (intvalue >= 1001 && intvalue <= 1010) {
+        *_aidl_return = intvalue - 1000;
+    } else {
+        // Unknown state - report as off
+        *_aidl_return = 0;
     }
     return ndk::ScopedAStatus::ok();
 }
 
 ndk::ScopedAStatus Flashlight::setBrightness(int32_t level) {
-    if (level > 5 || level < 1)
+    if (level > 10 || level < 1)
        return ndk::ScopedAStatus::fromExceptionCode(EX_UNSUPPORTED_OPERATION);
-    int writeval = 0;
-    switch (level) {
-	case 1:
-		writeval = 1001;
-		break;
-	case 2:
-		writeval = 1003;
-		break;
-	case 3:
-		writeval = 1005;
-		break;
-	case 4:
-		writeval = 1007;
-		break;
-	case 5:
-		writeval = 1010;
-		break;
-	default:
-		break;
-    }
+    
+    int writeval = 1000 + level;
     WriteStringToFile(std::to_string(writeval), FLASH_NODE);
-    SetProperty(FLASH_BRIGHTNESS_PROP, std::to_string(level));
-    level_saved = level;
     return ndk::ScopedAStatus::ok();
 }
 
 ndk::ScopedAStatus Flashlight::enableFlash(bool enable) {
-    int32_t rc = 0;
-    auto ret = getCurrentBrightness(&rc);
-    if (ret.isOk()) {
-	if (!!rc == enable)
-	    return ndk::ScopedAStatus::fromExceptionCode(EX_ILLEGAL_STATE);
+    if (enable) {
+        // For turning on, caller should use setBrightness instead
+        // This is just a fallback - turn on at level 1
+        WriteStringToFile("1001", FLASH_NODE);
+    } else {
+        WriteStringToFile("0", FLASH_NODE);
     }
-    WriteStringToFile(std::to_string(static_cast<int>(enable)), FLASH_NODE);
     return ndk::ScopedAStatus::ok();
 }
 

@@ -135,7 +135,7 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider-service_32.lineage \
     vendor.qti.hardware.camera.device@1.0.vendor \
     libgui_shim_vendor \
-    FlashControl
+    vendor.samsung_ext.hardware.camera.flashlight-service
 
 # Configstore
 PRODUCT_PACKAGES += \

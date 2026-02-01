@@ -16,7 +16,6 @@ namespace camera {
 namespace flashlight {
 
 struct Flashlight : public BnFlashlight {
-    int level_saved = 1; /* 1 - 5 */
     ndk::ScopedAStatus getCurrentBrightness(int32_t* _aidl_return) override;
     ndk::ScopedAStatus setBrightness(int32_t level) override;
     ndk::ScopedAStatus enableFlash(bool enable) override;
