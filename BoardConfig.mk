@@ -17,9 +17,6 @@
 DEVICE_PATH := device/samsung/gta2xlwifi
 BUILD_TOP := $(shell pwd)
 
-
-BUILD_BROKEN_DUP_RULES := true
-BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 SELINUX_IGNORE_NEVERALLOWS := true
 
 # Architecture
