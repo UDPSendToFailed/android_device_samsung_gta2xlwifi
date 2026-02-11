@@ -1184,6 +1184,34 @@
         <ctl name="TDM1 Data Mux" value="3124"/>
     </path>
 
+    <path name="speaker-mic">
+        <ctl name="MI2S_TX Channels" value="Two" />
+        <ctl name="Main Mic Switch" value="1"/>
+        <ctl name="Sub Mic Switch" value="1"/>
+        <ctl name="Mono DMIC L Mux" value="DMIC2 L"/>
+        <ctl name="Mono DMIC R Mux" value="DMIC1 R"/>
+        <ctl name="Mono ADC L2 Mux" value="DMIC"/>
+        <ctl name="Mono ADC R2 Mux" value="DMIC"/>
+        <ctl name="Mono ADC MIXL ADC2 Switch" value="1"/>
+        <ctl name="Mono ADC MIXR ADC2 Switch" value="1"/>
+        <ctl name="IF1_1 01 ADC Swap Mux" value="L/R" />
+        <ctl name="TDM1 Data Mux" value="3124"/>
+    </path>
+
+    <path name="voice-rec-dmic-ef">
+        <ctl name="MI2S_TX Channels" value="Two" />
+        <ctl name="Main Mic Switch" value="1"/>
+        <ctl name="Sub Mic Switch" value="1"/>
+        <ctl name="Mono DMIC L Mux" value="DMIC2 L"/>
+        <ctl name="Mono DMIC R Mux" value="DMIC1 R"/>
+        <ctl name="Mono ADC L2 Mux" value="DMIC"/>
+        <ctl name="Mono ADC R2 Mux" value="DMIC"/>
+        <ctl name="Mono ADC MIXL ADC2 Switch" value="1"/>
+        <ctl name="Mono ADC MIXR ADC2 Switch" value="1"/>
+        <ctl name="IF1_1 01 ADC Swap Mux" value="L/R" />
+        <ctl name="TDM1 Data Mux" value="3124"/>
+    </path>
+
     <path name="sub-main-mic">
         <ctl name="MI2S_TX Channels" value="Two" />
         <ctl name="Main Mic Switch" value="1"/>
