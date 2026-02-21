@@ -251,4 +251,7 @@
          autodetected from the Configuration. -->
     <bool name="config_showNavigationBar">true</bool>
 
+     <!-- Whether the current device's internal display can host desktop sessions.  -->
+    <bool name="config_canInternalDisplayHostDesktops">true</bool>
+
 </resources>
