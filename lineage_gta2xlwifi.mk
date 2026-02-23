@@ -23,6 +23,9 @@ $(call inherit-product, device/samsung/gta2xlwifi/device.mk)
 # Inherit some common Lineage stuff.
 $(call inherit-product, vendor/lineage/config/common_full_tablet_wifionly.mk)
 
+# Google apps
+$(call inherit-product-if-exists, vendor/gapps/arm64/arm64-vendor.mk)
+
 # Set those variables here to overwrite the inherited values.
 PRODUCT_NAME := lineage_gta2xlwifi
 PRODUCT_DEVICE := gta2xlwifi
