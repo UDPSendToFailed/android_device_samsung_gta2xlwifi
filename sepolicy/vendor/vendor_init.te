@@ -32,6 +32,7 @@ set_prop(vendor_init, vendor_iop_prop)
 set_prop(vendor_init, vendor_members_prop)
 set_prop(vendor_init, vold_prop)
 set_prop(vendor_init, vendor_mmi_prop)
+set_prop(vendor_init, vendor_perf_prop)
 
 # System data file access (needed for boot init)
 allow vendor_init system_data_file:dir { read open ioctl };

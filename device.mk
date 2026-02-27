@@ -260,7 +260,9 @@ PRODUCT_PACKAGES += \
 
 # Perf
 PRODUCT_PACKAGES += \
-    libqti-perfd-client
+    libqti-perfd-client \
+    SamsungPerformance \
+    init.perf.rc
 
 # Power
 PRODUCT_PACKAGES += \
