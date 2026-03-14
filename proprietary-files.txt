@@ -651,14 +651,10 @@ vendor/lib64/libqmi_encdec.so
 vendor/lib64/libqmiservices.so
 
 # Sensors
-vendor/bin/hw/android.hardware.sensors@1.0-service.samsung
 vendor/bin/init.qcom.sensors.sh
-vendor/etc/init/android.hardware.sensors@1.0-service.samsung.rc
 vendor/etc/yas_set.cfg
-vendor/lib/hw/android.hardware.sensors@1.0-impl.so
 vendor/lib/hw/sensors.msm8953.so
 vendor/lib/libyasalgo.so
-vendor/lib64/hw/android.hardware.sensors@1.0-impl.so
 
 # Soter
 vendor/bin/hw/vendor.qti.hardware.soter@1.0-service

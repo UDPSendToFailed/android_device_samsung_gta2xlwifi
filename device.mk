@@ -264,6 +264,10 @@ PRODUCT_PACKAGES += \
     SamsungPerformance \
     init.perf.rc
 
+# Sensors
+PRODUCT_PACKAGES += \
+    android.hardware.sensors-service.samsung-gta2xlwifi
+
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power-service-qti \
