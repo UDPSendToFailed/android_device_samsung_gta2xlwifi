@@ -1,3 +1,0 @@
-allow hal_bluetooth_default efs_file:dir search;
-allow hal_bluetooth_default vendor_convergence_data_file:dir search;
-allow hal_bluetooth_default vendor_convergence_data_file:file { getattr open read };

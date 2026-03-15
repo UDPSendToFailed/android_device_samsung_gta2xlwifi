@@ -1,6 +1,0 @@
-cc_library_shared {
-    name: "libsafestoi",
-    srcs: ["SafeStoi.cpp"],
-    export_include_dirs: ["."],
-    system_ext_specific: true,
-}

@@ -1,6 +1,0 @@
-service vendor.sensors-hal-aidl /vendor/bin/hw/android.hardware.sensors-service.samsung-gta2xlwifi
-    class hal
-    user system
-    group system wakelock input
-    capabilities BLOCK_SUSPEND
-    rlimit rtprio 10 10

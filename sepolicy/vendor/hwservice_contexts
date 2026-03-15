@@ -1,6 +1,0 @@
-# Dolby
-vendor.dolby.hardware.dms::IDms                              u:object_r:hal_dms_hwservice:s0
-
-# Trustonic TEE
-vendor.trustonic.tee::ITee                                   u:object_r:hal_tee_hwservice:s0
-vendor.trustonic.teeregistry::ITeeRegistry                   u:object_r:hal_tee_hwservice:s0

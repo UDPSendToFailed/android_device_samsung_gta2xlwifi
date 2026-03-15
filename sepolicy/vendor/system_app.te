@@ -1,6 +1,0 @@
-# Allow system_app to set audio rotation property
-# sys.audio.rotation is used for audio based on device orientation
-set_prop(system_app, audio_prop)
-
-# Allow Settings injected Performance app to set CPU/GPU governor properties
-set_prop(system_app, vendor_perf_prop)

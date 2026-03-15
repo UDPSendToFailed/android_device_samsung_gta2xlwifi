@@ -1,5 +1,0 @@
-# Dolby
-type hal_dms_hwservice, hwservice_manager_type;
-
-# Trustonic TEE
-type hal_tee_hwservice, hwservice_manager_type;
