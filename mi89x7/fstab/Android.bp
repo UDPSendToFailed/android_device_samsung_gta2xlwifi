@@ -1,0 +1,11 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+prebuilt_etc {
+    name: "fstab.mi89x7",
+    src: "fstab.mi89x7",
+    vendor: true,
+    ramdisk_available: true,
+}

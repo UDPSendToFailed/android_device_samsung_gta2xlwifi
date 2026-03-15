@@ -1,0 +1,16 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+prebuilt_usr_keylayout {
+    name: "Goodix_Capacitive_TouchScreen.kl",
+    src: "Goodix_Capacitive_TouchScreen.kl",
+    device_specific: true,
+}
+
+prebuilt_usr_keylayout {
+    name: "ts_vkeys.kl",
+    src: "ts_vkeys.kl",
+    device_specific: true,
+}

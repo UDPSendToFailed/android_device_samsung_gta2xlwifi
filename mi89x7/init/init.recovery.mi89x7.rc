@@ -1,0 +1,33 @@
+#
+# SPDX-FileCopyrightText: The LineageOS Project
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# Power supply
+## BQ25601 + BQ27426 devices
+on property:ro.vendor.device.codename=riva
+    write /sys/class/power_supply/bq256xx-charger/charge_term_current 60000
+    write /sys/class/power_supply/bq256xx-charger/constant_charge_current 1000000
+    write /sys/class/power_supply/bq256xx-charger/input_current_limit 1000000
+    write /sys/class/power_supply/bq256xx-charger/precharge_current 256000
+on property:ro.vendor.device.codename=ugg
+    write /sys/class/power_supply/bq256xx-charger/charge_term_current 120000
+    write /sys/class/power_supply/bq256xx-charger/constant_charge_current 2000000
+    write /sys/class/power_supply/bq256xx-charger/input_current_limit 2000000
+    write /sys/class/power_supply/bq256xx-charger/precharge_current 120000
+on property:ro.vendor.device.codename=ugglite
+    write /sys/class/power_supply/bq256xx-charger/charge_term_current 120000
+    write /sys/class/power_supply/bq256xx-charger/constant_charge_current 2000000
+    write /sys/class/power_supply/bq256xx-charger/input_current_limit 2000000
+    write /sys/class/power_supply/bq256xx-charger/precharge_current 120000
+## QCOM SMBCHG devices
+on property:ro.vendor.device.codename=land
+    write /sys/class/power_supply/qcom-smbchg-usb/constant_charge_current 2000000
+    write /sys/class/power_supply/qcom-smbchg-usb/input_current_limit 2000000
+on property:ro.vendor.device.codename=prada
+    write /sys/class/power_supply/qcom-smbchg-usb/constant_charge_current 2000000
+    write /sys/class/power_supply/qcom-smbchg-usb/input_current_limit 2000000
+on property:ro.vendor.device.codename=santoni
+    write /sys/class/power_supply/qcom-smbchg-usb/constant_charge_current 2000000
+    write /sys/class/power_supply/qcom-smbchg-usb/input_current_limit 2000000
+## SMB358 + CW2015 device (TODO)

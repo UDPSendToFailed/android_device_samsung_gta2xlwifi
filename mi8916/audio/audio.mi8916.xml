@@ -1,0 +1,5 @@
+<audiohal>
+    <codec_probe file="/proc/asound/card0/id">
+        <case name="wt88047" file="audio.wt88047.xml" />
+    </codec_probe>
+</audiohal>

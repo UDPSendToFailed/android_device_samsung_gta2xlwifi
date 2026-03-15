@@ -1,0 +1,144 @@
+From b83cb13740778c2fd361b5329967b304d1e510e5 Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Tue, 29 Jul 2025 01:13:21 +0800
+Subject: [PATCH] Revert "drm/msm/dpu: move scaling limitations out of the
+ hw_catalog"
+
+This reverts commit 8f15005783b8a77012a0b1da84c45611ea560a2e.
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 16 ++++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h |  4 ++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c      | 12 +++++-------
+ 3 files changed, 25 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 9f8d1bba9139..8aa90cfcd161 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -105,6 +105,10 @@
+ #define MAX_HORZ_DECIMATION	4
+ #define MAX_VERT_DECIMATION	4
+ 
++#define MAX_UPSCALE_RATIO	20
++#define MAX_DOWNSCALE_RATIO	4
++#define SSPP_UNITY_SCALE	1
++
+ #define STRCAT(X, Y) (X Y)
+ 
+ static const uint32_t plane_formats[] = {
+@@ -231,6 +235,8 @@ static const u32 wb2_formats_rgb_yuv[] = {
+ /* SSPP common configuration */
+ #define _VIG_SBLK(scaler_ver) \
+ 	{ \
++	.maxdwnscale = MAX_DOWNSCALE_RATIO, \
++	.maxupscale = MAX_UPSCALE_RATIO, \
+ 	.scaler_blk = {.name = "scaler", \
+ 		.version = scaler_ver, \
+ 		.base = 0xa00, .len = 0xa0,}, \
+@@ -243,6 +249,8 @@ static const u32 wb2_formats_rgb_yuv[] = {
+ 
+ #define _VIG_SBLK_ROT(scaler_ver, rot_cfg) \
+ 	{ \
++	.maxdwnscale = MAX_DOWNSCALE_RATIO, \
++	.maxupscale = MAX_UPSCALE_RATIO, \
+ 	.scaler_blk = {.name = "scaler", \
+ 		.version = scaler_ver, \
+ 		.base = 0xa00, .len = 0xa0,}, \
+@@ -255,6 +263,8 @@ static const u32 wb2_formats_rgb_yuv[] = {
+ 
+ #define _VIG_SBLK_NOSCALE() \
+ 	{ \
++	.maxdwnscale = SSPP_UNITY_SCALE, \
++	.maxupscale = SSPP_UNITY_SCALE, \
+ 	.format_list = plane_formats, \
+ 	.num_formats = ARRAY_SIZE(plane_formats), \
+ 	}
+@@ -262,6 +272,8 @@ static const u32 wb2_formats_rgb_yuv[] = {
+ /* qseed2 is not supported, so disabled scaling */
+ #define _VIG_SBLK_QSEED2() \
+ 	{ \
++	.maxdwnscale = SSPP_UNITY_SCALE, \
++	.maxupscale = SSPP_UNITY_SCALE, \
+ 	.scaler_blk = {.name = "scaler", \
+ 		/* no version for qseed2 */ \
+ 		.base = 0x200, .len = 0xa0,}, \
+@@ -274,6 +286,8 @@ static const u32 wb2_formats_rgb_yuv[] = {
+ 
+ #define _RGB_SBLK() \
+ 	{ \
++	.maxdwnscale = SSPP_UNITY_SCALE, \
++	.maxupscale = SSPP_UNITY_SCALE, \
+ 	.scaler_blk = {.name = "scaler", \
+ 		.base = 0x200, .len = 0x28,}, \
+ 	.format_list = plane_formats, \
+@@ -282,6 +296,8 @@ static const u32 wb2_formats_rgb_yuv[] = {
+ 
+ #define _DMA_SBLK() \
+ 	{ \
++	.maxdwnscale = SSPP_UNITY_SCALE, \
++	.maxupscale = SSPP_UNITY_SCALE, \
+ 	.format_list = plane_formats, \
+ 	.num_formats = ARRAY_SIZE(plane_formats), \
+ 	}
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+index f0768f54e9b3..79b1340231e3 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+@@ -281,6 +281,8 @@ struct dpu_caps {
+ /**
+  * struct dpu_sspp_sub_blks : SSPP sub-blocks
+  * common: Pointer to common configurations shared by sub blocks
++ * @maxdwnscale: max downscale ratio supported(without DECIMATION)
++ * @maxupscale:  maxupscale ratio supported
+  * @max_per_pipe_bw: maximum allowable bandwidth of this pipe in kBps
+  * @qseed_ver: qseed version
+  * @scaler_blk:
+@@ -290,6 +292,8 @@ struct dpu_caps {
+  * @dpu_rotation_cfg: inline rotation configuration
+  */
+ struct dpu_sspp_sub_blks {
++	u32 maxdwnscale;
++	u32 maxupscale;
+ 	u32 max_per_pipe_bw;
+ 	u32 qseed_ver;
+ 	struct dpu_scaler_blk scaler_blk;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 905524ceeb1f..ec77b191e5a8 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -810,14 +810,11 @@ static int dpu_plane_atomic_check_pipe(struct dpu_plane *pdpu,
+ 	return 0;
+ }
+ 
+-#define MAX_UPSCALE_RATIO	20
+-#define MAX_DOWNSCALE_RATIO	4
+-
+ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
+ 					 struct drm_plane_state *new_plane_state,
+ 					 const struct drm_crtc_state *crtc_state)
+ {
+-	int i, ret = 0, min_scale, max_scale;
++	int i, ret = 0, min_scale;
+ 	struct dpu_plane *pdpu = to_dpu_plane(plane);
+ 	struct dpu_kms *kms = _dpu_plane_get_kms(&pdpu->base);
+ 	u64 max_mdp_clk_rate = kms->perf.max_core_clk_rate;
+@@ -827,12 +824,13 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
+ 	struct drm_rect fb_rect = { 0 };
+ 	uint32_t max_linewidth;
+ 
+-	min_scale = FRAC_16_16(1, MAX_UPSCALE_RATIO);
+-	max_scale = MAX_DOWNSCALE_RATIO << 16;
++	const struct dpu_sspp_sub_blks *sblk = dpu_rm_get_sspp(&kms->rm, pdpu->pipe)->cap->sblk;
++
++	min_scale = FRAC_16_16(1, sblk->maxupscale);
+ 
+ 	ret = drm_atomic_helper_check_plane_state(new_plane_state, crtc_state,
+ 						  min_scale,
+-						  max_scale,
++						  sblk->maxdwnscale << 16,
+ 						  true, true);
+ 	if (ret) {
+ 		DPU_DEBUG_PLANE(pdpu, "Check plane state failed (%d)\n", ret);
+-- 
+2.47.3
+

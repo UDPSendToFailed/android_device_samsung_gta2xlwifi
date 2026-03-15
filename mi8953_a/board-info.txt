@@ -1,0 +1,1 @@
+require board=mi8953_a|markw|mido|onclite|oxygen|rosy|sakura|vince|ysl

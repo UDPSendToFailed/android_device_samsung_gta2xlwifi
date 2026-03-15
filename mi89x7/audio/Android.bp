@@ -1,0 +1,28 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+prebuilt_etc {
+    name: "audio.mi89x7.xml",
+    src: "audio.mi89x7.xml",
+    vendor: true,
+}
+
+prebuilt_etc {
+    name: "audio.xiaomi-riva.xml",
+    src: "audio.xiaomi-riva.xml",
+    vendor: true,
+}
+
+prebuilt_etc {
+    name: "audio.xiaomi-santoni.xml",
+    src: "audio.xiaomi-santoni.xml",
+    vendor: true,
+}
+
+prebuilt_etc {
+    name: "audio.xiaomi-ugg.xml",
+    src: "audio.xiaomi-ugg.xml",
+    vendor: true,
+}

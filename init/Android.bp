@@ -1,0 +1,24 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+prebuilt_etc {
+    name: "init.mi89xx.rc",
+    src: "init.mi89xx.rc",
+    sub_dir: "init/hw",
+    vendor: true,
+}
+
+prebuilt_etc {
+    name: "init.recovery.mi89xx.rc",
+    src: "init.recovery.mi89xx.rc",
+    sub_dir: "init",
+    recovery: true,
+}
+
+prebuilt_etc {
+    name: "ueventd.mi89xx.rc",
+    src: "ueventd.mi89xx.rc",
+    vendor: true,
+}

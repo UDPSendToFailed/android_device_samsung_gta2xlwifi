@@ -1,0 +1,5 @@
+edt-ft5x06.ko
+goodix_ts.ko
+novatek-nvt-ts.ko
+rmi_core.ko
+rmi_i2c.ko

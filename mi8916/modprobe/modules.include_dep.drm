@@ -1,0 +1,6 @@
+cec.ko
+drm_display_helper.ko
+drm_exec.ko
+drm_gpuvm.ko
+gpu-sched.ko
+ubwc_config.ko

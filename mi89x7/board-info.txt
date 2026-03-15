@@ -1,0 +1,1 @@
+require board=mi89x7

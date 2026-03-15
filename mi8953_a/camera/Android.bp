@@ -1,0 +1,12 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+prebuilt_etc {
+    name: "libcamera_camera_hal.yaml",
+    src: "camera_hal.yaml",
+    filename_from_src: true,
+    sub_dir: "libcamera",
+    vendor: true,
+}

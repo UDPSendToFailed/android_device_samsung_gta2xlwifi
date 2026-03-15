@@ -1,0 +1,5 @@
+bq256xx_charger.ko
+bq27xxx_battery_i2c.ko
+bq27xxx_battery.ko
+cw2015_battery.ko
+smb347-charger.ko

@@ -1,0 +1,24 @@
+From 5b31272556e0db3b465f9a19fffe33e11836307d Mon Sep 17 00:00:00 2001
+From: Yumi Yukimura <me.cafebabe@gmail.com>
+Date: Sun, 9 Nov 2025 14:27:09 +0800
+Subject: [PATCH] soc: qcom: ubwc: Add msm8940 entry
+
+---
+ drivers/soc/qcom/ubwc_config.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/soc/qcom/ubwc_config.c b/drivers/soc/qcom/ubwc_config.c
+index 15d373bff231..eefefd7f2f67 100644
+--- a/drivers/soc/qcom/ubwc_config.c
++++ b/drivers/soc/qcom/ubwc_config.c
+@@ -227,6 +227,7 @@ static const struct of_device_id qcom_ubwc_configs[] __maybe_unused = {
+ 	{ .compatible = "qcom,msm8916", .data = &no_ubwc_data },
+ 	{ .compatible = "qcom,msm8917", .data = &no_ubwc_data },
+ 	{ .compatible = "qcom,msm8937", .data = &msm8937_data },
++	{ .compatible = "qcom,msm8940", .data = &msm8937_data },
+ 	{ .compatible = "qcom,msm8929", .data = &no_ubwc_data },
+ 	{ .compatible = "qcom,msm8939", .data = &no_ubwc_data },
+ 	{ .compatible = "qcom,msm8953", .data = &msm8937_data },
+-- 
+2.47.3
+

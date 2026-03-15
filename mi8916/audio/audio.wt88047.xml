@@ -1,0 +1,135 @@
+<audiohal>
+    <mixer card="0">
+        <init>
+            <ctl name="RX1 Digital Volume" val="84"/>
+            <ctl name="RX2 Digital Volume" val="84"/>
+            <ctl name="RX3 Digital Volume" val="84"/>
+            <!-- Primary Mic Analog -->
+            <ctl name="ADC1 Volume" val="8"/>
+            <!-- Headphones Mic Analog -->
+            <ctl name="ADC2 Volume" val="8"/>
+        </init>
+    </mixer>
+    <device name="earpiece">
+        <path name="on">
+            <ctl name="RX1 MIX1 INP1" val="RX1"/>
+            <ctl name="RDAC2 MUX" val="RX1"/>
+            <ctl name="EAR_S" val="Switch"/>
+        </path>
+        <path name="off">
+            <ctl name="EAR_S" val="ZERO"/>
+            <ctl name="RX1 MIX1 INP1" val="ZERO"/>
+        </path>
+        <path name="pcm_on">
+            <ctl name="PRI_MI2S_RX Audio Mixer MultiMedia1" val="1"/>
+        </path>
+        <path name="pcm_off">
+            <ctl name="PRI_MI2S_RX Audio Mixer MultiMedia1" val="0"/>
+        </path>
+    </device>
+    <device name="headphone">
+        <path name="on">
+            <ctl name="RX1 MIX1 INP1" val="RX1"/>
+            <ctl name="RX2 MIX1 INP1" val="RX2"/>
+            <ctl name="RDAC2 MUX" val="RX2"/>
+            <ctl name="HPHL" val="Switch"/>
+            <ctl name="HPHR" val="Switch"/>
+            <ctl name="Headphones Switch" val="1"/>
+        </path>
+        <path name="off">
+            <ctl name="Headphones Switch" val="0"/>
+            <ctl name="HPHL" val="ZERO"/>
+            <ctl name="HPHR" val="ZERO"/>
+            <ctl name="RX1 MIX1 INP1" val="ZERO"/>
+            <ctl name="RX2 MIX1 INP1" val="ZERO"/>
+        </path>
+        <path name="pcm_on">
+            <ctl name="PRI_MI2S_RX Audio Mixer MultiMedia1" val="1"/>
+        </path>
+        <path name="pcm_off">
+            <ctl name="PRI_MI2S_RX Audio Mixer MultiMedia1" val="0"/>
+        </path>
+    </device>
+    <device name="headset">
+        <path name="on">
+            <ctl name="RX1 MIX1 INP1" val="RX1"/>
+            <ctl name="RX2 MIX1 INP1" val="RX2"/>
+            <ctl name="RDAC2 MUX" val="RX2"/>
+            <ctl name="HPHL" val="Switch"/>
+            <ctl name="HPHR" val="Switch"/>
+            <ctl name="Headphones Switch" val="1"/>
+        </path>
+        <path name="off">
+            <ctl name="Headphones Switch" val="0"/>
+            <ctl name="HPHL" val="ZERO"/>
+            <ctl name="HPHR" val="ZERO"/>
+            <ctl name="RX1 MIX1 INP1" val="ZERO"/>
+            <ctl name="RX2 MIX1 INP1" val="ZERO"/>
+        </path>
+        <path name="pcm_on">
+            <ctl name="PRI_MI2S_RX Audio Mixer MultiMedia1" val="1"/>
+        </path>
+        <path name="pcm_off">
+            <ctl name="PRI_MI2S_RX Audio Mixer MultiMedia1" val="0"/>
+        </path>
+    </device>
+    <device name="headset_in">
+        <path name="on">
+            <ctl name="DEC1 MUX" val="ADC2"/>
+            <ctl name="CIC1 MUX" val="AMIC"/>
+            <ctl name="ADC2 MUX" val="INP2"/>
+        </path>
+        <path name="off">
+            <ctl name="ADC2 MUX" val="ZERO"/>
+            <ctl name="DEC1 MUX" val="ZERO"/>
+        </path>
+        <path name="pcm_on">
+            <ctl name="MultiMedia2 Mixer TERT_MI2S_TX" val="1"/>
+        </path>
+        <path name="pcm_off">
+            <ctl name="MultiMedia2 Mixer TERT_MI2S_TX" val="0"/>
+        </path>
+    </device>
+    <device name="mic">
+        <path name="on">
+            <ctl name="DEC1 MUX" val="ADC1"/>
+            <ctl name="CIC1 MUX" val="AMIC"/>
+        </path>
+        <path name="off">
+            <ctl name="DEC1 MUX" val="ZERO"/>
+        </path>
+        <path name="pcm_on">
+            <ctl name="MultiMedia2 Mixer TERT_MI2S_TX" val="1"/>
+        </path>
+        <path name="pcm_off">
+            <ctl name="MultiMedia2 Mixer TERT_MI2S_TX" val="0"/>
+        </path>
+    </device>
+    <device name="speaker">
+        <path name="on">
+            <ctl name="RX2 MIX1 INP1" val="RX1"/>
+            <ctl name="RDAC2 MUX" val="RX2"/>
+            <ctl name="HPHR" val="Switch"/>
+            <ctl name="Speaker Switch" val="1"/>
+        </path>
+        <path name="off">
+            <ctl name="Speaker Switch" val="0"/>
+            <ctl name="HPHR" val="ZERO"/>
+            <ctl name="RX2 MIX1 INP1" val="ZERO"/>
+        </path>
+        <path name="pcm_on">
+            <ctl name="PRI_MI2S_RX Audio Mixer MultiMedia1" val="1"/>
+        </path>
+        <path name="pcm_off">
+            <ctl name="PRI_MI2S_RX Audio Mixer MultiMedia1" val="0"/>
+        </path>
+    </device>
+    <stream type="pcm" dir="out" card="0" device="0">
+        <enable path="pcm_on"/>
+        <disable path="pcm_off"/>
+    </stream>
+    <stream type="pcm" dir="in" card="0" device="1">
+        <enable path="pcm_on"/>
+        <disable path="pcm_off"/>
+    </stream>
+</audiohal>

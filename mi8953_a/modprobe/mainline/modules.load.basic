@@ -1,0 +1,4 @@
+leds-aw2013.ko
+qcom-pon.ko
+rtc-pm8xxx.ko
+socinfo.ko
