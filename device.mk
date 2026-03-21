@@ -3,29 +3,53 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-DEVICE_PATH := device/xiaomi/mi89xx-mainline
+DEVICE_PATH := device/samsung/gta2xlwifi
+
+# Inherit options from mainline/qcom-common
+TARGET_QCOM_SOC_FAMILY := msm8953
+TARGET_CAMERA_PROVIDER_HAL := libcamera
+TARGET_SENSORS_HAL := iio
+## TODO: Bringup the corresponding hardware and remove the following definitions
+TARGET_SUPPORTS_SUSPEND := false
+include device/mainline/qcom-common/optional/options.mk
 
 # Inherit from mainline/qcom-common
 $(call inherit-product, device/mainline/qcom-common/mainline_qcom-common.mk)
 
+# AAPT
+PRODUCT_AAPT_PREF_CONFIG := xxhdpi
+
+# Audio
+PRODUCT_PACKAGES += \
+    audio.gta2xlwifi.xml
+
 # Bluetooth
-ifneq ($(PRODUCT_IS_ATV),true)
-ifneq ($(PRODUCT_IS_AUTOMOTIVE),true)
-# Set the Bluetooth Class of Device
-# Service Field: 0x5A -> 90
-#    Bit 17: Networking
-#    Bit 19: Capturing
-#    Bit 20: Object Transfer
-#    Bit 22: Telephony
-# MAJOR_CLASS: 0x02 -> 2 (Phone)
-# MINOR_CLASS: 0x0C -> 12 (Smart Phone)
 PRODUCT_ODM_PROPERTIES += \
     bluetooth.device.class_of_device=90,2,12
-endif
-endif
 
-# Bootanimation
-TARGET_BOOTANIMATION_HALF_RES := true
+# Boot animation
+TARGET_SCREEN_HEIGHT := 1920
+TARGET_SCREEN_WIDTH := 1200
+
+# Dalvik heap
+$(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
+
+# Firmware
+PRODUCT_COPY_FILES += \
+    $(DEVICE_PATH)/firmware/a506_zap.b00:$(TARGET_COPY_OUT_VENDOR)/firmware/a506_zap.b00 \
+    $(DEVICE_PATH)/firmware/a506_zap.b01:$(TARGET_COPY_OUT_VENDOR)/firmware/a506_zap.b01 \
+    $(DEVICE_PATH)/firmware/a506_zap.b02:$(TARGET_COPY_OUT_VENDOR)/firmware/a506_zap.b02 \
+    $(DEVICE_PATH)/firmware/a506_zap.mdt:$(TARGET_COPY_OUT_VENDOR)/firmware/a506_zap.mdt \
+    $(DEVICE_PATH)/firmware/wcnss.b00:$(TARGET_COPY_OUT_VENDOR)/firmware/wcnss.b00 \
+    $(DEVICE_PATH)/firmware/wcnss.b01:$(TARGET_COPY_OUT_VENDOR)/firmware/wcnss.b01 \
+    $(DEVICE_PATH)/firmware/wcnss.b02:$(TARGET_COPY_OUT_VENDOR)/firmware/wcnss.b02 \
+    $(DEVICE_PATH)/firmware/wcnss.b04:$(TARGET_COPY_OUT_VENDOR)/firmware/wcnss.b04 \
+    $(DEVICE_PATH)/firmware/wcnss.b06:$(TARGET_COPY_OUT_VENDOR)/firmware/wcnss.b06 \
+    $(DEVICE_PATH)/firmware/wcnss.b09:$(TARGET_COPY_OUT_VENDOR)/firmware/wcnss.b09 \
+    $(DEVICE_PATH)/firmware/wcnss.b10:$(TARGET_COPY_OUT_VENDOR)/firmware/wcnss.b10 \
+    $(DEVICE_PATH)/firmware/wcnss.b11:$(TARGET_COPY_OUT_VENDOR)/firmware/wcnss.b11 \
+    $(DEVICE_PATH)/firmware/wcnss.b12:$(TARGET_COPY_OUT_VENDOR)/firmware/wcnss.b12 \
+    $(DEVICE_PATH)/firmware/wcnss.mdt:$(TARGET_COPY_OUT_VENDOR)/firmware/wcnss.mdt
 
 # HIDL
 PRODUCT_PACKAGES += \
@@ -33,15 +57,28 @@ PRODUCT_PACKAGES += \
 
 # Init
 PRODUCT_PACKAGES += \
-    init.mi89xx.rc \
-    init.recovery.mi89xx.rc \
-    ueventd.mi89xx.rc
+    init.gta2xlwifi.rc \
+    init.recovery.gta2xlwifi.rc \
+    ueventd.gta2xlwifi.rc \
+    iio_fixup.sh
 
 PRODUCT_PACKAGES += \
     zram.rc
 
+PRODUCT_PACKAGES += \
+    fstab.gta2xlwifi \
+    fstab.gta2xlwifi.ramdisk
+
+PRODUCT_PACKAGES += \
+    use_memfd.rc
+
+$(call soong_config_set,mainline_common_libinit,set_properties_from,devicetree)
+
 # Kernel
 PRODUCT_OTA_ENFORCE_VINTF_KERNEL_REQUIREMENTS := false
+
+PRODUCT_PACKAGES += \
+    modules.load.normal
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += \
@@ -54,12 +91,12 @@ endif
 
 # Permissions
 PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:$(TARGET_COPY_OUT_ODM)/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml
+    frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
+    frameworks/native/data/etc/android.software.app_widgets.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.app_widgets.xml
 
-ifeq ($(PRODUCT_IS_ATV),true)
-PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.screen.landscape.xml:$(TARGET_COPY_OUT_ODM)/etc/permissions/android.hardware.screen.landscape.xml
-endif
+# Properties
+PRODUCT_VENDOR_PROPERTIES += \
+    vendor.remoteproc.4080000_remoteproc.ignore=1
 
 # Set device properties
 PRODUCT_PACKAGES += \
@@ -72,6 +109,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 # Sensors
 PRODUCT_PACKAGES += \
     android.hardware.sensor.accelerometer.prebuilt.xml \
+    android.hardware.sensor.ambient_temperature.prebuilt.xml \
     android.hardware.sensor.compass.prebuilt.xml \
     android.hardware.sensor.gyroscope.prebuilt.xml \
     android.hardware.sensor.light.prebuilt.xml \
@@ -82,4 +120,5 @@ PRODUCT_SHIPPING_API_LEVEL := 33
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
-    $(DEVICE_PATH)
+    $(DEVICE_PATH) \
+    kernel/mainline/configs

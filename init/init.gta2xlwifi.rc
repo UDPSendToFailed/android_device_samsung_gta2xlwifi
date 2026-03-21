@@ -1,0 +1,53 @@
+#
+# SPDX-FileCopyrightText: The LineageOS Project
+# SPDX-License-Identifier: Apache-2.0
+#
+
+import /vendor/etc/init/hw/init.mainline.qcom.rc
+
+# Mount
+on fs
+    # Mount everything that does not require fsck
+    mount_all --early
+
+on late-fs
+    # Mount RW partitions which need run fsck
+    mount_all --late
+
+# Set device properties
+service vendor.set_device_prop /odm/bin/set_device_prop
+    class early_hal
+    group root
+    user root
+    oneshot
+
+on early-boot && property:ro.vendor.device.lcd_density=*
+    setprop ro.sf.lcd_density ${ro.vendor.device.lcd_density}
+
+on early-boot
+    chown system system /sys/class/backlight/1a94000.dsi.0/brightness
+    chown system system /sys/class/backlight/1a94000.dsi.0/max_brightness
+    chmod 0660 /sys/class/backlight/1a94000.dsi.0/brightness
+    chmod 0660 /sys/class/backlight/1a94000.dsi.0/max_brightness
+
+    # IIO sysfs permissions for sensors HAL
+    exec u:r:vendor_init:s0 root root -- /vendor/bin/iio_fixup.sh
+
+on post-fs-data
+    # Reset and set the fast compression algorithm
+    write /sys/block/zram0/reset 1
+    write /sys/block/zram0/comp_algorithm lzo-rle
+    
+    # Trigger swapon_all using your fstab
+    swapon_all /vendor/etc/fstab.gta2xlwifi
+
+
+on property:sys.boot_completed=1
+    write /proc/sys/vm/swappiness 150
+    write /proc/sys/vm/watermark_boost_factor 0
+    write /proc/sys/vm/vfs_cache_pressure 200
+
+# Kernel module loading
+on post-fs
+    exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -s -d /vendor/lib/modules --all=/vendor/etc/modules.load.normal
+    trigger start_all_remoteproc

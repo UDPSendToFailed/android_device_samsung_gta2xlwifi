@@ -4,21 +4,27 @@
 //
 
 prebuilt_etc {
-    name: "init.mi89xx.rc",
-    src: "init.mi89xx.rc",
+    name: "init.gta2xlwifi.rc",
+    src: "init.gta2xlwifi.rc",
     sub_dir: "init/hw",
     vendor: true,
 }
 
 prebuilt_etc {
-    name: "init.recovery.mi89xx.rc",
-    src: "init.recovery.mi89xx.rc",
+    name: "init.recovery.gta2xlwifi.rc",
+    src: "init.recovery.gta2xlwifi.rc",
     sub_dir: "init",
     recovery: true,
 }
 
 prebuilt_etc {
-    name: "ueventd.mi89xx.rc",
-    src: "ueventd.mi89xx.rc",
+    name: "ueventd.gta2xlwifi.rc",
+    src: "ueventd.gta2xlwifi.rc",
+    vendor: true,
+}
+
+sh_binary {
+    name: "iio_fixup.sh",
+    src: "iio_fixup.sh",
     vendor: true,
 }

@@ -1,0 +1,11 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+prebuilt_etc {
+    name: "fstab.gta2xlwifi",
+    src: "fstab.gta2xlwifi",
+    vendor: true,
+    ramdisk_available: true,
+}

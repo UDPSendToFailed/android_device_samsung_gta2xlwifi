@@ -1,0 +1,10 @@
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+prebuilt_etc {
+    name: "audio.gta2xlwifi.xml",
+    src: "audio.gta2xlwifi.xml",
+    vendor: true,
+}

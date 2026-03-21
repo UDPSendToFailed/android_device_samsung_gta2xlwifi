@@ -1,0 +1,6 @@
+<audiohal>
+    <mixer card="0">
+    </mixer>
+    <stream type="pcm" dir="out" card="0" device="0">
+    </stream>
+</audiohal>

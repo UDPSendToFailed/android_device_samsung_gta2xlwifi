@@ -26,32 +26,8 @@ const device_info_t kFallbackDeviceInfo = {
 const std::unordered_map<std::string, device_info_t> kDeviceInfoMap = {
         // clang-format off
 
-    // mi8916
-    {"wt88047", {320}},
-
-    // Mi8917
-    {"riva", {280}},
-    {"rolex", {280}},
-    {"tiare", {280}},
-    {"ugglite", {260}},
-
-    // Mi8937
-    {"land", {280}},
-    {"prada", {280}},
-    {"santoni", {280}},
-    {"ugg", {260}},
-
-    // Mi439
-    {"olive", {320}},
-    {"pine", {320}},
-
-    // Xiaomi MSM8953
-    {"daisy", {420}},
-    {"oxygen", {342}},
-    {"uter", {400}},
-    {"sakura", {420}},
-    {"vince", {440}},
-    {"ysl", {280}},
+    // Samsung Galaxy Tab A 10.5 (gta2xlwifi) - SDM450/MSM8953
+    {"gta2xlwifi", {240}},
 
         // clang-format on
 };
@@ -99,7 +75,7 @@ int main() {
 
     std::string device_codename;
     for (const auto& compatible : compatibles) {
-        if (StartsWith(compatible, "wingtech,") || StartsWith(compatible, "xiaomi,")) {
+        if (StartsWith(compatible, "samsung,")) {
             if (!device_codename.empty()) continue;
             device_codename = compatible.substr(compatible.find_first_of(",") + 1);
             std::cout << "Device codename: " << device_codename << std::endl;

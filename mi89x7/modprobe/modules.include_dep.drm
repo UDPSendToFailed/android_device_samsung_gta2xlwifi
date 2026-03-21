@@ -1,9 +1,0 @@
-cec.ko
-drm_client_lib.ko
-drm_display_helper.ko
-drm_exec.ko
-drm_gpuvm.ko
-drm_kms_helper.ko
-gpu-sched.ko
-mdt_loader.ko
-ubwc_config.ko

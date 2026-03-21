@@ -1,0 +1,8 @@
+cameras:
+  "/base/soc@0/cci@1b0c000/i2c-bus@1/camera-sensor@10":
+    location: front
+    rotation: 90
+  "/base/soc@0/cci@1b0c000/i2c-bus@0/camera-sensor@37":
+    location: back
+    rotation: 270
+    rotation: 0

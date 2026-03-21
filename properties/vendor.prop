@@ -1,2 +1,13 @@
+# SoC
+ro.soc.manufacturer=Qualcomm
+ro.soc.model=SDM450
+
 # ZRAM
 persist.sys.zram_enabled=1
+
+# IIO Sensors HAL — force poll mode for sensors whose kernel
+# drivers use hardware FIFO (no trigger/ sysfs directory)
+ro.vendor.iio.accel.quirks=no-trig
+ro.vendor.iio.anglvel.quirks=no-trig
+ro.vendor.iio.magn.quirks=no-trig
+ro.vendor.iio.temp.quirks=no-trig
