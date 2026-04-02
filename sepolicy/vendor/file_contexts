@@ -100,6 +100,7 @@
 /(vendor|system/vendor)/bin/hw/android\.hardware\.light-service\.samsung                           u:object_r:hal_light_default_exec:s0
 /vendor/bin/hw/vendor\.dolby\.hardware\.dms@2\.0-service                                           u:object_r:hal_dms_default_exec:s0
 /(vendor|system/vendor)/bin/hw/android\.hardware\.sensors-service\.samsung-gta2xlwifi              u:object_r:hal_sensors_default_exec:s0
+/(vendor|system/vendor)/bin/hw/android\.hardware\.thermal-service\.samsung-gta2xlwifi              u:object_r:hal_thermal_default_exec:s0
 /(vendor|system/vendor)/bin/hw/vendor\.trustonic\.tee@1\.0-service                                 u:object_r:tee_exec:s0
 /(vendor|system/vendor)/bin/hw/vendor\.trustonic\.teeregistry@1\.0-service                         u:object_r:tee_exec:s0
 

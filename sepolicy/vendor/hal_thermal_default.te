@@ -1,0 +1,5 @@
+# netlink_kobject_uevent_socket for thermal zone uevent monitoring
+allow hal_thermal_default hal_thermal_default:netlink_kobject_uevent_socket { create setopt bind read };
+
+# Write trip points and hysteresis for threshold monitoring
+allow hal_thermal_default sysfs_thermal:file { write };
