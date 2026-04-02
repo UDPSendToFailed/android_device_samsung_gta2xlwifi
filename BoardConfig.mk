@@ -49,7 +49,8 @@ BOARD_RAMDISK_OFFSET := 0x02000000
 BOARD_TAGS_OFFSET := 0x01e00000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
-BOARD_KERNEL_CMDLINE := console=null androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 androidboot.selinux=enforcing
+BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci loop.max_part=7 androidboot.usbconfigfs=true androidboot.selinux=enforcing
+BOARD_KERNEL_CMDLINE += androidboot.boot_devices=soc/7824900.sdhci
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_TAGS_OFFSET)
 
 BOARD_CUSTOM_BOOTIMG := true
@@ -60,10 +61,7 @@ TARGET_KERNEL_SOURCE := kernel/samsung/gta2xlwifi
 TARGET_KERNEL_CONFIG := gta2xlwifi_defconfig
 
 # Kernel Toolchain
-TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
-KERNEL_TOOLCHAIN := $(BUILD_TOP)/prebuilts/gcc/$(HOST_OS)-x86/aarch64/aarch64-linux-android-4.9/bin
-TARGET_LINUX_KERNEL_VERSION := 3.18
-TARGET_KERNEL_CLANG_COMPILE := false
+TARGET_LINUX_KERNEL_VERSION := 4.9
 
 # Partitions
 BOARD_EROFS_COMPRESSOR := lz4hc
