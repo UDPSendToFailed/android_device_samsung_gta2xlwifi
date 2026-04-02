@@ -46,7 +46,7 @@ public class SamsungDozeService extends Service {
     private static final String DOZE_INTENT = "com.android.systemui.doze.pulse";
     private static final int MIN_PULSE_INTERVAL_MS = 5000;
 
-    private static final String SAR_SENSOR_ENABLE_PATH = "/sys/class/input/input5/enable";
+    private static final String SAR_SENSOR_ENABLE_PATH = "/sys/class/input/input6/enable";
 
     private Context mContext;
     private AccelerometerPickUpSensor mPickUpSensor;
