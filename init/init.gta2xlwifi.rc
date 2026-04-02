@@ -6,53 +6,6 @@ on post-fs-data
     chown system system /data/cache/backup_stage
     chmod 0711 /data/cache/backup_stage
 
-# OLAF setup cgroup freezer
-    mkdir /dev/freezer
-    mount cgroup none /dev/freezer freezer
-    mkdir /dev/freezer/olaf
-    write /dev/freezer/olaf/freezer.state THAWED
-    mkdir /dev/cpuset/olaf
-    copy /dev/cpuset/cpus /dev/cpuset/olaf/cpus
-    copy /dev/cpuset/mems /dev/cpuset/olaf/mems
-    chown system system /dev/freezer/olaf
-    chown system system /dev/freezer/olaf/tasks
-    chown system system /dev/freezer/olaf/cgroup.procs
-    chown system system /dev/freezer/olaf/freezer.state
-    chown system system /dev/cpuset/olaf
-    chown system system /dev/cpuset/olaf/tasks
-    chown system system /dev/cpuset/olaf/cpus
-    chmod 0644 /dev/freezer/olaf/tasks
-    chmod 0644 /dev/freezer/olaf/cgroup.procs
-    chmod 0644 /dev/freezer/olaf/freezer.state
-    chmod 0664 /dev/cpuset/olaf
-    chmod 0664 /dev/cpuset/olaf/tasks
-    chmod 0664 /dev/cpuset/olaf/cpus
-    
-# setup cgroup freezer for freecess
-    mkdir /dev/freezer
-    mount cgroup none /dev/freezer freezer
-    mkdir /dev/freezer/frozen
-    mkdir /dev/freezer/thaw
-    write /dev/freezer/frozen/freezer.state FROZEN
-    write /dev/freezer/thaw/freezer.state THAWED
-
-# MARs for freecess
-    chown system system /dev/freezer
-    chown system system /dev/freezer/frozen
-    chown system system /dev/freezer/frozen/tasks
-    chown system system /dev/freezer/frozen/cgroup.procs
-    chown system system /dev/freezer/frozen/freezer.state
-    chown system system /dev/freezer/thaw
-    chown system system /dev/freezer/thaw/tasks
-    chown system system /dev/freezer/thaw/cgroup.procs
-
-# MARs for freecess
-    chmod 0644 /dev/freezer/frozen/tasks
-    chmod 0644 /dev/freezer/frozen/cgroup.procs
-    chmod 0644 /dev/freezer/frozen/freezer.state
-    chmod 0644 /dev/freezer/thaw/tasks
-    chmod 0644 /dev/freezer/thaw/cgroup.procs
-
 on boot
 
 #BUS Permissions
@@ -225,9 +178,6 @@ on init
 # Permission for Lineage Health HAL
     chown system system /sys/class/power_supply/battery/batt_slate_mode
     chown system system /sys/class/sec/switch/afc_disable
-
-# setup cgroup mountpoint
-    mount tmpfs cgroup /sys/fs/cgroup
 
 # Create mb_po folder for Activation TA
     mkdir /efs/mb_po 0700 system system
