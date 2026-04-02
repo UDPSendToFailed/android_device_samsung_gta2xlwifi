@@ -1,0 +1,13 @@
+cc_binary {
+    name: "set-audio-rotation",
+    vendor: true,
+
+    srcs: ["set-audio-rotation.cpp"],
+
+    shared_libs: [
+        "libbase",
+        "libtinyalsa",
+    ],
+
+    init_rc: ["set-audio-rotation.rc"],
+}
