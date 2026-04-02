@@ -19,3 +19,11 @@ genfscon sysfs /power/cpufreq_min_limit u:object_r:sysfs_power:s0
 genfscon sysfs /power/cpufreq_table u:object_r:sysfs_power:s0
 
 genfscon sysfs /devices/platform/soc/a000000.qcom,wcnss-wlan u:object_r:sysfs_net:s0
+
+genfscon sysfs /devices/platform/soc/200f000.qcom,spmi/spmi-0 u:object_r:sysfs_spmi_dev:s0
+
+genfscon sysfs /devices/platform/soc/soc:qcom,mdss_wb_panel/extcon u:object_r:sysfs_extcon:s0
+
+genfscon sysfs /devices/virtual/input/input6 u:object_r:sysfs_doze:s0
+
+genfscon sysfs /devices/virtual/camera/flash u:object_r:sysfs_camera_flash:s0

@@ -14,7 +14,13 @@ allow vendor_init ipa_dev:file { create open write };
 allow vendor_init persist_file:lnk_file read;
 allow vendor_init system_data_file:dir setattr;
 allow vendor_init tombstone_data_file:dir getattr;
+allow vendor_init watchdog_device:file { setattr create write open };
+
+get_prop(vendor_init, default_prop)
 get_prop(vendor_init, audio_prop)
+
+# tmpfs write for /vendor, /efs, /persist mount points
+allow vendor_init tmpfs:dir { write add_name };
 
 allow vendor_init system_data_file:dir { add_name create };
 

@@ -1,0 +1,5 @@
+# Doze sensor enable node (SX9320 SAR / grip_sensor_wifi)
+type sysfs_doze, sysfs_type, fs_type;
+
+# Camera flash LED node (KTD2692)
+type sysfs_camera_flash, sysfs_type, fs_type;

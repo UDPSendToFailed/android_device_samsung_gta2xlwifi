@@ -1,0 +1,4 @@
+# GPU firmware loading (Adreno 506)
+# kgsl request_firmware() direct path needs file read; without it, falls back to ueventd
+allow surfaceflinger vendor_firmware_file:dir search;
+allow surfaceflinger vendor_firmware_file:file r_file_perms;

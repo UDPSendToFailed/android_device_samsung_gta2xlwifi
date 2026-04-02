@@ -1,1 +1,7 @@
 allow hal_wifi_default proc_net:file write;
+
+# Allow reading MAC address from EFS
+allow hal_wifi_default mnt_vendor_file:dir search;
+allow hal_wifi_default efs_file:dir search;
+allow hal_wifi_default wifi_efs_file:dir search;
+allow hal_wifi_default wifi_efs_file:file { open read getattr };

@@ -1,1 +1,5 @@
 binder_call(system_app, hal_samsung_camera_flashlight)
+
+# Doze lift-to-wake: SX9320 SAR sensor enable node
+allow system_app sysfs_doze:dir search;
+allow system_app sysfs_doze:file { open write getattr };

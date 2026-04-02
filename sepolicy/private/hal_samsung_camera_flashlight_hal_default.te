@@ -5,3 +5,7 @@ type hal_samsung_camera_flashlight_default_exec, exec_type, system_file_type, fi
 init_daemon_domain(hal_samsung_camera_flashlight_default)
 
 binder_call(hal_samsung_camera_flashlight_default, servicemanager);
+
+# Write to /sys/class/camera/flash/rear_flash
+allow hal_samsung_camera_flashlight_default sysfs_camera_flash:dir search;
+allow hal_samsung_camera_flashlight_default sysfs_camera_flash:file { open read write getattr };

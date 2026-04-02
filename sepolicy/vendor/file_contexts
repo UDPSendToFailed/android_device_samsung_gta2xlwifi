@@ -11,6 +11,9 @@
 /dev/block/platform/soc/7824900\.sdhci/by-name/sec_efs       u:object_r:sec_efsblk_device:s0
 /dev/block/platform/soc/7824900\.sdhci/by-name/steady        u:object_r:steady_block_device:s0
 
+# Standard Android partition labels (fsck needs these)
+/dev/block/platform/soc/7824900\.sdhci/by-name/odm            u:object_r:metadata_block_device:s0
+
 # Data files
 /data/vendor/biometrics(/.*)?        u:object_r:biometrics_vendor_data_file:s0
 /data/vendor/conn(/.*)?              u:object_r:vendor_convergence_data_file:s0

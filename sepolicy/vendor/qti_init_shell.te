@@ -8,3 +8,6 @@ set_prop(qti_init_shell, ctl_default_prop)
 
 # Proc sched access for sched_boost
 allow qti_init_shell proc_sched:file { write open };
+
+# read_ahead_kb tuning
+allow qti_init_shell sysfs:file write;

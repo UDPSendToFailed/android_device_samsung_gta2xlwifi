@@ -6,3 +6,6 @@ allow kernel sysfs:file { open read };
 
 # Param block device access
 allow kernel paramblk_device:blk_file { read write open getattr };
+
+# kdevtmpfs device node creation
+allow kernel device:dir { write add_name };
