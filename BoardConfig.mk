@@ -194,6 +194,7 @@ PROTOBUF_SUPPORTED := true
 # Qualcomm
 BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QC_TIME_SERVICES := true
+TARGET_ENFORCES_QSSI := true
 
 # Recovery
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/init/fstab.recovery.qcom

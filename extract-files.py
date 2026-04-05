@@ -21,8 +21,10 @@ from extract_utils.fixups_lib import (
 
 namespace_imports = [
     'device/samsung/gta2xlwifi',
-    'hardware/qcom-caf/msm8996',
+    'hardware/qcom-caf/msm8953',
     'hardware/qcom-caf/wlan',
+    'vendor/qcom/opensource/commonsys/display',
+    'vendor/qcom/opensource/display'
 ]
 
 lib_fixups: lib_fixups_user_type = {
