@@ -51,8 +51,9 @@
 #define CEILING4(X)  (((X) + 0x0003) & 0xFFFC)
 #define CEILING2(X)  (((X) + 0x0001) & 0xFFFE)
 
-#define MAX_ZOOMS_CNT 91
-#define MAX_SIZES_CNT 40
+#define MAX_ZOOMS_CNT 400
+#define MAX_SIZES_CNT 64
+#define MAX_FPS_SIZES_CNT 128
 #define MAX_EXP_BRACKETING_LENGTH 32
 #define MAX_ROI 10
 #define MAX_STREAM_NUM_IN_BUNDLE 8
@@ -634,6 +635,10 @@ typedef enum {
     CAM_AEC_MODE_USER_METERING,
     CAM_AEC_MODE_SPOT_METERING_ADV,
     CAM_AEC_MODE_CENTER_WEIGHTED_ADV,
+    CAM_AEC_MODE_SAMSUNG_7,
+    CAM_AEC_MODE_SAMSUNG_8,
+    CAM_AEC_MODE_SAMSUNG_9,
+    CAM_AEC_MODE_SAMSUNG_10,
     CAM_AEC_MODE_MAX
 } cam_auto_exposure_mode_type;
 
@@ -879,6 +884,8 @@ typedef enum {
     CAM_SENSOR_HDR_OFF,
     CAM_SENSOR_HDR_IN_SENSOR = 1,
     CAM_SENSOR_HDR_ZIGZAG,
+    CAM_SENSOR_HDR_SAMSUNG_3,
+    CAM_SENSOR_HDR_SAMSUNG_4,
     CAM_SENSOR_HDR_MAX,
 } cam_sensor_hdr_type_t;
 
@@ -2234,7 +2241,11 @@ typedef enum {
     CAM_INTF_META_SPOT_LIGHT_DETECT,
     /* HAL based HDR*/
     CAM_INTF_PARM_HAL_BRACKETING_HDR,
-    CAM_INTF_PARM_MAX
+    /* Samsung proprietary entries — daemon accesses these via is_valid[pid] */
+    CAM_INTF_SAMSUNG_PARAM_232 = 232,
+    CAM_INTF_SAMSUNG_PARAM_242 = 242,
+    CAM_INTF_SAMSUNG_PARAM_244 = 244,
+    CAM_INTF_PARM_MAX = 245
 } cam_intf_parm_type_t;
 
 typedef struct {

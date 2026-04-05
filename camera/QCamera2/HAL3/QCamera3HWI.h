@@ -473,6 +473,7 @@ private:
         bool shutter_notified;
         uint8_t scene_mode;
         uint8_t fwkAeMode;
+        int32_t requestedSensitivity;
     } PendingRequestInfo;
     typedef struct {
         uint32_t frame_number;

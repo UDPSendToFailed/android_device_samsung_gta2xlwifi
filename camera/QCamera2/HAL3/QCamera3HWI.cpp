@@ -2005,18 +2005,22 @@ int QCamera3HardwareInterface::configureStreamsPerfLocked(
             break;
             case HAL_PIXEL_FORMAT_BLOB:
                 mStreamConfigInfo.type[mStreamConfigInfo.num_streams] = CAM_STREAM_TYPE_SNAPSHOT;
-                // No need to check bSmallJpegSize if ZSL is present since JPEG uses ZSL stream
-                if ((m_bIs4KVideo && !isZsl) || (bSmallJpegSize && !isZsl)) {
-                     mStreamConfigInfo.postprocess_mask[mStreamConfigInfo.num_streams] =
-                             CAM_QCOM_FEATURE_PP_SUPERSET_HAL3;
-                } else {
+                // Samsung's daemon does not support offline reprocessing
+                // (CAM_STREAM_TYPE_OFFLINE_PROC). Force inline CPP processing
+                // so the snapshot goes through the normal ISP->CPP pipeline
+                // and JPEG encoding happens directly in the HAL via mm_jpeg.
+                if (isZsl) {
                     if (bUseCommonFeatureMask &&
                             isOnEncoder(maxViewfinderSize, newStream->width,
                             newStream->height)) {
                         mStreamConfigInfo.postprocess_mask[mStreamConfigInfo.num_streams] = commonFeatureMask;
                     } else {
-                        mStreamConfigInfo.postprocess_mask[mStreamConfigInfo.num_streams] = CAM_QCOM_FEATURE_NONE;
+                        mStreamConfigInfo.postprocess_mask[mStreamConfigInfo.num_streams] =
+                                CAM_QCOM_FEATURE_PP_SUPERSET_HAL3;
                     }
+                } else {
+                    mStreamConfigInfo.postprocess_mask[mStreamConfigInfo.num_streams] =
+                            CAM_QCOM_FEATURE_PP_SUPERSET_HAL3;
                 }
                 if (isZsl) {
                     if (zslStream) {
@@ -3178,6 +3182,19 @@ void QCamera3HardwareInterface::handleMetadataWithLock(
                     i->capture_intent, internalPproc, i->fwkCacMode,
                     firstMetadataInBatch);
             restoreHdrScene(i->scene_mode, result.result);
+
+            /* In manual AE mode the app controls ISO directly.  Samsung's
+             * daemon does not echo the requested value — AEC reports its own
+             * auto-calculated ISO instead.  Override with the value the app
+             * actually requested so Camera2 clients see the correct readback. */
+            if (i->fwkAeMode == ANDROID_CONTROL_AE_MODE_OFF &&
+                    i->requestedSensitivity > 0) {
+                CameraMetadata convergeMeta;
+                convergeMeta.acquire((camera_metadata_t *)result.result);
+                convergeMeta.update(ANDROID_SENSOR_SENSITIVITY,
+                        &i->requestedSensitivity, 1);
+                result.result = convergeMeta.release();
+            }
 
             saveExifParams(metadata);
 
@@ -4655,6 +4672,13 @@ no_error:
           pendingRequest.fwkAeMode = m_fwAeMode;
     }
 
+    if (meta.exists(ANDROID_SENSOR_SENSITIVITY)) {
+        pendingRequest.requestedSensitivity =
+                meta.find(ANDROID_SENSOR_SENSITIVITY).data.i32[0];
+    } else {
+        pendingRequest.requestedSensitivity = -1;
+    }
+
     //extract CAC info
     if (meta.exists(ANDROID_COLOR_CORRECTION_ABERRATION_MODE)) {
         mCacMode =
@@ -5778,13 +5802,35 @@ QCamera3HardwareInterface::translateFromHalMetadata(
                 sensorRollingShutterSkew, 1);
     }
 
-    IF_META_AVAILABLE(int32_t, sensorSensitivity, CAM_INTF_META_SENSOR_SENSITIVITY, metadata) {
-        LOGD("sensorSensitivity = %d", *sensorSensitivity);
-        camMetadata.update(ANDROID_SENSOR_SENSITIVITY, sensorSensitivity, 1);
+    {
+        /* Samsung's daemon does not populate SENSOR_SENSITIVITY in per-frame
+         * metadata (reads back as INT_MIN or is not marked valid).  Use
+         * iso_value from the AEC 3A results as the primary source. */
+        int32_t minSens = gCamCapability[mCameraId]->sensitivity_range.min_sensitivity;
+        int32_t maxSens = gCamCapability[mCameraId]->sensitivity_range.max_sensitivity;
+        int32_t reportedSens = minSens;
+
+        IF_META_AVAILABLE(cam_3a_params_t, ae_params, CAM_INTF_META_AEC_INFO, metadata) {
+            if (ae_params->iso_value >= minSens && ae_params->iso_value <= maxSens) {
+                reportedSens = ae_params->iso_value;
+            }
+        }
+
+        /* If AEC didn't help, try the raw SENSOR_SENSITIVITY field. */
+        if (reportedSens == minSens) {
+            IF_META_AVAILABLE(int32_t, sensorSensitivity,
+                    CAM_INTF_META_SENSOR_SENSITIVITY, metadata) {
+                if (*sensorSensitivity >= minSens && *sensorSensitivity <= maxSens) {
+                    reportedSens = *sensorSensitivity;
+                }
+            }
+        }
+
+        camMetadata.update(ANDROID_SENSOR_SENSITIVITY, &reportedSens, 1);
 
         //calculate the noise profile based on sensitivity
-        double noise_profile_S = computeNoiseModelEntryS(*sensorSensitivity);
-        double noise_profile_O = computeNoiseModelEntryO(*sensorSensitivity);
+        double noise_profile_S = computeNoiseModelEntryS(reportedSens);
+        double noise_profile_O = computeNoiseModelEntryO(reportedSens);
         double noise_profile[2 * gCamCapability[mCameraId]->num_color_channels];
         for (int i = 0; i < 2 * gCamCapability[mCameraId]->num_color_channels; i += 2) {
             noise_profile[i]   = noise_profile_S;
@@ -7086,6 +7132,7 @@ int QCamera3HardwareInterface::initCapabilities(uint32_t cameraId)
     int rc = 0;
     mm_camera_vtbl_t *cameraHandle = NULL;
     QCamera3HeapMemory *capabilityHeap = NULL;
+    cam_capability_t *cap = NULL;
 
     rc = camera_open((uint8_t)cameraId, &cameraHandle);
     if (rc) {
@@ -7132,8 +7179,26 @@ int QCamera3HardwareInterface::initCapabilities(uint32_t cameraId)
         LOGE("out of memory");
         goto query_failed;
     }
-    memcpy(gCamCapability[cameraId], DATA_PTR(capabilityHeap,0),
-                                        sizeof(cam_capability_t));
+
+    /* Samsung daemon fills the capability buffer using its struct layout.
+     * Our cam_capability_t and cam_types.h match Samsung's layout via padding
+     * fields (samsung_cap_pad1..4) and field reordering (sensitivity fields).
+     * A single memcpy is sufficient — no field-level fixups needed. */
+    memcpy(gCamCapability[cameraId],
+           DATA_PTR(capabilityHeap, 0), sizeof(cam_capability_t));
+    cap = gCamCapability[cameraId];
+
+    /* No OIS on gta2xlwifi — report OFF only */
+    cap->optical_stab_modes_count = 1;
+    cap->optical_stab_modes[0] = CAM_OPT_STAB_OFF;
+
+    /* EIS: report IS_TYPE_NONE only for now */
+    cap->supported_is_types_cnt = 1;
+    cap->supported_is_types[0] = IS_TYPE_NONE;
+
+    /* Viewfinder max = active array (safe upper bound) */
+    cap->max_viewfinder_size.width  = cap->active_array_size.width;
+    cap->max_viewfinder_size.height = cap->active_array_size.height;
 
     int index;
     for (index = 0; index < CAM_ANALYSIS_INFO_MAX; index++) {
@@ -9216,15 +9281,6 @@ camera_metadata_t* QCamera3HardwareInterface::translateCapabilityToMetadata(int 
         LOGD("TNR:%d with process plate %d for template:%d",
                              tnr_enable, tnr_process_type, type);
     }
-
-    //Update Link tags to default
-    int32_t sync_type = CAM_TYPE_STANDALONE;
-    settings.update(QCAMERA3_DUALCAM_LINK_ENABLE, &sync_type, 1);
-
-    int32_t is_main = 0; //this doesn't matter as app should overwrite
-    settings.update(QCAMERA3_DUALCAM_LINK_IS_MAIN, &is_main, 1);
-
-    settings.update(QCAMERA3_DUALCAM_LINK_RELATED_CAMERA_ID, &is_main, 1);
 
     /* CDS default */
     char prop[PROPERTY_VALUE_MAX];

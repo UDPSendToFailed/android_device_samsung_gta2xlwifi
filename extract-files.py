@@ -32,9 +32,6 @@ lib_fixups: lib_fixups_user_type = {
 # Define the blob fixups
 blob_fixups: blob_fixups_user_type = {
 
-    ('vendor/lib/hw/camera.msm8953.so'): blob_fixup()
-    .replace_needed('libgui.so', 'libgui_vendor.so'),
-
     ('vendor/lib/libchromaflash.so',
     'vendor/lib/libmmcamera_hdr_gb_lib.so',
     'vendor/lib/libMOTION.so',

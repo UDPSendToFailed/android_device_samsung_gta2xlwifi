@@ -136,7 +136,11 @@ PRODUCT_PACKAGES += \
     android.hardware.camera.provider-service_32.lineage \
     vendor.qti.hardware.camera.device@1.0.vendor \
     libgui_shim_vendor \
-    vendor.samsung_ext.hardware.camera.flashlight-service
+    vendor.samsung_ext.hardware.camera.flashlight-service \
+    camera.msm8953 \
+    libmmcamera_interface \
+    libmmjpeg_interface \
+    libqomx_core \
 
 # Configstore
 PRODUCT_PACKAGES += \

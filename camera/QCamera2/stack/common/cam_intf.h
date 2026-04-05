@@ -212,7 +212,9 @@ typedef struct{
     cam_auto_exposure_mode_type supported_aec_modes[CAM_AEC_MODE_MAX];
 
     size_t fps_ranges_tbl_cnt;                              /* fps ranges table size */
-    cam_fps_range_t fps_ranges_tbl[MAX_SIZES_CNT];          /* fps ranges table */
+    cam_fps_range_t fps_ranges_tbl[MAX_FPS_SIZES_CNT];       /* fps ranges table (Samsung uses 128) */
+
+    uint32_t samsung_fps_pad;                                /* Samsung extra field after fps_ranges */
 
     /* supported antibanding modes */
     size_t supported_antibandings_cnt;
@@ -245,16 +247,20 @@ typedef struct{
     float min_focus_pos[CAM_MANUAL_FOCUS_MODE_MAX];
     float max_focus_pos[CAM_MANUAL_FOCUS_MODE_MAX];
 
+    uint32_t samsung_focus_pad2[3];              /* Samsung extra fields after focus pos */
     int32_t exposure_compensation_min;       /* min value of exposure compensation index */
     int32_t exposure_compensation_max;       /* max value of exposure compensation index */
     int32_t exposure_compensation_default;   /* default value of exposure compensation index */
-    float exposure_compensation_step;
-    cam_rational_type_t exp_compensation_step;    /* exposure compensation step value */
+    float exposure_compensation_step;        /* Samsung: float BEFORE rational */
+    cam_rational_type_t exp_compensation_step;
 
     uint8_t video_stablization_supported; /* flag id video stablization is supported */
 
     size_t picture_sizes_tbl_cnt;                           /* picture sizes table size */
     cam_dimension_t picture_sizes_tbl[MAX_SIZES_CNT];       /* picture sizes table */
+
+    uint32_t samsung_pic_pad;                               /* Samsung extra field after pic_sizes */
+
     /* The minimum frame duration that is supported for each
      * resolution in availableProcessedSizes. Should correspond
      * to the frame duration when only that processed stream
@@ -302,6 +308,11 @@ typedef struct{
     size_t supported_picture_fmt_cnt;
     cam_format_t supported_picture_fmts[CAM_FORMAT_MAX];
 
+    /* Samsung 0x48D8..0x4CF8: Samsung-specific fields between format tables
+     * and raw dimension tables. Referenced by Samsung camera libraries at
+     * offsets 0x48F8 (5 refs), 0x4900 (18 refs), 0x4908 (1 ref). */
+    uint8_t samsung_cap_pad1[1060];
+
     uint8_t max_downscale_factor;
 
     /* dimension and supported output format of raw dump from camif */
@@ -309,6 +320,10 @@ typedef struct{
     cam_dimension_t raw_dim[MAX_SIZES_CNT];
     size_t supported_raw_fmt_cnt;
     cam_format_t supported_raw_fmts[CAM_FORMAT_MAX];
+
+    /* Samsung: 12 extra bytes between raw format table and raw min durations */
+    uint8_t samsung_cap_pad2[12];
+
     /* The minimum frame duration that is supported for above
        raw resolution */
     int64_t raw_min_duration[MAX_SIZES_CNT];
@@ -347,6 +362,9 @@ typedef struct{
     uint32_t min_num_pp_bufs;             /* minimum number of buffers needed by postproc module */
     cam_format_t rdi_mode_stream_fmt;  /* stream format supported in rdi mode */
 
+    /* Samsung: 4 extra bytes before HAL3 capability fields */
+    uint32_t samsung_cap_pad3;
+
     /* capabilities specific to HAL 3 */
 
     float min_focus_distance;
@@ -371,7 +389,7 @@ typedef struct{
     float geo_correction_map[2 * 3 * CAM_MAX_MAP_WIDTH *
               CAM_MAX_MAP_HEIGHT];
 
-    float lens_position[3];
+    float lens_position[2];
 
     /* nano seconds */
     int64_t exposure_time_range[EXPOSURE_TIME_RANGE_CNT];
@@ -442,15 +460,14 @@ typedef struct{
     int32_t max_sharpness_map_value;
 
     /*Autoexposure modes for camera 3 api*/
+    uint32_t samsung_ae_pad[3];              /* Samsung extra fields before AE modes */
     size_t supported_ae_modes_cnt;
     cam_ae_mode_type supported_ae_modes[CAM_AE_MODE_MAX];
 
-
-    cam_sensitivity_range_t sensitivity_range;
-    int32_t max_analog_sensitivity;
-
-    /* ISP digital gain */
+    /* Samsung daemon order: isp_sensitivity_range, max_analog, sensitivity_range */
     cam_sensitivity_range_t isp_sensitivity_range;
+    int32_t max_analog_sensitivity;
+    cam_sensitivity_range_t sensitivity_range;
 
     /* picture sizes need scale*/
     cam_scene_mode_overrides_t scene_mode_overrides[CAM_SCENE_MODE_MAX];
@@ -568,7 +585,20 @@ typedef struct{
     cam_format_t supported_meta_raw_fmts[CAM_FORMAT_MAX];
     cam_dimension_t raw_meta_dim[MAX_SIZES_CNT];
     cam_sub_format_type_t sub_fmt[CAM_FORMAT_SUBTYPE_MAX];
+
+    /* Samsung daemon (mm-qcamera-daemon) fills a larger cam_capability_t
+     * (0x8158 bytes). The struct above matches Samsung's layout through
+     * ~0x145C (picture/preview/video sizes, mount angle, focal length).
+     * The remaining Samsung fields (hfr internals, formats, raw dims,
+     * HAL3 fields like active_array, white_level, etc.) live in this
+     * opaque blob — QCamera3HWI reads them by Samsung offset. */
+    uint8_t samsung_reserved_cap[0x8158 - 0x7BAC];
 } cam_capability_t;
+
+/* Samsung daemon expects sizeof(cam_capability_t) == 0x8158 (33,112).
+ * If this assertion fires, adjust samsung_reserved_cap[]. */
+_Static_assert(sizeof(cam_capability_t) == 0x8158,
+    "cam_capability_t size must be 0x8158 to match Samsung daemon");
 
 typedef enum {
     CAM_STREAM_PARAM_TYPE_DO_REPROCESS = CAM_INTF_PARM_DO_REPROCESS,
@@ -613,7 +643,7 @@ typedef struct {
 } cam_stream_img_prop_t;
 
 typedef struct {
-    uint8_t enableStream; /*0 � stop and 1-start */
+    uint8_t enableStream; /*0 � stop and 1-start */
 } cam_request_frames;
 
 typedef struct {
@@ -786,246 +816,268 @@ typedef struct {
 
 typedef struct {
 /**************************************************************************************
- *  ID from (cam_intf_metadata_type_t)                DATATYPE                     COUNT
+ *  Samsung-matching INCLUDE order — offsets verified against libmmcamera2_mct.so
+ *  DO NOT reorder entries. Padding blocks match Samsung's metadata_data_t layout.
+ *  ID from (cam_intf_parm_type_t)                    DATATYPE                     COUNT
  **************************************************************************************/
-    /* common between HAL1 and HAL3 */
-    INCLUDE(CAM_INTF_META_HISTOGRAM,                    cam_hist_stats_t,               1);
-    INCLUDE(CAM_INTF_META_FACE_DETECTION,               cam_face_detection_data_t,      1);
-    INCLUDE(CAM_INTF_META_FACE_RECOG,                   cam_face_recog_data_t,          1);
-    INCLUDE(CAM_INTF_META_FACE_BLINK,                   cam_face_blink_data_t,          1);
-    INCLUDE(CAM_INTF_META_FACE_GAZE,                    cam_face_gaze_data_t,           1);
-    INCLUDE(CAM_INTF_META_FACE_SMILE,                   cam_face_smile_data_t,          1);
-    INCLUDE(CAM_INTF_META_FACE_LANDMARK,                cam_face_landmarks_data_t,      1);
-    INCLUDE(CAM_INTF_META_FACE_CONTOUR,                 cam_face_contour_data_t,        1);
-    INCLUDE(CAM_INTF_META_AUTOFOCUS_DATA,               cam_auto_focus_data_t,          1);
-    INCLUDE(CAM_INTF_META_CDS_DATA,                     cam_cds_data_t,                 1);
-    INCLUDE(CAM_INTF_PARM_UPDATE_DEBUG_LEVEL,           uint32_t,                       1);
+    uint8_t _samsung_pad1[328096];
+    INCLUDE(CAM_INTF_META_HISTOGRAM,                             cam_hist_stats_t,                    1);
+    INCLUDE(CAM_INTF_META_FACE_DETECTION,                        cam_face_detection_data_t,           1);
+    INCLUDE(CAM_INTF_META_FACE_RECOG,                            cam_face_recog_data_t,               1);
+    INCLUDE(CAM_INTF_META_FACE_BLINK,                            cam_face_blink_data_t,               1);
+    uint8_t _samsung_pad2[2];
+    INCLUDE(CAM_INTF_META_FACE_GAZE,                             cam_face_gaze_data_t,                1);
+    INCLUDE(CAM_INTF_META_FACE_SMILE,                            cam_face_smile_data_t,               1);
+    INCLUDE(CAM_INTF_META_FACE_LANDMARK,                         cam_face_landmarks_data_t,           1);
+    INCLUDE(CAM_INTF_META_FACE_CONTOUR,                          cam_face_contour_data_t,             1);
+    INCLUDE(CAM_INTF_META_AUTOFOCUS_DATA,                        cam_auto_focus_data_t,               1);
+    uint8_t _samsung_pad3[68];
+    INCLUDE(CAM_INTF_PARM_UPDATE_DEBUG_LEVEL,                    uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_CROP_DATA,                             cam_crop_data_t,                     1);
+    uint8_t _samsung_pad4[96];
+    INCLUDE(CAM_INTF_META_PREP_SNAPSHOT_DONE,                    int32_t,                             1);
+    INCLUDE(CAM_INTF_META_GOOD_FRAME_IDX_RANGE,                  cam_frame_idx_range_t,               1);
+    uint8_t _samsung_pad5[4];
+    INCLUDE(CAM_INTF_META_ASD_HDR_SCENE_DATA,                    cam_asd_hdr_scene_data_t,            1);
+    INCLUDE(CAM_INTF_META_ASD_SCENE_INFO,                        cam_asd_decision_t,                  1);
+    INCLUDE(CAM_INTF_META_CURRENT_SCENE,                         cam_scene_mode_type,                 1);
+    INCLUDE(CAM_INTF_META_AWB_INFO,                              cam_awb_params_t,                    1);
+    INCLUDE(CAM_INTF_META_FOCUS_POSITION,                        cam_focus_pos_info_t,                1);
+    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_ISP,                    cam_chromatix_lite_isp_t,            1);
+    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_PP,                     cam_chromatix_lite_pp_t,             1);
+    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_AE,                     cam_chromatix_lite_ae_stats_t,       1);
+    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_AWB,                    cam_chromatix_lite_awb_stats_t,      1);
+    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_AF,                     cam_chromatix_lite_af_stats_t,       1);
+    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_ASD,                    cam_chromatix_lite_asd_stats_t,      1);
+    INCLUDE(CAM_INTF_BUF_DIVERT_INFO,                            cam_buf_divert_info_t,               1);
+    uint8_t _samsung_pad6[24];
+    INCLUDE(CAM_INTF_META_FRAME_NUMBER_VALID,                    int32_t,                             1);
+    INCLUDE(CAM_INTF_META_URGENT_FRAME_NUMBER_VALID,             int32_t,                             1);
+    INCLUDE(CAM_INTF_META_FRAME_DROPPED,                         cam_stream_ID_t,                     1);
+    INCLUDE(CAM_INTF_META_FRAME_NUMBER,                          uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_URGENT_FRAME_NUMBER,                   uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_COLOR_CORRECT_MODE,                    uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_COLOR_CORRECT_TRANSFORM,               cam_color_correct_matrix_t,          1);
+    INCLUDE(CAM_INTF_META_COLOR_CORRECT_GAINS,                   cam_color_correct_gains_t,           1);
+    INCLUDE(CAM_INTF_META_PRED_COLOR_CORRECT_TRANSFORM,          cam_color_correct_matrix_t,          1);
+    INCLUDE(CAM_INTF_META_PRED_COLOR_CORRECT_GAINS,              cam_color_correct_gains_t,           1);
+    INCLUDE(CAM_INTF_META_AEC_ROI,                               cam_area_t,                          1);
+    INCLUDE(CAM_INTF_META_AEC_STATE,                             uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_FOCUS_MODE,                            uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_MANUAL_FOCUS_POS,                      cam_manual_focus_parm_t,             1);
+    INCLUDE(CAM_INTF_META_AF_ROI,                                cam_area_t,                          1);
+    INCLUDE(CAM_INTF_META_AF_STATE,                              uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_WHITE_BALANCE,                         int32_t,                             1);
+    INCLUDE(CAM_INTF_META_AWB_REGIONS,                           cam_area_t,                          1);
+    INCLUDE(CAM_INTF_META_AWB_STATE,                             uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_BLACK_LEVEL_LOCK,                      uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_MODE,                                  uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_EDGE_MODE,                             cam_edge_application_t,              1);
+    INCLUDE(CAM_INTF_META_FLASH_POWER,                           uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_FLASH_FIRING_TIME,                     int64_t,                             1);
+    INCLUDE(CAM_INTF_META_FLASH_MODE,                            uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_FLASH_STATE,                           int32_t,                             1);
+    INCLUDE(CAM_INTF_META_HOTPIXEL_MODE,                         uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_LENS_APERTURE,                         float,                               1);
+    INCLUDE(CAM_INTF_META_LENS_FILTERDENSITY,                    float,                               1);
+    INCLUDE(CAM_INTF_META_LENS_FOCAL_LENGTH,                     float,                               1);
+    INCLUDE(CAM_INTF_META_LENS_FOCUS_DISTANCE,                   float,                               1);
+    INCLUDE(CAM_INTF_META_FOCUS_VALUE,                           float,                               1);
+    INCLUDE(CAM_INTF_META_SPOT_LIGHT_DETECT,                     uint8_t,                             1);
+    uint8_t _samsung_pad7[3];
+    INCLUDE(CAM_INTF_META_LENS_FOCUS_RANGE,                      float,                               2);
+    INCLUDE(CAM_INTF_META_LENS_STATE,                            cam_af_lens_state_t,                 1);
+    INCLUDE(CAM_INTF_META_LENS_OPT_STAB_MODE,                    uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_VIDEO_STAB_MODE,                       uint32_t,                            1);
+    uint8_t _samsung_pad8[4];
+    INCLUDE(CAM_INTF_META_NOISE_REDUCTION_MODE,                  uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_NOISE_REDUCTION_STRENGTH,              uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_SCALER_CROP_REGION,                    cam_crop_region_t,                   1);
+    INCLUDE(CAM_INTF_META_SCENE_FLICKER,                         uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_SENSOR_EXPOSURE_TIME,                  int64_t,                             1);
+    INCLUDE(CAM_INTF_META_SENSOR_FRAME_DURATION,                 int64_t,                             1);
+    INCLUDE(CAM_INTF_META_SENSOR_SENSITIVITY,                    int32_t,                             1);
+    INCLUDE(CAM_INTF_META_ISP_SENSITIVITY,                       int32_t,                             1);
+    INCLUDE(CAM_INTF_META_SENSOR_TIMESTAMP,                      int64_t,                             1);
+    INCLUDE(CAM_INTF_META_SENSOR_ROLLING_SHUTTER_SKEW,           int64_t,                             1);
+    INCLUDE(CAM_INTF_META_SHADING_MODE,                          uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_STATS_FACEDETECT_MODE,                 uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_STATS_HISTOGRAM_MODE,                  uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_STATS_SHARPNESS_MAP_MODE,              uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_STATS_SHARPNESS_MAP,                   cam_sharpness_map_t,                 3);
+    INCLUDE(CAM_INTF_META_TONEMAP_CURVES,                        cam_rgb_tonemap_curves,              1);
+    INCLUDE(CAM_INTF_META_LENS_SHADING_MAP,                      cam_lens_shading_map_t,              1);
+    INCLUDE(CAM_INTF_META_AEC_INFO,                              cam_3a_params_t,                     1);
+    uint8_t _samsung_pad9[1608];
+    INCLUDE(CAM_INTF_META_SENSOR_INFO,                           cam_sensor_params_t,                 1);
+    uint8_t _samsung_pad10[4];
+    INCLUDE(CAM_INTF_META_EXIF_DEBUG_AE,                         cam_ae_exif_debug_t,                 1);
+    INCLUDE(CAM_INTF_META_EXIF_DEBUG_AWB,                        cam_awb_exif_debug_t,                1);
+    INCLUDE(CAM_INTF_META_EXIF_DEBUG_AF,                         cam_af_exif_debug_t,                 1);
+    INCLUDE(CAM_INTF_META_EXIF_DEBUG_ASD,                        cam_asd_exif_debug_t,                1);
+    INCLUDE(CAM_INTF_META_EXIF_DEBUG_STATS,                      cam_stats_buffer_exif_debug_t,       1);
+    INCLUDE(CAM_INTF_META_EXIF_DEBUG_BESTATS,                    cam_bestats_buffer_exif_debug_t,     1);
+    INCLUDE(CAM_INTF_META_EXIF_DEBUG_BHIST,                      cam_bhist_buffer_exif_debug_t,       1);
+    INCLUDE(CAM_INTF_META_EXIF_DEBUG_3A_TUNING,                  cam_q3a_tuning_info_t,               1);
+    uint8_t _samsung_pad11[4];
+    INCLUDE(CAM_INTF_PARM_EFFECT,                                uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_PRIVATE_DATA,                          int32_t,                             MAX_METADATA_PRIVATE_PAYLOAD_SIZE_IN_BYTES / 4);
+    INCLUDE(CAM_INTF_PARM_HAL_VERSION,                           int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_ANTIBANDING,                           uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_EXPOSURE_COMPENSATION,                 int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_EV_STEP,                               cam_rational_type_t,                 1);
+    INCLUDE(CAM_INTF_PARM_AEC_LOCK,                              uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_FPS_RANGE,                             cam_fps_range_t,                     1);
+    INCLUDE(CAM_INTF_PARM_AWB_LOCK,                              uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_BESTSHOT_MODE,                         uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_DIS_ENABLE,                            int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_LED_MODE,                              int32_t,                             1);
+    INCLUDE(CAM_INTF_META_LED_MODE_OVERRIDE,                     uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_RELATED_SENSORS_CALIBRATION,           cam_related_system_calibration_data_t, 1);
+    uint8_t _samsung_pad12[2];
+    INCLUDE(CAM_INTF_META_AF_FOCAL_LENGTH_RATIO,                 cam_focal_length_ratio_t,            1);
+    INCLUDE(CAM_INTF_META_SNAP_CROP_INFO_SENSOR,                 cam_stream_crop_info_t,              1);
+    uint8_t _samsung_pad13[12];
+    INCLUDE(CAM_INTF_META_SNAP_CROP_INFO_CAMIF,                  cam_stream_crop_info_t,              1);
+    uint8_t _samsung_pad14[12];
+    INCLUDE(CAM_INTF_META_SNAP_CROP_INFO_ISP,                    cam_stream_crop_info_t,              1);
+    uint8_t _samsung_pad15[12];
+    INCLUDE(CAM_INTF_META_SNAP_CROP_INFO_CPP,                    cam_stream_crop_info_t,              1);
+    uint8_t _samsung_pad16[12];
+    INCLUDE(CAM_INTF_META_DCRF,                                  cam_dcrf_result_t,                   1);
+    INCLUDE(CAM_INTF_PARM_QUERY_FLASH4SNAP,                      int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_EXPOSURE,                              int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_SHARPNESS,                             int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_CONTRAST,                              int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_SATURATION,                            int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_BRIGHTNESS,                            int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_ISO,                                   cam_intf_parm_manual_3a_t,           1);
+    INCLUDE(CAM_INTF_PARM_EXPOSURE_TIME,                         cam_intf_parm_manual_3a_t,           1);
+    INCLUDE(CAM_INTF_PARM_ZOOM,                                  int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_ROLLOFF,                               int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_MODE,                                  int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_AEC_ALGO_TYPE,                         int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_FOCUS_ALGO_TYPE,                       int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_AEC_ROI,                               cam_set_aec_roi_t,                   1);
+    INCLUDE(CAM_INTF_PARM_AF_ROI,                                cam_roi_info_t,                      1);
+    INCLUDE(CAM_INTF_PARM_SCE_FACTOR,                            int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_FD,                                    cam_fd_set_parm_t,                   1);
+    uint8_t _samsung_pad17[4];
+    INCLUDE(CAM_INTF_PARM_MCE,                                   int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_HFR,                                   int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_REDEYE_REDUCTION,                      int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_WAVELET_DENOISE,                       cam_denoise_param_t,                 1);
+    INCLUDE(CAM_INTF_PARM_TEMPORAL_DENOISE,                      cam_denoise_param_t,                 1);
+    INCLUDE(CAM_INTF_PARM_HISTOGRAM,                             int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_ASD_ENABLE,                            int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_RECORDING_HINT,                        int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_HDR,                                   cam_exp_bracketing_t,                1);
+    INCLUDE(CAM_INTF_PARM_FRAMESKIP,                             int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_ZSL_MODE,                              int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_HDR_NEED_1X,                           int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_LOCK_CAF,                              int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_VIDEO_HDR,                             int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_SENSOR_HDR,                            cam_sensor_hdr_type_t,               1);
+    INCLUDE(CAM_INTF_PARM_VT,                                    int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_SET_AUTOFOCUSTUNING,                   tune_actuator_t,                     1);
+    INCLUDE(CAM_INTF_PARM_SET_VFE_COMMAND,                       tune_cmd_t,                          1);
+    INCLUDE(CAM_INTF_PARM_SET_PP_COMMAND,                        tune_cmd_t,                          1);
+    INCLUDE(CAM_INTF_PARM_MAX_DIMENSION,                         cam_dimension_t,                     1);
+    INCLUDE(CAM_INTF_PARM_RAW_DIMENSION,                         cam_dimension_t,                     1);
+    INCLUDE(CAM_INTF_PARM_TINTLESS,                              int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_WB_MANUAL,                             cam_manual_wb_parm_t,                1);
+    INCLUDE(CAM_INTF_PARM_CDS_MODE,                              int32_t,                             1);
+    uint8_t _samsung_pad18[24];
+    INCLUDE(CAM_INTF_PARM_EZTUNE_CMD,                            cam_eztune_cmd_data_t,               1);
+    INCLUDE(CAM_INTF_PARM_INT_EVT,                               cam_int_evt_params_t,                1);
+    INCLUDE(CAM_INTF_PARM_RDI_MODE,                              int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_BURST_NUM,                             uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_RETRO_BURST_NUM,                       uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_BURST_LED_ON_PERIOD,                   uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_LONGSHOT_ENABLE,                       int8_t,                              1);
+    uint8_t _samsung_pad19[3];
+    INCLUDE(CAM_INTF_PARM_TONE_MAP_MODE,                         uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_TOUCH_AE_RESULT,                       int32_t,                             1);
+    INCLUDE(CAM_INTF_PARM_LED_CALIBRATION,                       cam_led_calibration_mode_t,          1);
+    INCLUDE(CAM_INTF_PARM_ADV_CAPTURE_MODE,                      uint8_t,                             1);
+    uint8_t _samsung_pad20[3];
+    INCLUDE(CAM_INTF_PARM_QUADRA_CFA,                            int32_t,                             1);
+    uint8_t _samsung_pad21[484];
+    INCLUDE(CAM_INTF_SAMSUNG_PARAM_242,                          uint8_t,                             8);
+    INCLUDE(CAM_INTF_META_STREAM_INFO,                           cam_stream_size_info_t,              1);
+    uint8_t _samsung_pad22[64];
+    INCLUDE(CAM_INTF_META_AEC_MODE,                              uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_AEC_PRECAPTURE_TRIGGER,                cam_trigger_t,                       1);
+    INCLUDE(CAM_INTF_META_AF_TRIGGER,                            cam_trigger_t,                       1);
+    INCLUDE(CAM_INTF_META_CAPTURE_INTENT,                        uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_DEMOSAIC,                              int32_t,                             1);
+    INCLUDE(CAM_INTF_META_SHARPNESS_STRENGTH,                    int32_t,                             1);
+    INCLUDE(CAM_INTF_META_GEOMETRIC_MODE,                        uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_GEOMETRIC_STRENGTH,                    uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_LENS_SHADING_MAP_MODE,                 uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_SHADING_STRENGTH,                      uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_TONEMAP_MODE,                          uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_STREAM_ID,                             cam_stream_ID_t,                     1);
+    INCLUDE(CAM_INTF_PARM_STATS_DEBUG_MASK,                      uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_STATS_AF_PAAF,                         uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_FOCUS_BRACKETING,                      cam_af_bracketing_t,                 1);
+    INCLUDE(CAM_INTF_PARM_FLASH_BRACKETING,                      cam_flash_bracketing_t,              1);
+    uint8_t _samsung_pad23[2];
+    INCLUDE(CAM_INTF_META_JPEG_GPS_COORDINATES,                  double,                              3);
+    INCLUDE(CAM_INTF_META_JPEG_GPS_PROC_METHODS,                 uint8_t,                             GPS_PROCESSING_METHOD_SIZE);
+    uint8_t _samsung_pad24[7];
+    INCLUDE(CAM_INTF_META_JPEG_GPS_TIMESTAMP,                    int64_t,                             1);
+    INCLUDE(CAM_INTF_META_JPEG_ORIENTATION,                      int32_t,                             1);
+    INCLUDE(CAM_INTF_META_JPEG_QUALITY,                          uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_JPEG_THUMB_QUALITY,                    uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_JPEG_THUMB_SIZE,                       cam_dimension_t,                     1);
+    INCLUDE(CAM_INTF_META_TEST_PATTERN_DATA,                     cam_test_pattern_data_t,             1);
+    INCLUDE(CAM_INTF_META_PROFILE_TONE_CURVE,                    cam_profile_tone_curve,              1);
+    INCLUDE(CAM_INTF_META_OTP_WB_GRGB,                           float,                               1);
+    INCLUDE(CAM_INTF_META_IMG_HYST_INFO,                         cam_img_hysterisis_info_t,           1);
+    INCLUDE(CAM_INTF_META_CAC_INFO,                              cam_cac_info_t,                      1);
+    INCLUDE(CAM_INTF_PARM_CAC,                                   cam_aberration_mode_t,               1);
+    INCLUDE(CAM_INTF_META_NEUTRAL_COL_POINT,                     cam_neutral_col_point_t,             1);
+    INCLUDE(CAM_INTF_PARM_ROTATION,                              cam_rotation_info_t,                 1);
+    uint8_t _samsung_pad25[8196];
+    INCLUDE(CAM_INTF_META_IMGLIB,                                cam_intf_meta_imglib_t,              1);
+    INCLUDE(CAM_INTF_PARM_CAPTURE_FRAME_CONFIG,                  cam_capture_frame_config_t,          1);
+    uint8_t _samsung_pad26[264];
+    INCLUDE(CAM_INTF_PARM_CUSTOM,                                custom_parm_buffer_t,                1);
+    uint8_t _samsung_pad27[5312];
+    INCLUDE(CAM_INTF_PARM_FLIP,                                  int32_t,                             1);
+    INCLUDE(CAM_INTF_META_USE_AV_TIMER,                          uint8_t,                             1);
+    uint8_t _samsung_pad28[47];
+    INCLUDE(CAM_INTF_META_LOW_LIGHT,                             cam_low_light_mode_t,                1);
+    INCLUDE(CAM_INTF_META_IMG_DYN_FEAT,                          cam_dyn_img_data_t,                  1);
+    uint8_t _samsung_pad29[4];
+    INCLUDE(CAM_INTF_AF_STATE_TRANSITION,                        uint8_t,                             1);
+    uint8_t _samsung_pad30[3];
+    INCLUDE(CAM_INTF_PARM_INITIAL_EXPOSURE_INDEX,                uint32_t,                            1);
+    INCLUDE(CAM_INTF_PARM_INSTANT_AEC,                           uint8_t,                             1);
+    uint8_t _samsung_pad31[59];
+    INCLUDE(CAM_INTF_META_FOCUS_DEPTH_INFO,                      uint8_t,                             1);
+    uint8_t _samsung_pad32[15];
+    INCLUDE(CAM_INTF_SAMSUNG_PARAM_232,                          uint8_t,                             24);
+    INCLUDE(CAM_INTF_SAMSUNG_PARAM_244,                          uint8_t,                             4);
 
-    /* Specific to HAl1 */
-    INCLUDE(CAM_INTF_META_CROP_DATA,                    cam_crop_data_t,                1);
-    INCLUDE(CAM_INTF_META_PREP_SNAPSHOT_DONE,           int32_t,                        1);
-    INCLUDE(CAM_INTF_META_GOOD_FRAME_IDX_RANGE,         cam_frame_idx_range_t,          1);
-    INCLUDE(CAM_INTF_META_ASD_HDR_SCENE_DATA,           cam_asd_hdr_scene_data_t,       1);
-    INCLUDE(CAM_INTF_META_ASD_SCENE_INFO,               cam_asd_decision_t,             1);
-    INCLUDE(CAM_INTF_META_CURRENT_SCENE,                cam_scene_mode_type,            1);
-    INCLUDE(CAM_INTF_META_AWB_INFO,                     cam_awb_params_t,               1);
-    INCLUDE(CAM_INTF_META_FOCUS_POSITION,               cam_focus_pos_info_t,           1);
-    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_ISP,           cam_chromatix_lite_isp_t,       1);
-    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_PP,            cam_chromatix_lite_pp_t,        1);
-    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_AE,            cam_chromatix_lite_ae_stats_t,  1);
-    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_AWB,           cam_chromatix_lite_awb_stats_t, 1);
-    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_AF,            cam_chromatix_lite_af_stats_t,  1);
-    INCLUDE(CAM_INTF_META_CHROMATIX_LITE_ASD,           cam_chromatix_lite_asd_stats_t, 1);
-    INCLUDE(CAM_INTF_BUF_DIVERT_INFO,                   cam_buf_divert_info_t,          1);
-
-    /* Specific to HAL3 */
-    INCLUDE(CAM_INTF_META_FRAME_NUMBER_VALID,           int32_t,                     1);
-    INCLUDE(CAM_INTF_META_URGENT_FRAME_NUMBER_VALID,    int32_t,                     1);
-    INCLUDE(CAM_INTF_META_FRAME_DROPPED,                cam_stream_ID_t,             1);
-    INCLUDE(CAM_INTF_META_FRAME_NUMBER,                 uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_URGENT_FRAME_NUMBER,          uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_COLOR_CORRECT_MODE,           uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_COLOR_CORRECT_TRANSFORM,      cam_color_correct_matrix_t,  1);
-    INCLUDE(CAM_INTF_META_COLOR_CORRECT_GAINS,          cam_color_correct_gains_t,   1);
-    INCLUDE(CAM_INTF_META_PRED_COLOR_CORRECT_TRANSFORM, cam_color_correct_matrix_t,  1);
-    INCLUDE(CAM_INTF_META_PRED_COLOR_CORRECT_GAINS,     cam_color_correct_gains_t,   1);
-    INCLUDE(CAM_INTF_META_AEC_ROI,                      cam_area_t,                  1);
-    INCLUDE(CAM_INTF_META_AEC_STATE,                    uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_FOCUS_MODE,                   uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_MANUAL_FOCUS_POS,             cam_manual_focus_parm_t,     1);
-    INCLUDE(CAM_INTF_META_AF_ROI,                       cam_area_t,                  1);
-    INCLUDE(CAM_INTF_META_AF_STATE,                     uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_WHITE_BALANCE,                int32_t,                     1);
-    INCLUDE(CAM_INTF_META_AWB_REGIONS,                  cam_area_t,                  1);
-    INCLUDE(CAM_INTF_META_AWB_STATE,                    uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_BLACK_LEVEL_LOCK,             uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_MODE,                         uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_EDGE_MODE,                    cam_edge_application_t,      1);
-    INCLUDE(CAM_INTF_META_FLASH_POWER,                  uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_FLASH_FIRING_TIME,            int64_t,                     1);
-    INCLUDE(CAM_INTF_META_FLASH_MODE,                   uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_FLASH_STATE,                  int32_t,                     1);
-    INCLUDE(CAM_INTF_META_HOTPIXEL_MODE,                uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_LENS_APERTURE,                float,                       1);
-    INCLUDE(CAM_INTF_META_LENS_FILTERDENSITY,           float,                       1);
-    INCLUDE(CAM_INTF_META_LENS_FOCAL_LENGTH,            float,                       1);
-    INCLUDE(CAM_INTF_META_LENS_FOCUS_DISTANCE,          float,                       1);
-    INCLUDE(CAM_INTF_META_FOCUS_VALUE,                  float,                       1);
-    INCLUDE(CAM_INTF_META_SPOT_LIGHT_DETECT,            uint8_t,                     1);
-    INCLUDE(CAM_INTF_META_LENS_FOCUS_RANGE,             float,                       2);
-    INCLUDE(CAM_INTF_META_LENS_STATE,                   cam_af_lens_state_t,         1);
-    INCLUDE(CAM_INTF_META_LENS_OPT_STAB_MODE,           uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_VIDEO_STAB_MODE,              uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_LENS_FOCUS_STATE,             uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_NOISE_REDUCTION_MODE,         uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_NOISE_REDUCTION_STRENGTH,     uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_SCALER_CROP_REGION,           cam_crop_region_t,           1);
-    INCLUDE(CAM_INTF_META_SCENE_FLICKER,                uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_SENSOR_EXPOSURE_TIME,         int64_t,                     1);
-    INCLUDE(CAM_INTF_META_SENSOR_FRAME_DURATION,        int64_t,                     1);
-    INCLUDE(CAM_INTF_META_SENSOR_SENSITIVITY,           int32_t,                     1);
-    INCLUDE(CAM_INTF_META_ISP_SENSITIVITY ,             int32_t,                     1);
-    INCLUDE(CAM_INTF_META_SENSOR_TIMESTAMP,             int64_t,                     1);
-    INCLUDE(CAM_INTF_META_SENSOR_ROLLING_SHUTTER_SKEW,  int64_t,                     1);
-    INCLUDE(CAM_INTF_META_SHADING_MODE,                 uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_STATS_FACEDETECT_MODE,        uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_STATS_HISTOGRAM_MODE,         uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_STATS_SHARPNESS_MAP_MODE,     uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_STATS_SHARPNESS_MAP,          cam_sharpness_map_t,         3);
-    INCLUDE(CAM_INTF_META_TONEMAP_CURVES,               cam_rgb_tonemap_curves,      1);
-    INCLUDE(CAM_INTF_META_LENS_SHADING_MAP,             cam_lens_shading_map_t,      1);
-    INCLUDE(CAM_INTF_META_AEC_INFO,                     cam_3a_params_t,             1);
-    INCLUDE(CAM_INTF_META_SENSOR_INFO,                  cam_sensor_params_t,         1);
-    INCLUDE(CAM_INTF_META_EXIF_DEBUG_AE,                cam_ae_exif_debug_t,         1);
-    INCLUDE(CAM_INTF_META_EXIF_DEBUG_AWB,               cam_awb_exif_debug_t,        1);
-    INCLUDE(CAM_INTF_META_EXIF_DEBUG_AF,                cam_af_exif_debug_t,         1);
-    INCLUDE(CAM_INTF_META_EXIF_DEBUG_ASD,               cam_asd_exif_debug_t,        1);
-    INCLUDE(CAM_INTF_META_EXIF_DEBUG_STATS,             cam_stats_buffer_exif_debug_t,   1);
-    INCLUDE(CAM_INTF_META_EXIF_DEBUG_BESTATS,           cam_bestats_buffer_exif_debug_t, 1);
-    INCLUDE(CAM_INTF_META_EXIF_DEBUG_BHIST,             cam_bhist_buffer_exif_debug_t,   1);
-    INCLUDE(CAM_INTF_META_EXIF_DEBUG_3A_TUNING,         cam_q3a_tuning_info_t,       1);
-    INCLUDE(CAM_INTF_META_ASD_SCENE_CAPTURE_TYPE,       cam_auto_scene_t,            1);
-    INCLUDE(CAM_INTF_PARM_EFFECT,                       uint32_t,                    1);
-    /* Defining as int32_t so that this array is 4 byte aligned */
-    INCLUDE(CAM_INTF_META_PRIVATE_DATA,                 int32_t,
-            MAX_METADATA_PRIVATE_PAYLOAD_SIZE_IN_BYTES / 4);
-
-    /* Following are Params only and not metadata currently */
-    INCLUDE(CAM_INTF_PARM_HAL_VERSION,                  int32_t,                     1);
-    /* Shared between HAL1 and HAL3 */
-    INCLUDE(CAM_INTF_PARM_ANTIBANDING,                  uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_EXPOSURE_COMPENSATION,        int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_EV_STEP,                      cam_rational_type_t,         1);
-    INCLUDE(CAM_INTF_PARM_AEC_LOCK,                     uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_FPS_RANGE,                    cam_fps_range_t,             1);
-    INCLUDE(CAM_INTF_PARM_AWB_LOCK,                     uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_BESTSHOT_MODE,                uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_DIS_ENABLE,                   int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_LED_MODE,                     int32_t,                     1);
-    INCLUDE(CAM_INTF_META_LED_MODE_OVERRIDE,            uint32_t,                    1);
-
-    /* dual camera specific params */
-    INCLUDE(CAM_INTF_PARM_RELATED_SENSORS_CALIBRATION,  cam_related_system_calibration_data_t, 1);
-    INCLUDE(CAM_INTF_META_AF_FOCAL_LENGTH_RATIO,        cam_focal_length_ratio_t, 1);
-    INCLUDE(CAM_INTF_META_SNAP_CROP_INFO_SENSOR,        cam_stream_crop_info_t,   1);
-    INCLUDE(CAM_INTF_META_SNAP_CROP_INFO_CAMIF,         cam_stream_crop_info_t,   1);
-    INCLUDE(CAM_INTF_META_SNAP_CROP_INFO_ISP,           cam_stream_crop_info_t,   1);
-    INCLUDE(CAM_INTF_META_SNAP_CROP_INFO_CPP,           cam_stream_crop_info_t,   1);
-    INCLUDE(CAM_INTF_META_DCRF,                         cam_dcrf_result_t,        1);
-
-    /* HAL1 specific */
-    /* read only */
-    INCLUDE(CAM_INTF_PARM_QUERY_FLASH4SNAP,             int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_EXPOSURE,                     int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_SHARPNESS,                    int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_CONTRAST,                     int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_SATURATION,                   int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_BRIGHTNESS,                   int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_ISO,                          cam_intf_parm_manual_3a_t,   1);
-    INCLUDE(CAM_INTF_PARM_EXPOSURE_TIME,                cam_intf_parm_manual_3a_t,   1);
-    INCLUDE(CAM_INTF_PARM_ZOOM,                         int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_ROLLOFF,                      int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_MODE,                         int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_AEC_ALGO_TYPE,                int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_FOCUS_ALGO_TYPE,              int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_AEC_ROI,                      cam_set_aec_roi_t,           1);
-    INCLUDE(CAM_INTF_PARM_AF_ROI,                       cam_roi_info_t,              1);
-    INCLUDE(CAM_INTF_PARM_SCE_FACTOR,                   int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_FD,                           cam_fd_set_parm_t,           1);
-    INCLUDE(CAM_INTF_PARM_MCE,                          int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_HFR,                          int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_REDEYE_REDUCTION,             int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_WAVELET_DENOISE,              cam_denoise_param_t,         1);
-    INCLUDE(CAM_INTF_PARM_TEMPORAL_DENOISE,             cam_denoise_param_t,         1);
-    INCLUDE(CAM_INTF_PARM_HISTOGRAM,                    int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_ASD_ENABLE,                   int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_RECORDING_HINT,               int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_HDR,                          cam_exp_bracketing_t,        1);
-    INCLUDE(CAM_INTF_PARM_FRAMESKIP,                    int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_ZSL_MODE,                     int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_HDR_NEED_1X,                  int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_LOCK_CAF,                     int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_VIDEO_HDR,                    int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_SENSOR_HDR,                   cam_sensor_hdr_type_t,       1);
-    INCLUDE(CAM_INTF_PARM_VT,                           int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_SET_AUTOFOCUSTUNING,          tune_actuator_t,             1);
-    INCLUDE(CAM_INTF_PARM_SET_VFE_COMMAND,              tune_cmd_t,                  1);
-    INCLUDE(CAM_INTF_PARM_SET_PP_COMMAND,               tune_cmd_t,                  1);
-    INCLUDE(CAM_INTF_PARM_MAX_DIMENSION,                cam_dimension_t,             1);
-    INCLUDE(CAM_INTF_PARM_RAW_DIMENSION,                cam_dimension_t,             1);
-    INCLUDE(CAM_INTF_PARM_TINTLESS,                     int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_WB_MANUAL,                    cam_manual_wb_parm_t,        1);
-    INCLUDE(CAM_INTF_PARM_CDS_MODE,                     int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_EZTUNE_CMD,                   cam_eztune_cmd_data_t,       1);
-    INCLUDE(CAM_INTF_PARM_INT_EVT,                      cam_int_evt_params_t,        1);
-    INCLUDE(CAM_INTF_PARM_RDI_MODE,                     int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_BURST_NUM,                    uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_RETRO_BURST_NUM,              uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_BURST_LED_ON_PERIOD,          uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_LONGSHOT_ENABLE,              int8_t,                      1);
-    INCLUDE(CAM_INTF_PARM_TONE_MAP_MODE,                uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_TOUCH_AE_RESULT,              int32_t,                     1);
-    INCLUDE(CAM_INTF_PARM_LED_CALIBRATION,              cam_led_calibration_mode_t,  1);
-    INCLUDE(CAM_INTF_PARM_ADV_CAPTURE_MODE,             uint8_t,                     1);
-    INCLUDE(CAM_INTF_PARM_QUADRA_CFA,                   int32_t,                     1);
-    INCLUDE(CAM_INTF_META_RAW,                          cam_dimension_t,             1);
-    INCLUDE(CAM_INTF_META_STREAM_INFO_FOR_PIC_RES,      cam_stream_size_info_t,      1);
-
-
-    /* HAL3 specific */
-    INCLUDE(CAM_INTF_META_STREAM_INFO,                  cam_stream_size_info_t,      1);
-    INCLUDE(CAM_INTF_META_AEC_MODE,                     uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_AEC_PRECAPTURE_TRIGGER,       cam_trigger_t,               1);
-    INCLUDE(CAM_INTF_META_AF_TRIGGER,                   cam_trigger_t,               1);
-    INCLUDE(CAM_INTF_META_CAPTURE_INTENT,               uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_DEMOSAIC,                     int32_t,                     1);
-    INCLUDE(CAM_INTF_META_SHARPNESS_STRENGTH,           int32_t,                     1);
-    INCLUDE(CAM_INTF_META_GEOMETRIC_MODE,               uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_GEOMETRIC_STRENGTH,           uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_LENS_SHADING_MAP_MODE,        uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_SHADING_STRENGTH,             uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_TONEMAP_MODE,                 uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_STREAM_ID,                    cam_stream_ID_t,             1);
-    INCLUDE(CAM_INTF_PARM_STATS_DEBUG_MASK,             uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_STATS_AF_PAAF,                uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_FOCUS_BRACKETING,             cam_af_bracketing_t,         1);
-    INCLUDE(CAM_INTF_PARM_FLASH_BRACKETING,             cam_flash_bracketing_t,      1);
-    INCLUDE(CAM_INTF_META_JPEG_GPS_COORDINATES,         double,                      3);
-    INCLUDE(CAM_INTF_META_JPEG_GPS_PROC_METHODS,        uint8_t,                     GPS_PROCESSING_METHOD_SIZE);
-    INCLUDE(CAM_INTF_META_JPEG_GPS_TIMESTAMP,           int64_t,                     1);
-    INCLUDE(CAM_INTF_META_JPEG_ORIENTATION,             int32_t,                     1);
-    INCLUDE(CAM_INTF_META_JPEG_QUALITY,                 uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_JPEG_THUMB_QUALITY,           uint32_t,                    1);
-    INCLUDE(CAM_INTF_META_JPEG_THUMB_SIZE,              cam_dimension_t,             1);
-    INCLUDE(CAM_INTF_META_TEST_PATTERN_DATA,            cam_test_pattern_data_t,     1);
-    INCLUDE(CAM_INTF_META_PROFILE_TONE_CURVE,           cam_profile_tone_curve,      1);
-    INCLUDE(CAM_INTF_META_OTP_WB_GRGB,                  float,                       1);
-    INCLUDE(CAM_INTF_META_IMG_HYST_INFO,                cam_img_hysterisis_info_t,   1);
-    INCLUDE(CAM_INTF_META_CAC_INFO,                     cam_cac_info_t,              1);
-    INCLUDE(CAM_INTF_PARM_CAC,                          cam_aberration_mode_t,       1);
-    INCLUDE(CAM_INTF_META_NEUTRAL_COL_POINT,            cam_neutral_col_point_t,     1);
-    INCLUDE(CAM_INTF_PARM_ROTATION,                     cam_rotation_info_t,         1);
-    INCLUDE(CAM_INTF_PARM_HW_DATA_OVERWRITE,            cam_hw_data_overwrite_t,     1);
-    INCLUDE(CAM_INTF_META_IMGLIB,                       cam_intf_meta_imglib_t,      1);
-    INCLUDE(CAM_INTF_PARM_CAPTURE_FRAME_CONFIG,         cam_capture_frame_config_t,  1);
-    INCLUDE(CAM_INTF_PARM_CUSTOM,                       custom_parm_buffer_t,        1);
-    INCLUDE(CAM_INTF_PARM_FLIP,                         int32_t,                     1);
-    INCLUDE(CAM_INTF_META_USE_AV_TIMER,                 uint8_t,                     1);
-    INCLUDE(CAM_INTF_META_EFFECTIVE_EXPOSURE_FACTOR,    float,                       1);
-    INCLUDE(CAM_INTF_META_LDAF_EXIF,                    uint32_t,                    2);
-    INCLUDE(CAM_INTF_META_BLACK_LEVEL_SOURCE_PATTERN,   cam_black_level_metadata_t,  1);
-    INCLUDE(CAM_INTF_META_BLACK_LEVEL_APPLIED_PATTERN,  cam_black_level_metadata_t,  1);
-    INCLUDE(CAM_INTF_META_LOW_LIGHT,                    cam_low_light_mode_t,        1);
-    INCLUDE(CAM_INTF_META_IMG_DYN_FEAT,                 cam_dyn_img_data_t,          1);
-    INCLUDE(CAM_INTF_PARM_MANUAL_CAPTURE_TYPE,          cam_manual_capture_type,     1);
-    INCLUDE(CAM_INTF_AF_STATE_TRANSITION,               uint8_t,                     1);
-    INCLUDE(CAM_INTF_PARM_INITIAL_EXPOSURE_INDEX,       uint32_t,                    1);
-    INCLUDE(CAM_INTF_PARM_INSTANT_AEC,                  uint8_t,                     1);
-    INCLUDE(CAM_INTF_META_REPROCESS_FLAGS,              uint8_t,                     1);
-    INCLUDE(CAM_INTF_PARM_JPEG_ENCODE_CROP,             cam_stream_crop_info_t,      1);
-    INCLUDE(CAM_INTF_PARM_JPEG_SCALE_DIMENSION,         cam_dimension_t,             1);
-    INCLUDE(CAM_INTF_META_FOCUS_DEPTH_INFO,             uint8_t,                     1);
-    INCLUDE(CAM_INTF_PARM_HAL_BRACKETING_HDR,           cam_hdr_param_t,             1);
+    /* OSS-only entries — Samsung daemon does not access these. */
+    /* Placed after Samsung's data region; exact offsets don't matter. */
+    INCLUDE(CAM_INTF_META_CDS_DATA,                              cam_cds_data_t,                      1);
+    INCLUDE(CAM_INTF_META_LENS_FOCUS_STATE,                      uint32_t,                            1);
+    INCLUDE(CAM_INTF_META_ASD_SCENE_CAPTURE_TYPE,                cam_auto_scene_t,                    1);
+    INCLUDE(CAM_INTF_PARM_HW_DATA_OVERWRITE,                     cam_hw_data_overwrite_t,             1);
+    INCLUDE(CAM_INTF_META_EFFECTIVE_EXPOSURE_FACTOR,             float,                               1);
+    INCLUDE(CAM_INTF_META_LDAF_EXIF,                             uint32_t,                            2);
+    INCLUDE(CAM_INTF_META_BLACK_LEVEL_SOURCE_PATTERN,            cam_black_level_metadata_t,          1);
+    INCLUDE(CAM_INTF_META_BLACK_LEVEL_APPLIED_PATTERN,           cam_black_level_metadata_t,          1);
+    INCLUDE(CAM_INTF_PARM_MANUAL_CAPTURE_TYPE,                   cam_manual_capture_type,             1);
+    INCLUDE(CAM_INTF_META_REPROCESS_FLAGS,                       uint8_t,                             1);
+    INCLUDE(CAM_INTF_PARM_JPEG_ENCODE_CROP,                      cam_stream_crop_info_t,              1);
+    INCLUDE(CAM_INTF_PARM_JPEG_SCALE_DIMENSION,                  cam_dimension_t,                     1);
+    INCLUDE(CAM_INTF_META_RAW,                                   cam_dimension_t,                     1);
+    INCLUDE(CAM_INTF_META_STREAM_INFO_FOR_PIC_RES,               cam_stream_size_info_t,              1);
+    INCLUDE(CAM_INTF_PARM_HAL_BRACKETING_HDR,                    cam_hdr_param_t,                     1);
 } metadata_data_t;
 
 /* Update clear_metadata_buffer() function when a new is_xxx_valid is added to
@@ -1073,6 +1125,11 @@ typedef struct {
     cam_q3a_tuning_info_t statsdebug_3a_tuning_data;
 
 } metadata_buffer_t;
+
+/* Samsung data region = 822,036 bytes, union = 248, trailing = 657,424.
+ * Total metadata_buffer_t = 1,488,464 bytes (verified via ARM cross-compile). */
+_Static_assert(sizeof(metadata_buffer_t) == 1488464,
+    "metadata_buffer_t size must be 1488464 to match Samsung daemon layout");
 
 typedef metadata_buffer_t parm_buffer_t;
 
