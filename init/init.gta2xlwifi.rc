@@ -8,6 +8,10 @@ on post-fs-data
 
 on boot
 
+# ZRAM
+    write /sys/block/zram0/comp_algorithm zstd
+    swapon_all vendor/etc/fstab.qcom
+
 #BUS Permissions
     chmod 0664 /sys/class/devfreq/soc:qcom,cpubw/available_frequencies
     chmod 0664 /sys/class/devfreq/soc:qcom,cpubw/min_freq
@@ -242,7 +246,3 @@ on property:sys.boot_completed=1
     # This initializes vendor.qti.hardware.perf@1.0-service
     setprop vendor.post_boot.parsed 1
     setprop persist.vendor.mmi.misc_dev_path /dev/block/bootdevice/by-name/misc
-
-    # ZRAM
-    write /sys/block/zram0/comp_algorithm zstd
-    swapon_all vendor/etc/fstab.qcom
