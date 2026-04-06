@@ -5,7 +5,7 @@ ro.config.media_vol_steps=25
 dalvik.vm.dex2oat64.enabled=true
 
 # Display
-debug.hwui.renderer=skiavk
+debug.hwui.renderer=skiaglthreaded
 debug.sf.disable_client_composition_cache=0
 debug.sf.enable_planner_prediction=true
 debug.sf.luma_sampling=0
