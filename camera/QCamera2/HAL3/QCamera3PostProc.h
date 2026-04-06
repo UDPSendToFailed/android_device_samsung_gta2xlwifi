@@ -97,7 +97,7 @@ typedef struct {
     qcamera_hal3_meta_pp_buffer_t *metaBuffer;
 }ReprocessBuffer;
 
-#define MAX_HAL3_EXIF_TABLE_ENTRIES 23
+#define MAX_HAL3_EXIF_TABLE_ENTRIES 50
 class QCamera3Exif
 {
 public:
