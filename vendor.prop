@@ -16,12 +16,12 @@ vendor.audio.safx.pbe.enabled=true
 vendor.audio.use.sw.alac.decoder=false
 vendor.audio.use.sw.ape.decoder=true
 vendor.audio_hal.period_size=192
-vendor.voice.path.for.pcm.voip=true
+vendor.voice.path.for.pcm.voip=false
 vendor.voice.playback.conc.disabled=true
 
 # Audio dynamic feature flags
 vendor.audio.feature.anc_headset.enable=true
-vendor.audio.feature.compr_voip.enable=true
+vendor.audio.feature.compr_voip.enable=false
 vendor.audio.feature.compress_meta_data.enable=false
 vendor.audio.feature.custom_stereo.enable=true
 vendor.audio.feature.fluence.enable=true
@@ -30,12 +30,12 @@ vendor.audio.feature.hfp.enable=true
 vendor.audio.feature.hifi_audio.enable=true
 vendor.audio.feature.incall_music.enable=true
 vendor.audio.feature.kpi_optimize.enable=true
-vendor.audio.feature.multi_voice_session.enable=true
+vendor.audio.feature.multi_voice_session.enable=false
 vendor.audio.feature.snd_mon.enable=true
-vendor.audio.feature.spkr_prot.enable=true
+vendor.audio.feature.spkr_prot.enable=false
 vendor.audio.feature.src_trkn.enable=true
 vendor.audio.feature.vbat.enable=true
-vendor.audio.feature.wsa.enable=true
+vendor.audio.feature.wsa.enable=false
 
 # Bluetooth
 bluetooth.device.class_of_device=90,2,12
