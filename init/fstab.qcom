@@ -33,8 +33,8 @@
 # Currently we dont have e2fsck compiled. So fs check would failed.
 
 #<src>                                                    <mnt_point>  	         <type> <mnt_flags and options>                                                                    <fs_mgr_flags>
-/dev/block/by-name/system                                 /system                 erofs  ro                                                                                         wait,first_stage_mount
-/dev/block/by-name/vendor                                 /vendor                 erofs  ro                                                                                         wait,first_stage_mount
+/dev/block/by-name/system                                 /system                 ext4  ro                                                                                         wait,first_stage_mount
+/dev/block/by-name/vendor                                 /vendor                 ext4  ro                                                                                         wait,first_stage_mount
 
 /dev/block/bootdevice/by-name/userdata                    /data                   ext4  noatime,nosuid,nodev,noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic    wait,check,formattable,fileencryption=aes-256-xts,check,reservedsize=128M
 /dev/block/bootdevice/by-name/userdata                    /data                   f2fs  nosuid,nodev,noatime,fsync_mode=nobarrier,disable_roll_forward                             wait,check,formattable,fileencryption=aes-256-xts,quota,reservedsize=128M
