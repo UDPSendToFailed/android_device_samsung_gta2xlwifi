@@ -82,7 +82,7 @@ BOARD_ROOT_EXTRA_SYMLINKS := \
     /mnt/vendor/efs:/efs \
 
 # Root Folders
-BOARD_ROOT_EXTRA_FOLDERS := config efs
+BOARD_ROOT_EXTRA_FOLDERS := config efs metadata
 BOARD_FLASH_BLOCK_SIZE := 131072
 TARGET_USERIMAGES_USE_F2FS := true
 TARGET_USERIMAGES_USE_EXT4 := true
