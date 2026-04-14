@@ -32,25 +32,26 @@ fun BandGainSlider(
     bandGain: BandGain,
     onValueChangeFinished: (Int) -> Unit
 ) {
-    // Gain range is of -1->1 in UI, -100->100 in backend, but actually is -10->10 dB.
+    // Gain range is -1->1 in UI, -192->192 in backend, which is -19.2->19.2 dB.
+    // DAP GEQ accepts values in 1/10th dB units, max ±192.
 
     // Ensure we update the slider when gain is changed,
     // for eg. when changing the preset
     var sliderPosition by remember(bandGain.gain) {
-        mutableFloatStateOf(bandGain.gain / 100f)
+        mutableFloatStateOf(bandGain.gain / 192f)
     }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         SliderText(
-            "%.1f".format(sliderPosition * 10f)
+            "%.1f".format(sliderPosition * 19.2f)
         )
         Slider(
             value = sliderPosition,
             onValueChange = { sliderPosition = it },
             onValueChangeFinished = {
-                onValueChangeFinished((sliderPosition * 100f).toInt())
+                onValueChangeFinished((sliderPosition * 192f).toInt())
             },
             valueRange = -1f..1f,
             modifier = Modifier

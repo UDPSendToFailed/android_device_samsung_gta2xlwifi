@@ -34,7 +34,7 @@ fun BandGainSliderLabels() {
             horizontalAlignment = Alignment.End
         ) {
             LabelText(
-                "+10 dB",
+                "+19.2 dB",
                 modifier = Modifier.padding(
                     top = 10.dp
                 )
@@ -47,7 +47,7 @@ fun BandGainSliderLabels() {
                 modifier = Modifier.weight(1f)
             )
             LabelText(
-                "-10 dB",
+                "-19.2 dB",
                 modifier = Modifier.padding(
                     bottom = 10.dp
                 )
