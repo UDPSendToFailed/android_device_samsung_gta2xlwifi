@@ -17,10 +17,12 @@ on property:vendor.perf.cpu_gov=false
 on property:vendor.perf.gpu_gov=true
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor "performance"
     write /sys/class/devfreq/soc:qcom,gpubw/governor "performance"
+    write /sys/devices/platform/soc/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/default_pwrlevel "0"
 
 on property:vendor.perf.gpu_gov=false
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor "msm-adreno-tz"
     write /sys/class/devfreq/soc:qcom,gpubw/governor "bw_vbif"
+    write /sys/devices/platform/soc/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/default_pwrlevel "4"
 
 # GPU Overclocking
 on property:vendor.perf.gpu_oc=*
