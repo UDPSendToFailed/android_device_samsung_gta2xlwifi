@@ -112,5 +112,9 @@ ro.soc.model=SDM450
 # System
 persist.sys.binary_xml=false
 
+# USB
+vendor.usb.use_ffs_mtp=0
+vendor.usb.use_gadget_hal=0
+
 # Wifi
 wifi.interface=wlan0
