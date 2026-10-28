@@ -18,6 +18,7 @@ DEVICE_PATH := device/samsung/gta2xlwifi
 BUILD_TOP := $(shell pwd)
 
 SELINUX_IGNORE_NEVERALLOWS := true
+BUILD_BROKEN_SRC_DIR_RW_ALLOWLIST += kernel/samsung/gta2xlwifi
 
 # Architecture
 TARGET_ARCH := arm64
@@ -62,7 +63,6 @@ TARGET_KERNEL_CONFIG := gta2xlwifi_defconfig
 
 # Kernel Toolchain
 TARGET_LINUX_KERNEL_VERSION := 4.9
-TARGET_KERNEL_CLANG_VERSION := r574158
 
 # Partitions
 #BOARD_EROFS_COMPRESSOR := lz4hc

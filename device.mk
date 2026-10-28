@@ -143,8 +143,8 @@ PRODUCT_PACKAGES += \
     libqomx_core \
 
 # Configstore
-PRODUCT_PACKAGES += \
-    disable_configstore
+#PRODUCT_PACKAGES += \
+#    disable_configstore
 
 # Display
 PRODUCT_PACKAGES += \
