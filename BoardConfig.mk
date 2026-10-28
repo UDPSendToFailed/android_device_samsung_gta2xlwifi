@@ -146,6 +146,8 @@ TARGET_SUPPORT_HAL1 := false
 
 # Display
 TARGET_USES_ION := true
+$(call soong_config_set_bool,libion,legacy_impl,true)
+$(call soong_config_set_bool,libui,legacy_gralloc,true)
 TARGET_SCREEN_DENSITY := 240
 TARGET_USES_VULKAN := true
 
@@ -202,6 +204,7 @@ TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/init/fstab.recovery.qcom
 
 # SELinux
 include device/qcom/sepolicy-legacy-um/SEPolicy.mk
+include device/lineage/sepolicy/libion/sepolicy.mk
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/public
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/private
 BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor

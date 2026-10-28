@@ -1,4 +1,5 @@
 allow hal_gatekeeper_default tz_device:chr_file rw_file_perms;
+allow hal_gatekeeper_default ion_device:chr_file rw_file_perms;
 
 allow hal_gatekeeper_default efs_file:dir search;
 
