@@ -184,7 +184,8 @@ PRODUCT_PACKAGES += \
     libbatching \
     libgeofencing \
     libgnss \
-    libwifi-hal-ctrl
+    libwifi-hal-ctrl \
+    libsemnativecarrierfeature
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/gps/apdr.conf:$(TARGET_COPY_OUT_VENDOR)/etc/apdr.conf \

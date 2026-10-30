@@ -1,0 +1,13 @@
+//
+// Copyright (C) 2026 The LineageOS Project
+//
+// SPDX-License-Identifier: Apache-2.0
+//
+
+cc_library_shared {
+    name: "libsemnativecarrierfeature",
+    srcs: ["semcarrier_shim.cpp"],
+    vendor: true,
+    compile_multilib: "both",
+}
+

@@ -75,6 +75,14 @@ blob_fixups: blob_fixups_user_type = {
     ('vendor/bin/pm-service'): blob_fixup()
     .replace_needed('libutils.so', 'libutils-v33.so'),
 
+    ('vendor/lib/libloc_api_v02.so'): blob_fixup()
+    .replace_needed('libqmi_cci-v31.so', 'libqmi_cci.so'),
+
+    ('vendor/bin/loc_launcher',
+     'vendor/bin/hw/android.hardware.gnss@2.1-service-qti',
+     'vendor/lib/vendor.qti.gnss@4.0-service.so'): blob_fixup()
+    .replace_needed('libqti_vndfwk_detect-drx.so', 'libqti_vndfwk_detect.so'),
+
 }
 
 # Define the module

@@ -12,6 +12,10 @@ allow hal_gnss_qti sysfs:file { open read };
 
 hal_client_domain(hal_gnss_qti, hal_health)
 
-# Radio and CSC property access
+# Capabilities for MSM IPC router socket bind
+allow hal_gnss_qti self:capability { net_raw net_bind_service };
+
+# Properties
+get_prop(hal_gnss_qti, system_prop)
 get_prop(hal_gnss_qti, radio_prop)
 get_prop(hal_gnss_qti, csc_prop)

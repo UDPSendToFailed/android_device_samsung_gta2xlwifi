@@ -472,6 +472,7 @@ vendor/etc/vintf/manifest/vendor.qti.gnss@4.0-service.xml
 vendor/etc/xtra_root_cert.pem
 vendor/lib/hw/android.hardware.gnss@2.1-impl-qti.so
 vendor/lib/hw/vendor.qti.gnss@4.0-impl.so
+vendor/lib/hw/vendor.samsung.hardware.gnss@2.0-impl-sec.so
 vendor/lib/hw/vendor.qti.hardware.qccvndhal@1.0-impl.so
 vendor/lib/libasn1cper.so
 vendor/lib/libasn1crt.so
@@ -516,6 +517,7 @@ vendor/lib/vendor.qti.gnss@2.1.so
 vendor/lib/vendor.qti.gnss@3.0.so
 vendor/lib/vendor.qti.gnss@4.0-service.so
 vendor/lib/vendor.qti.gnss@4.0.so
+vendor/lib/vendor.samsung.hardware.gnss@2.0.so
 vendor/lib/vendor.qti.hardware.qccvndhal@1.0-halimpl.so
 vendor/lib/vendor.qti.hardware.qccvndhal@1.0.so
 vendor/lib64/hw/android.hardware.gnss@2.1-impl-qti.so
