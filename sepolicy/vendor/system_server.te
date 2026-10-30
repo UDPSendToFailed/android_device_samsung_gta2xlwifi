@@ -1,0 +1,3 @@
+# Allow system_server to read memory telemetry
+allow system_server sysfs_memory:dir search;
+allow system_server sysfs_memory:file r_file_perms;
