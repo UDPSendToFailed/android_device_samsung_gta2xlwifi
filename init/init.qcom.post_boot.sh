@@ -542,26 +542,14 @@ function sdm660_sched_schedutil_dcvs() {
 target=`getprop ro.board.platform`
 
 function configure_read_ahead_kb_values() {
-    MemTotalStr=`cat /proc/meminfo | grep MemTotal`
-    MemTotal=${MemTotalStr:16:8}
-
     dmpts=$(ls /sys/block/*/queue/read_ahead_kb | grep -e dm -e mmc)
 
-    # Set 128 for <= 3GB &
-    # set 512 for >= 4GB targets.
-    if [ $MemTotal -le 3145728 ]; then
-        echo 128 > /sys/block/mmcblk0/bdi/read_ahead_kb
-        echo 128 > /sys/block/mmcblk0rpmb/bdi/read_ahead_kb
-        for dm in $dmpts; do
-            echo 128 > $dm
-        done
-    else
-        echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
-        echo 512 > /sys/block/mmcblk0rpmb/bdi/read_ahead_kb
-        for dm in $dmpts; do
-            echo 512 > $dm
-        done
-    fi
+    # Set 1024 for eMMC and dm targets.
+    echo 1024 > /sys/block/mmcblk0/bdi/read_ahead_kb
+    echo 1024 > /sys/block/mmcblk0rpmb/bdi/read_ahead_kb
+    for dm in $dmpts; do
+        echo 1024 > $dm
+    done
 }
 
 function disable_core_ctl() {
@@ -2067,6 +2055,7 @@ case "$target" in
                 for queue in /sys/block/mmcblk0*/queue; do
                     if [ -d "$queue" ]; then
                         echo 64 > $queue/nr_requests
+                        echo 1024 > $queue/read_ahead_kb
                     fi
                 done
             ;;
