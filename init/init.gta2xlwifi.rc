@@ -169,7 +169,7 @@ on boot
    chown system system /sys/class/input/input6/enable
 
 # Swappiness
-   write /proc/sys/vm/swappiness 100
+   write /proc/sys/vm/swappiness 160
 
 on init
     # Add preload partition.

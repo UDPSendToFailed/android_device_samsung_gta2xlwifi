@@ -2052,6 +2052,13 @@ case "$target" in
 
                 # Set Memory parameters
                 configure_memory_parameters
+
+                # VM tuning
+                echo 100 > /proc/sys/vm/vfs_cache_pressure
+                echo 160 > /proc/sys/vm/swappiness
+                echo 15 > /proc/sys/vm/dirty_ratio
+                echo 5 > /proc/sys/vm/dirty_background_ratio
+                echo 45000 > /proc/sys/vm/extra_free_kbytes
             ;;
         esac
         case "$soc_id" in
