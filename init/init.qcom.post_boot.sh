@@ -2059,6 +2059,13 @@ case "$target" in
                 echo 15 > /proc/sys/vm/dirty_ratio
                 echo 5 > /proc/sys/vm/dirty_background_ratio
                 echo 45000 > /proc/sys/vm/extra_free_kbytes
+
+                # eMMC queue tuning
+                for queue in /sys/block/mmcblk0*/queue; do
+                    if [ -d "$queue" ]; then
+                        echo 64 > $queue/nr_requests
+                    fi
+                done
             ;;
         esac
         case "$soc_id" in
