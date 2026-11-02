@@ -3,6 +3,8 @@ ro.config.media_vol_steps=25
 
 # Dexopt
 dalvik.vm.dex2oat64.enabled=true
+dalvik.vm.madvise.vdexfile.size=0
+dalvik.vm.madvise.odexfile.size=33554432
 
 # Display
 debug.hwui.renderer=skiaglthreaded
