@@ -2047,8 +2047,11 @@ case "$target" in
                 done
 
                 # SMP scheduler
-                echo 85 > /proc/sys/kernel/sched_upmigrate
-                echo 85 > /proc/sys/kernel/sched_downmigrate
+                echo 50 > /proc/sys/kernel/sched_downmigrate
+                echo 65 > /proc/sys/kernel/sched_upmigrate
+                echo 60 > /proc/sys/kernel/sched_group_downmigrate
+                echo 75 > /proc/sys/kernel/sched_group_upmigrate
+                echo 1 > /dev/stune/top-app/schedtune.prefer_idle
 
                 # Set Memory parameters
                 configure_memory_parameters
