@@ -51,32 +51,37 @@ public class SamsungDozeService extends Service {
     private Context mContext;
     private AccelerometerPickUpSensor mPickUpSensor;
     private PowerManager mPowerManager;
+    private boolean mScreenReceiverRegistered = false;
+
     /**
      * Inner class for handling accelerometer-based pickup detection.
      * Sensor events are delivered on a dedicated HandlerThread.
      */
     class AccelerometerPickUpSensor implements SensorEventListener {
-        private SensorManager mSensorManager;
-        private Sensor mSensor;
+        private static final float PICKUP_THRESHOLD_MAGNITUDE = 9.8f;
+        private static final float PICKUP_THRESHOLD_CHANGE = 1.0f;
+        private static final float Z_AXIS_PICKUP_THRESHOLD_CHANGE = -2.5f;
+        private static final float Z_AXIS_MINIMUM_MAGNITUDE = 2.0f;
+
+        private final SensorManager mSensorManager;
+        private final Sensor mSensor;
         private HandlerThread mHandlerThread;
         private Handler mHandler;
 
-        private long lastPulseTimestamp;
-        private float lastMagnitude = 0f;
-        private float lastZValue = 0f;
-
-        private float pickupThresholdMagnitude = 9.8f;
-        private float pickupThresholdChange = 1.0f;
-        private float zAxisPickupThresholdChange = -2.5f;
-        private float zAxisMinimumMagnitude = 2.0f;
+        private boolean mRegistered = false;
+        private boolean mHasBaseline = false;
+        private long mLastPulseTimestamp;
+        private float mLastMagnitude = 0f;
+        private float mLastZValue = 0f;
 
         public AccelerometerPickUpSensor(Context context) {
             mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-            mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            mSensor = mSensorManager != null
+                    ? mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+                    : null;
             if (mSensor == null) {
                 Log.e(TAG, "Accelerometer sensor not available");
-            }
-            if (mSensor != null) {
+            } else {
                 mHandlerThread = new HandlerThread("AccelSensorThread");
                 mHandlerThread.start();
                 mHandler = new Handler(mHandlerThread.getLooper());
@@ -84,33 +89,38 @@ public class SamsungDozeService extends Service {
         }
 
         /**
-         * Enables sensor monitoring.
-         * Registers this as a listener on a dedicated HandlerThread.
+         * Enables sensor monitoring on a dedicated HandlerThread.
          */
-        protected void enable() {
-            if (mSensor == null || mHandler == null) {
-                 Log.w(TAG, "Cannot enable Accelerometer: Sensor or Handler not initialized.");
-                 return;
+        protected synchronized void enable() {
+            if (mSensorManager == null || mSensor == null || mHandler == null) {
+                Log.w(TAG, "Cannot enable Accelerometer: Sensor or Handler not initialized.");
+                return;
             }
-            lastPulseTimestamp = SystemClock.elapsedRealtime();
-            mSensorManager.registerListener(this, mSensor, SensorManager.SENSOR_DELAY_NORMAL, mHandler);
-            Log.d(TAG, "Accelerometer Pickup Sensor Enabled");
+            if (mRegistered) {
+                return;
+            }
+            mHasBaseline = false;
+            mLastPulseTimestamp = SystemClock.elapsedRealtime();
+            mRegistered = mSensorManager.registerListener(
+                    this, mSensor, SensorManager.SENSOR_DELAY_NORMAL, mHandler);
+            if (DEBUG) Log.d(TAG, "Accelerometer Pickup Sensor Enabled: " + mRegistered);
         }
 
         /**
          * Disables sensor monitoring.
-         * Unregisters this listener and stops the HandlerThread.
          */
-        protected void disable() {
-             if (mSensor == null || mSensorManager == null) {
-                 Log.w(TAG, "Cannot disable Accelerometer: Sensor or Manager not initialized.");
-                 return;
-             }
+        protected synchronized void disable() {
+            if (mSensorManager == null || mSensor == null || !mRegistered) {
+                return;
+            }
             try {
                 mSensorManager.unregisterListener(this, mSensor);
-                Log.d(TAG, "Accelerometer Pickup Sensor Disabled");
+                if (DEBUG) Log.d(TAG, "Accelerometer Pickup Sensor Disabled");
             } catch (Exception e) {
-                 Log.w(TAG, "Error unregistering accelerometer listener", e);
+                Log.w(TAG, "Error unregistering accelerometer listener", e);
+            } finally {
+                mRegistered = false;
+                mHasBaseline = false;
             }
         }
 
@@ -118,6 +128,7 @@ public class SamsungDozeService extends Service {
          * Shuts down the sensor thread to clean up resources.
          */
         protected void shutdown() {
+            disable();
             if (mHandlerThread != null) {
                 mHandlerThread.quitSafely();
                 mHandlerThread = null;
@@ -128,37 +139,43 @@ public class SamsungDozeService extends Service {
         @Override
         public void onSensorChanged(SensorEvent event) {
             if (DEBUG) {
-                Log.d(TAG, "Accelerometer event: x=" + event.values[0] +
-                        ", y=" + event.values[1] + ", z=" + event.values[2]);
-            }
-
-            long currentTime = SystemClock.elapsedRealtime();
-
-            if (currentTime - lastPulseTimestamp < MIN_PULSE_INTERVAL_MS) {
-                return;
+                Log.d(TAG, "Accelerometer event: x=" + event.values[0]
+                        + ", y=" + event.values[1] + ", z=" + event.values[2]);
             }
 
             float x = event.values[0];
             float y = event.values[1];
             float z = event.values[2];
-
             float magnitude = (float) sqrt(x * x + y * y + z * z);
-            float accelerationChange = magnitude - lastMagnitude;
-            lastMagnitude = magnitude;
 
-            float zChange = z - lastZValue;
-            lastZValue = z;
+            if (!mHasBaseline) {
+                mLastMagnitude = magnitude;
+                mLastZValue = z;
+                mHasBaseline = true;
+                return;
+            }
+
+            float accelerationChange = magnitude - mLastMagnitude;
+            mLastMagnitude = magnitude;
+
+            float zChange = z - mLastZValue;
+            mLastZValue = z;
+
+            long currentTime = SystemClock.elapsedRealtime();
+            if (currentTime - mLastPulseTimestamp < MIN_PULSE_INTERVAL_MS) {
+                return;
+            }
 
             if (DEBUG) {
-                Log.d(TAG, "Magnitude: " + magnitude + ", Change: " + accelerationChange +
-                        ", Z-Change: " + zChange + ", Z-Value: " + z);
+                Log.d(TAG, "Magnitude: " + magnitude + ", Change: " + accelerationChange
+                        + ", Z-Change: " + zChange + ", Z-Value: " + z);
             }
 
             if (isPickupDetected(magnitude, accelerationChange, zChange, z)) {
-                if (DEBUG) { Log.d(TAG, "Pickup Detected - WAKE UP"); }
-                lastPulseTimestamp = SystemClock.elapsedRealtime();
+                if (DEBUG) Log.d(TAG, "Pickup Detected - WAKE UP");
+                mLastPulseTimestamp = currentTime;
                 wakeOrLaunchDozePulse();
-                }
+            }
         }
 
         @Override
@@ -167,13 +184,16 @@ public class SamsungDozeService extends Service {
         /**
          * Determines if the pickup gesture is detected based on sensor data.
          */
-        private boolean isPickupDetected(float magnitude, float accelerationChange, float zChange, float zValue) {
-            return (magnitude > pickupThresholdMagnitude && accelerationChange > pickupThresholdChange) ||
-                   (zChange < zAxisPickupThresholdChange && zValue > zAxisMinimumMagnitude);
+        private boolean isPickupDetected(
+                float magnitude, float accelerationChange, float zChange, float zValue) {
+            return (magnitude > PICKUP_THRESHOLD_MAGNITUDE
+                            && accelerationChange > PICKUP_THRESHOLD_CHANGE)
+                    || (zChange < Z_AXIS_PICKUP_THRESHOLD_CHANGE
+                            && zValue > Z_AXIS_MINIMUM_MAGNITUDE);
         }
     }
 
-@Override
+    @Override
     public void onCreate() {
         super.onCreate();
         if (DEBUG) Log.d(TAG, "SamsungDozeService onCreate");
@@ -181,15 +201,22 @@ public class SamsungDozeService extends Service {
         mPowerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
         mPickUpSensor = new AccelerometerPickUpSensor(mContext);
 
-        boolean pickupEnabled = Utils.isPickUpGestureEnabled(this);
-        boolean sensorsShouldBeActive = !isInteractive() &&
-                                        Utils.isDozeEnabled(this) &&
-                                        pickupEnabled;
+        IntentFilter screenStateFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        mContext.registerReceiver(mScreenStateReceiver, screenStateFilter, RECEIVER_NOT_EXPORTED);
+        mScreenReceiverRegistered = true;
 
-        if (DEBUG) Log.d(TAG, "onCreate: isInteractive=" + isInteractive() +
-                             ", isDozeEnabled=" + Utils.isDozeEnabled(this) +
-                             ", isPickupEnabled=" + pickupEnabled +
-                             ", sensorsShouldBeActive=" + sensorsShouldBeActive);
+        boolean pickupEnabled = Utils.isPickUpGestureEnabled(this);
+        boolean sensorsShouldBeActive = !isInteractive()
+                && Utils.isDozeEnabled(this)
+                && pickupEnabled;
+
+        if (DEBUG) {
+            Log.d(TAG, "onCreate: isInteractive=" + isInteractive()
+                    + ", isDozeEnabled=" + Utils.isDozeEnabled(this)
+                    + ", isPickupEnabled=" + pickupEnabled
+                    + ", sensorsShouldBeActive=" + sensorsShouldBeActive);
+        }
 
         if (sensorsShouldBeActive) {
             setSarSensorEnabled(true);
@@ -202,9 +229,6 @@ public class SamsungDozeService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (DEBUG) Log.d(TAG, "Starting service");
-        IntentFilter screenStateFilter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        mContext.registerReceiver(mScreenStateReceiver, screenStateFilter);
         return START_STICKY;
     }
 
@@ -216,13 +240,15 @@ public class SamsungDozeService extends Service {
     @Override
     public void onDestroy() {
         if (DEBUG) Log.d(TAG, "SamsungDozeService onDestroy");
-        try {
-            mContext.unregisterReceiver(mScreenStateReceiver);
-        } catch (IllegalArgumentException e) {
-            Log.w(TAG, "Receiver not registered or already unregistered?", e);
+        if (mScreenReceiverRegistered) {
+            try {
+                mContext.unregisterReceiver(mScreenStateReceiver);
+            } catch (IllegalArgumentException e) {
+                Log.w(TAG, "Receiver already unregistered", e);
+            }
+            mScreenReceiverRegistered = false;
         }
         setSarSensorEnabled(false);
-        mPickUpSensor.disable();
         mPickUpSensor.shutdown();
         super.onDestroy();
     }
@@ -232,7 +258,8 @@ public class SamsungDozeService extends Service {
             if (DEBUG) Log.d(TAG, "Wake up display");
             if (mPowerManager != null) {
                 try {
-                    mPowerManager.wakeUp(SystemClock.uptimeMillis(), PowerManager.WAKE_REASON_GESTURE, TAG);
+                    mPowerManager.wakeUp(
+                            SystemClock.uptimeMillis(), PowerManager.WAKE_REASON_GESTURE, TAG);
                 } catch (Exception e) {
                     Log.e(TAG, "Error waking up display", e);
                 }
@@ -253,9 +280,7 @@ public class SamsungDozeService extends Service {
     private void onDisplayOn() {
         if (DEBUG) Log.d(TAG, "Display on");
         setSarSensorEnabled(false);
-        if (Utils.isPickUpGestureEnabled(this)) {
-            mPickUpSensor.disable();
-        }
+        mPickUpSensor.disable();
     }
 
     private void onDisplayOff() {
@@ -264,15 +289,16 @@ public class SamsungDozeService extends Service {
         boolean pickupEnabled = Utils.isPickUpGestureEnabled(this);
         boolean sensorsShouldBeActive = Utils.isDozeEnabled(this) && pickupEnabled;
 
-        if (DEBUG) Log.d(TAG, "onDisplayOff: isDozeEnabled=" + Utils.isDozeEnabled(this) +
-                             ", isPickupEnabled=" + pickupEnabled +
-                             ", sensorsShouldBeActive=" + sensorsShouldBeActive);
+        if (DEBUG) {
+            Log.d(TAG, "onDisplayOff: isDozeEnabled=" + Utils.isDozeEnabled(this)
+                    + ", isPickupEnabled=" + pickupEnabled
+                    + ", sensorsShouldBeActive=" + sensorsShouldBeActive);
+        }
 
         if (sensorsShouldBeActive) {
-             setSarSensorEnabled(true);
+            setSarSensorEnabled(true);
             mPickUpSensor.enable();
-        }
-        else {
+        } else {
             setSarSensorEnabled(false);
             mPickUpSensor.disable();
         }
@@ -281,10 +307,10 @@ public class SamsungDozeService extends Service {
     private final BroadcastReceiver mScreenStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-             if (intent == null || intent.getAction() == null) {
-                 return;
-             }
-             String action = intent.getAction();
+            if (intent == null || intent.getAction() == null) {
+                return;
+            }
+            String action = intent.getAction();
             if (Intent.ACTION_SCREEN_OFF.equals(action)) {
                 onDisplayOff();
             } else if (Intent.ACTION_SCREEN_ON.equals(action)) {
